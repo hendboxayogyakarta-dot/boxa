@@ -23,6 +23,23 @@ export function conditionLabel(condition: string): string {
   return map[condition] ?? condition;
 }
 
+export function slugify(input: string): string {
+  return input
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-");
+}
+
+export function linesToArray(value: FormDataEntryValue | null): string[] {
+  if (!value || typeof value !== "string") return [];
+  return value
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean);
+}
+
 export function stockLabel(status: string): string {
   const map: Record<string, string> = {
     in_stock: "Tersedia",

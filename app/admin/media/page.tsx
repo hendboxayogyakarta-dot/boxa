@@ -1,16 +1,15 @@
-import { ImagePlus } from "lucide-react";
+import { MediaLibrary } from "@/components/admin/media-library";
 
 export default function AdminMediaPage() {
   return (
     <div>
       <h1 className="font-display text-2xl font-bold text-ink">Media Library</h1>
-      <p className="mt-1 text-sm text-muted">
-        Membutuhkan Supabase Storage. Setelah disambungkan, halaman ini akan menampilkan
-        semua gambar yang diunggah dan bisa dipilih untuk produk atau CMS.
+      <p className="mt-1 max-w-lg text-sm text-muted">
+        Unggah gambar di sini, salin URL-nya, lalu tempel ke kolom gambar produk. Butuh bucket
+        Storage bernama <code className="rounded bg-cream-warm px-1 py-0.5 text-xs">media-library</code> — lihat README.md.
       </p>
-      <div className="mt-6 flex h-48 flex-col items-center justify-center rounded-2xl border-2 border-dashed border-line text-muted">
-        <ImagePlus size={28} />
-        <span className="mt-2 text-sm">Belum ada media — sambungkan Supabase Storage dulu</span>
+      <div className="mt-5">
+        <MediaLibrary />
       </div>
     </div>
   );

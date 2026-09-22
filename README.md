@@ -50,18 +50,38 @@ Fully working against the mock data layer right now:
   hero, showcase cards, and nav collapse to a single-column, scrollable
   mobile layout.
 
-Still needs a live Supabase project to do anything beyond mock data:
-- Admin dashboard CRUD forms (product/category/review create & edit) —
-  the pages render and read real data once connected, but mutations
-  aren't wired to Server Actions yet.
-- Image uploads / media library (needs a Storage bucket).
-- Hero CMS editor UI — the data model supports a full custom hero
-  (`hero.badge`, `hero.featured_product_id`, manual title/subtitle/CTA
-  overrides — see `lib/types.ts` `HeroSettings`), but there's no admin
-  form to edit it yet; edit the `website_settings.hero` JSON directly in
-  Supabase for now.
+**Admin CRUD is now real**, not just a read-only shell:
+- Products: `/admin/products/new` and `/admin/products/[id]/edit` — full
+  form (pricing, stock, condition, rarity, BOXA Approved/score, CTA
+  routing, pros/cons, what's-included, images) backed by the
+  `saveProduct` / `deleteProduct` / `toggleProductStatus` Server Actions
+  in `lib/actions/products.ts`.
+- Categories: `/admin/categories/new` and `/admin/categories/[id]/edit`,
+  backed by `lib/actions/categories.ts`.
+- Reviews: approve / reject / hide / delete buttons on `/admin/reviews`,
+  backed by `lib/actions/reviews.ts`.
+- Website / CMS: `/admin/cms` is a real form for branding, hero copy +
+  CTAs, delivery, social links, and SEO, plus per-section homepage
+  toggles — backed by `lib/actions/settings.ts`, writing straight to
+  `website_settings` and `homepage_sections`.
+- Media library: `/admin/media` uploads to the `media-library` Storage
+  bucket, lists what's there, and lets you copy a URL to paste into a
+  product's image field or delete a file — client-side against Supabase
+  Storage (`components/admin/media-library.tsx`).
+
+Every Server Action re-checks the session and `profiles.role` itself
+(`lib/actions/require-admin.ts`) before writing anything — RLS is still
+the real backstop, this is defense in depth.
+
+**Still needs a live Supabase project to actually persist anything** —
+without it, these forms render but submitting throws (mock mode is
+read/preview-only, which the banner in `/admin` says explicitly). Also
+still open:
 - Analytics (`app/api/cta-click/route.ts` logs the event shape, doesn't
   insert into Postgres yet).
+- No drag-to-reorder for product images or homepage sections — images
+  are ordered by textarea line order (first = primary); sections are
+  toggled on/off but not reordered from the UI yet.
 
 ## 1. Local setup
 

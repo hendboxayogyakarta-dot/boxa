@@ -56,6 +56,15 @@ async function getHomepageSections() {
   return (data as SiteSettings["homepage_sections"]) ?? mockSettings.homepage_sections;
 }
 
+/** Admin variant: all categories regardless of status (RLS already limits
+ * this to admins; public callers should keep using getCategories()). */
+export async function getAllCategoriesForAdmin(): Promise<Category[]> {
+  if (!SUPABASE_CONFIGURED) return mockCategories;
+  const supabase = await createClient();
+  const { data } = await supabase.from("categories").select("*").order("sort_order");
+  return (data as Category[]) ?? [];
+}
+
 export async function getCategories(): Promise<Category[]> {
   if (!SUPABASE_CONFIGURED) return mockCategories;
 
@@ -170,6 +179,32 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
   return (data as Product) ?? null;
 }
 
+/** Admin variant: fetch by id, not restricted to status='published' (so
+ * drafts/archived products can be edited). RLS still requires admin/staff. */
+export async function getProductByIdForAdmin(id: string): Promise<Product | null> {
+  if (!SUPABASE_CONFIGURED) {
+    return mockProducts.find((p) => p.id === id) ?? null;
+  }
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("products")
+    .select("*, category:categories(*), images:product_images(*)")
+    .eq("id", id)
+    .single();
+  return (data as Product) ?? null;
+}
+
+/** Admin variant: every product regardless of status. */
+export async function getAllProductsForAdmin(): Promise<Product[]> {
+  if (!SUPABASE_CONFIGURED) return mockProducts;
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("products")
+    .select("*, category:categories(*), images:product_images(*)")
+    .order("created_at", { ascending: false });
+  return (data as Product[]) ?? [];
+}
+
 export async function getRelatedProducts(product: Product): Promise<Product[]> {
   if (!SUPABASE_CONFIGURED) {
     return mockProducts
@@ -212,5 +247,16 @@ export async function getAllApprovedReviews(): Promise<Review[]> {
     .eq("status", "approved")
     .order("created_at", { ascending: false })
     .limit(12);
+  return (data as Review[]) ?? [];
+}
+
+/** Admin variant: every review regardless of moderation status. */
+export async function getAllReviewsForAdmin(): Promise<Review[]> {
+  if (!SUPABASE_CONFIGURED) return mockReviews;
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("reviews")
+    .select("*")
+    .order("created_at", { ascending: false });
   return (data as Review[]) ?? [];
 }

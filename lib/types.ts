@@ -61,6 +61,7 @@ export interface Product {
   sold_count: number;
   view_count: number;
   images: ProductImage[];
+  status: "draft" | "published" | "archived";
   created_at: string;
   updated_at: string;
 }

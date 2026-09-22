@@ -27,7 +27,7 @@ export const mockProducts: Product[] = [
     cons: ["Box agak besar, perhatikan penyimpanan"],
     what_is_included: ["1580 keping building block", "6 minifigure", "Buku instruksi"],
     what_is_not_included: ["Lem", "Display case"],
-    sold_count: 34, view_count: 512, images: [img("i1", "boxa-castle-1"), img("i1b", "boxa-castle-2")],
+    sold_count: 34, view_count: 512, status: "published", images: [img("i1", "boxa-castle-1"), img("i1b", "boxa-castle-2")],
     created_at: "2026-08-01", updated_at: "2026-09-01",
   },
   {
@@ -43,7 +43,7 @@ export const mockProducts: Product[] = [
     pros: ["Gampang dirakit", "Harga ramah untuk pemula"],
     cons: ["Detail lebih simpel dibanding Master Grade"],
     what_is_included: ["Runner model kit", "Stiker", "Instruksi"], what_is_not_included: ["Cat", "Nozzle tambahan"],
-    sold_count: 61, view_count: 890, images: [img("i2", "boxa-gundam-1")],
+    sold_count: 61, view_count: 890, status: "published", images: [img("i2", "boxa-gundam-1")],
     created_at: "2026-07-15", updated_at: "2026-08-20",
   },
   {
@@ -58,7 +58,7 @@ export const mockProducts: Product[] = [
     warranty_type: null, warranty_description: "Sifatnya random/blind box, jadi isi tidak bisa dipilih — ini kami info di depan.",
     pros: ["Ada peluang dapat secret", "Segel pabrik"], cons: ["Karakter di dalam random, bukan pilihan sendiri"],
     what_is_included: ["1 figure random dalam box tersegel"], what_is_not_included: [],
-    sold_count: 102, view_count: 1340, images: [img("i3", "boxa-blindbox-1")],
+    sold_count: 102, view_count: 1340, status: "published", images: [img("i3", "boxa-blindbox-1")],
     created_at: "2026-06-10", updated_at: "2026-09-10",
   },
   {
@@ -74,7 +74,7 @@ export const mockProducts: Product[] = [
     pros: ["Sendi masih kencang", "Warna orisinil, tidak pudar", "Lengkap dengan aksesoris"],
     cons: ["Box ada lecet minor di sudut", "Stok cuma 1, tidak restock"],
     what_is_included: ["Figure Optimus Prime", "Aksesoris senjata", "Box original"], what_is_not_included: ["Stand display"],
-    sold_count: 8, view_count: 260, images: [img("i4", "boxa-optimus-1")],
+    sold_count: 8, view_count: 260, status: "published", images: [img("i4", "boxa-optimus-1")],
     created_at: "2026-05-20", updated_at: "2026-09-05",
   },
   {
@@ -88,7 +88,7 @@ export const mockProducts: Product[] = [
     cta_type: "WHATSAPP", shopee_url: null, whatsapp_url: "https://wa.me/6281234567890", external_order_url: null,
     warranty_type: null, warranty_description: null, pros: [], cons: [],
     what_is_included: ["240 keping building block"], what_is_not_included: [],
-    sold_count: 45, view_count: 300, images: [img("i5", "boxa-racer-1")],
+    sold_count: 45, view_count: 300, status: "published", images: [img("i5", "boxa-racer-1")],
     created_at: "2026-04-11", updated_at: "2026-08-01",
   },
   {
@@ -104,7 +104,7 @@ export const mockProducts: Product[] = [
     pros: ["Detail cat rapi", "Ada hologram resmi", "Box collector edition"],
     cons: ["Harga lebih tinggi dari figure reguler"],
     what_is_included: ["Figure", "Base display", "Sertifikat keaslian"], what_is_not_included: [],
-    sold_count: 19, view_count: 740, images: [img("i6", "boxa-luffy-1")],
+    sold_count: 19, view_count: 740, status: "published", images: [img("i6", "boxa-luffy-1")],
     created_at: "2026-08-25", updated_at: "2026-09-15",
   },
 ];

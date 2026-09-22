@@ -1,18 +1,18 @@
-import { getProducts, getAllApprovedReviews } from "@/lib/data";
+import { getAllProductsForAdmin, getAllReviewsForAdmin } from "@/lib/data";
 import { Eye, Flame, MousePointerClick, Package, Star } from "lucide-react";
 
 export default async function AdminOverviewPage() {
-  const [products, reviews] = await Promise.all([getProducts(), getAllApprovedReviews()]);
+  const [products, reviews] = await Promise.all([getAllProductsForAdmin(), getAllReviewsForAdmin()]);
 
   const cards = [
     { label: "Total Produk", value: products.length, icon: Package },
-    { label: "Produk Aktif", value: products.filter((p) => p.stock_status !== "sold_out").length, icon: Package },
-    { label: "Produk Habis", value: products.filter((p) => p.stock_status === "sold_out").length, icon: Package },
+    { label: "Tayang", value: products.filter((p) => p.status === "published").length, icon: Package },
+    { label: "Draft", value: products.filter((p) => p.status === "draft").length, icon: Package },
+    { label: "Stok Habis", value: products.filter((p) => p.stock_status === "sold_out").length, icon: Package },
     { label: "BOXA Approved", value: products.filter((p) => p.is_boxa_approved).length, icon: Flame },
-    { label: "Total Ulasan", value: reviews.length, icon: Star },
+    { label: "Ulasan Menunggu", value: reviews.filter((r) => r.status === "pending").length, icon: Star },
     { label: "Total Dilihat", value: products.reduce((s, p) => s + p.view_count, 0), icon: Eye },
-    { label: "Klik CTA (30 hari)", value: "—", icon: MousePointerClick, note: "Perlu Supabase analytics_events" },
-    { label: "Produk Unggulan", value: products.filter((p) => p.is_featured).length, icon: Flame },
+    { label: "Klik CTA (30 hari)", value: "—", icon: MousePointerClick, note: "Perlu tabel analytics_events terisi" },
   ];
 
   return (
@@ -40,9 +40,10 @@ export default async function AdminOverviewPage() {
             {products.slice(0, 5).map((p) => (
               <li key={p.id} className="flex items-center justify-between py-2 text-sm">
                 <span className="text-ink-soft">{p.name}</span>
-                <span className="text-xs text-muted">{p.updated_at}</span>
+                <span className="text-xs text-muted">{p.status === "published" ? "Tayang" : "Draft"}</span>
               </li>
             ))}
+            {products.length === 0 && <li className="py-2 text-sm text-muted">Belum ada produk.</li>}
           </ul>
         </div>
         <div className="rounded-2xl border border-line bg-white p-5">
@@ -51,9 +52,10 @@ export default async function AdminOverviewPage() {
             {reviews.slice(0, 5).map((r) => (
               <li key={r.id} className="flex items-center justify-between py-2 text-sm">
                 <span className="text-ink-soft">{r.customer_name}</span>
-                <span className="text-xs text-muted">{r.rating}★</span>
+                <span className="text-xs text-muted">{r.rating}★ · {r.status}</span>
               </li>
             ))}
+            {reviews.length === 0 && <li className="py-2 text-sm text-muted">Belum ada ulasan.</li>}
           </ul>
         </div>
       </div>
