@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getAllCategoriesForAdmin, getProductByIdForAdmin } from "@/lib/data";
+import { getAllBrandsForAdmin, getAllCategoriesForAdmin, getProductByIdForAdmin } from "@/lib/data";
 import { ProductForm } from "@/components/admin/product-form";
 
 export default async function EditProductPage({
@@ -8,9 +8,10 @@ export default async function EditProductPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const [product, categories] = await Promise.all([
+  const [product, categories, brands] = await Promise.all([
     getProductByIdForAdmin(id),
     getAllCategoriesForAdmin(),
+    getAllBrandsForAdmin(),
   ]);
   if (!product) notFound();
 
@@ -18,7 +19,7 @@ export default async function EditProductPage({
     <div>
       <h1 className="font-display text-2xl font-bold text-ink">Edit Produk</h1>
       <div className="mt-5">
-        <ProductForm product={product} categories={categories} />
+        <ProductForm product={product} categories={categories} brands={brands} />
       </div>
     </div>
   );

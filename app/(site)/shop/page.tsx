@@ -1,7 +1,12 @@
-import { getCategories, getProducts } from "@/lib/data";
+import { getBrands, getCategories, getProducts, getSiteSettings } from "@/lib/data";
 import { ProductCard } from "@/components/product-card";
+import { RequestToyButton } from "@/components/request-toy-button";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+
+// Helps the common no-filter case (/shop with no query) get cached;
+// pages hit with search/filter query strings are still rendered fresh.
+export const revalidate = 60;
 
 const SORTS: { value: string; label: string }[] = [
   { value: "newest", label: "Terbaru" },
@@ -17,6 +22,7 @@ export default async function ShopPage({
 }) {
   const params = await searchParams;
   const category = typeof params.category === "string" ? params.category : undefined;
+  const brand = typeof params.brand === "string" ? params.brand : undefined;
   const q = typeof params.q === "string" ? params.q : undefined;
   const sort = (typeof params.sort === "string" ? params.sort : "newest") as
     | "newest"
@@ -27,13 +33,23 @@ export default async function ShopPage({
   const isNew = params.new === "1";
   const featured = params.featured === "1";
 
-  const [categories, products] = await Promise.all([
+  const [categories, brands, settings, products] = await Promise.all([
     getCategories(),
-    getProducts({ category, search: q, sort, rareOrSecret: rare || undefined, isNew: isNew || undefined, featured: featured || undefined }),
+    getBrands(),
+    getSiteSettings(),
+    getProducts({
+      category,
+      brand,
+      search: q,
+      sort,
+      rareOrSecret: rare || undefined,
+      isNew: isNew || undefined,
+      featured: featured || undefined,
+    }),
   ]);
 
   function hrefFor(next: Record<string, string | undefined>) {
-    const merged = { category, q, sort, ...next };
+    const merged = { category, brand, q, sort, ...next };
     const search = new URLSearchParams();
     Object.entries(merged).forEach(([k, v]) => v && search.set(k, v));
     const qs = search.toString();
@@ -42,10 +58,15 @@ export default async function ShopPage({
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
-      <h1 className="font-display text-3xl font-bold text-ink">Semua Produk</h1>
-      <p className="mt-1 text-sm text-muted">
-        {q ? `Hasil pencarian untuk "${q}"` : "Mainan dan collectible pilihan BOXA.YK"}
-      </p>
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h1 className="font-display text-3xl font-bold text-ink">Semua Produk</h1>
+          <p className="mt-1 text-sm text-muted">
+            {q ? `Hasil pencarian untuk "${q}"` : "Mainan dan collectible pilihan BOXA.YK"}
+          </p>
+        </div>
+        <RequestToyButton whatsappNumber={settings.whatsapp_number} />
+      </div>
 
       <div className="mt-6 grid gap-8 md:grid-cols-[220px_1fr]">
         <aside className="space-y-6">
@@ -78,6 +99,38 @@ export default async function ShopPage({
               ))}
             </ul>
           </div>
+
+          {brands.length > 0 && (
+            <div>
+              <h2 className="mb-2 text-sm font-semibold text-ink">Brand & Lisensi</h2>
+              <ul className="space-y-1">
+                <li>
+                  <Link
+                    href={hrefFor({ brand: undefined })}
+                    className={cn(
+                      "block rounded-lg px-2 py-1.5 text-sm",
+                      !brand ? "bg-maroon text-cream" : "text-ink-soft hover:bg-cream-warm"
+                    )}
+                  >
+                    Semua Brand
+                  </Link>
+                </li>
+                {brands.map((b) => (
+                  <li key={b.id}>
+                    <Link
+                      href={hrefFor({ brand: b.slug })}
+                      className={cn(
+                        "block rounded-lg px-2 py-1.5 text-sm",
+                        brand === b.slug ? "bg-maroon text-cream" : "text-ink-soft hover:bg-cream-warm"
+                      )}
+                    >
+                      {b.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
 
           <div>
             <h2 className="mb-2 text-sm font-semibold text-ink">Cepat</h2>
@@ -120,6 +173,9 @@ export default async function ShopPage({
             <div className="rounded-2xl border border-dashed border-line bg-white py-16 text-center">
               <p className="font-display text-lg font-semibold text-ink">Belum ada produk di sini</p>
               <p className="mt-1 text-sm text-muted">Coba kategori lain atau kata kunci berbeda.</p>
+              <div className="mt-4 flex justify-center">
+                <RequestToyButton whatsappNumber={settings.whatsapp_number} />
+              </div>
             </div>
           ) : (
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">

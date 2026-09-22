@@ -1,5 +1,5 @@
-import type { Banner, Category, Product, Review, SiteSettings } from "./types";
-import { mockBanners, mockCategories, mockProducts, mockReviews, mockSettings } from "./mock-data";
+import type { Banner, Brand, Category, Product, Review, SiteSettings } from "./types";
+import { mockBanners, mockBrands, mockCategories, mockProducts, mockReviews, mockSettings } from "./mock-data";
 import { createClient, createPublicClient } from "./supabase/server";
 
 /**
@@ -75,6 +75,24 @@ export async function getAllBannersForAdmin(): Promise<Banner[]> {
   return (data as Banner[]) ?? [];
 }
 
+export async function getBrands(): Promise<Brand[]> {
+  if (!SUPABASE_CONFIGURED) return mockBrands.filter((b) => b.status === "active");
+  const supabase = createPublicClient();
+  const { data } = await supabase
+    .from("brands")
+    .select("*")
+    .eq("status", "active")
+    .order("sort_order");
+  return (data as Brand[]) ?? [];
+}
+
+export async function getAllBrandsForAdmin(): Promise<Brand[]> {
+  if (!SUPABASE_CONFIGURED) return mockBrands;
+  const supabase = await createClient();
+  const { data } = await supabase.from("brands").select("*").order("sort_order");
+  return (data as Brand[]) ?? [];
+}
+
 /** Admin variant: all categories regardless of status (RLS already limits
  * this to admins; public callers should keep using getCategories()). */
 export async function getAllCategoriesForAdmin(): Promise<Category[]> {
@@ -98,6 +116,7 @@ export async function getCategories(): Promise<Category[]> {
 
 export async function getProducts(filters?: {
   category?: string;
+  brand?: string;
   featured?: boolean;
   isNew?: boolean;
   rareOrSecret?: boolean;
@@ -111,11 +130,14 @@ export async function getProducts(filters?: {
   const supabase = createPublicClient();
   let query = supabase
     .from("products")
-    .select("*, category:categories(*), images:product_images(*)")
+    .select("*, category:categories(*), images:product_images(*), brand_logo:brands(*)")
     .eq("status", "published");
 
   if (filters?.category) {
     query = query.eq("category.slug", filters.category);
+  }
+  if (filters?.brand) {
+    query = query.eq("brand_logo.slug", filters.brand);
   }
   if (filters?.featured) query = query.eq("is_featured", true);
   if (filters?.isNew) query = query.eq("is_new", true);
@@ -152,6 +174,12 @@ function filterAndSortMock(filters?: Parameters<typeof getProducts>[0]): Product
     items = items.filter((p) => {
       const cat = mockCategories.find((c) => c.id === p.category_id);
       return cat?.slug === filters.category;
+    });
+  }
+  if (filters?.brand) {
+    items = items.filter((p) => {
+      const b = mockBrands.find((b) => b.id === p.brand_id);
+      return b?.slug === filters.brand;
     });
   }
   if (filters?.featured) items = items.filter((p) => p.is_featured);
@@ -192,7 +220,7 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
   const supabase = createPublicClient();
   const { data } = await supabase
     .from("products")
-    .select("*, category:categories(*), images:product_images(*)")
+    .select("*, category:categories(*), images:product_images(*), brand_logo:brands(*)")
     .eq("slug", slug)
     .single();
   return (data as Product) ?? null;
@@ -207,7 +235,7 @@ export async function getProductByIdForAdmin(id: string): Promise<Product | null
   const supabase = await createClient();
   const { data } = await supabase
     .from("products")
-    .select("*, category:categories(*), images:product_images(*)")
+    .select("*, category:categories(*), images:product_images(*), brand_logo:brands(*)")
     .eq("id", id)
     .single();
   return (data as Product) ?? null;
@@ -219,7 +247,7 @@ export async function getAllProductsForAdmin(): Promise<Product[]> {
   const supabase = await createClient();
   const { data } = await supabase
     .from("products")
-    .select("*, category:categories(*), images:product_images(*)")
+    .select("*, category:categories(*), images:product_images(*), brand_logo:brands(*)")
     .order("created_at", { ascending: false });
   return (data as Product[]) ?? [];
 }
@@ -233,7 +261,7 @@ export async function getRelatedProducts(product: Product): Promise<Product[]> {
   const supabase = createPublicClient();
   const { data } = await supabase
     .from("products")
-    .select("*, category:categories(*), images:product_images(*)")
+    .select("*, category:categories(*), images:product_images(*), brand_logo:brands(*)")
     .eq("category_id", product.category_id)
     .eq("status", "published")
     .neq("id", product.id)

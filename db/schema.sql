@@ -47,6 +47,22 @@ create index idx_categories_slug on categories(slug);
 create index idx_categories_status on categories(status);
 
 -- ---------------------------------------------------------------------
+-- BRANDS  (reusable manufacturer/license logos — Blokees, Hot Toys,
+-- Transformers, One Piece, etc. Upload once, attach to many products.)
+-- ---------------------------------------------------------------------
+create table brands (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  slug text not null unique,
+  logo_url text,
+  status text not null default 'active' check (status in ('active', 'hidden')),
+  sort_order int not null default 0,
+  created_at timestamptz not null default now()
+);
+create index idx_brands_slug on brands(slug);
+create index idx_brands_status on brands(status);
+
+-- ---------------------------------------------------------------------
 -- PRODUCTS
 -- ---------------------------------------------------------------------
 create table products (
@@ -61,6 +77,8 @@ create table products (
   -- Optional cheaper price for local pickup in Yogyakarta ("Original Toys,
   -- Local Prices" USP). Null = product only has the one price.
   local_price numeric(12,2) check (local_price is null or local_price >= 0),
+  offline_available boolean not null default true,
+  brand_id uuid references brands(id) on delete set null,
   stock_quantity int not null default 0,
   stock_status stock_status not null default 'in_stock',
   category_id uuid references categories(id) on delete set null,
@@ -100,6 +118,7 @@ create index idx_products_name on products using gin (to_tsvector('simple', name
 create index idx_products_category on products(category_id);
 create index idx_products_status on products(status);
 create index idx_products_created_at on products(created_at desc);
+create index idx_products_brand on products(brand_id);
 
 -- ---------------------------------------------------------------------
 -- PRODUCT IMAGES
@@ -248,6 +267,7 @@ $$ language sql security definer stable;
 
 alter table profiles enable row level security;
 alter table categories enable row level security;
+alter table brands enable row level security;
 alter table products enable row level security;
 alter table product_images enable row level security;
 alter table reviews enable row level security;
@@ -267,6 +287,12 @@ create policy "categories_public_read" on categories for select using (status = 
 create policy "categories_admin_write" on categories for insert with check (is_admin());
 create policy "categories_admin_update" on categories for update using (is_admin()) with check (is_admin());
 create policy "categories_admin_delete" on categories for delete using (is_admin());
+
+-- brands: public can read active; admins full CRUD
+create policy "brands_public_read" on brands for select using (status = 'active' or is_admin());
+create policy "brands_admin_write" on brands for insert with check (is_admin());
+create policy "brands_admin_update" on brands for update using (is_admin()) with check (is_admin());
+create policy "brands_admin_delete" on brands for delete using (is_admin());
 
 -- products: public can read published; admins full CRUD
 create policy "products_public_read" on products for select using (status = 'published' or is_admin());
@@ -325,6 +351,17 @@ values (
   '{"enabled": true, "service_area": "Antar area Yogyakarta", "free_delivery_enabled": true, "free_delivery_minimum": 300000, "notes": "Gratis antar untuk pembelian di atas Rp300.000, area Kota Yogyakarta."}'::jsonb,
   '{"site_title": "BOXA.YK — Mainan pilihan dari Yogyakarta", "meta_description": "Toko mainan dan collectible kurasi dari Yogyakarta."}'::jsonb
 ) on conflict (id) do nothing;
+
+insert into brands (name, slug, status, sort_order) values
+  ('Blokees', 'blokees', 'active', 1),
+  ('Hot Toys', 'hot-toys', 'active', 2),
+  ('ZD Toy', 'zd-toy', 'active', 3),
+  ('Transformers', 'transformers', 'active', 4),
+  ('One Piece', 'one-piece', 'active', 5),
+  ('Gundam', 'gundam', 'active', 6)
+on conflict (slug) do nothing;
+-- Logos aren't set here — upload each one from /admin/brands after this
+-- runs (they need real files, not a placeholder URL).
 
 insert into categories (name, slug, description, status, sort_order) values
   ('Blokees', 'blokees', 'Building toys ala LEGO, seri lokal & impor.', 'active', 1),

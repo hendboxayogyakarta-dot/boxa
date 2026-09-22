@@ -35,6 +35,17 @@ export interface Product {
    * only has the one (online) price, and the product page shows the
    * existing single-price experience unchanged. */
   local_price: number | null;
+  /** Whether this product can actually be picked up / COD'd locally in
+   * Yogyakarta. Matters for affiliate/dropship listings (e.g. a Shopee
+   * affiliate link) that BOXA doesn't physically stock — even if
+   * local_price is set as a reference, turning this off hides the local
+   * pickup option and falls back to the plain online-only experience. */
+  offline_available: boolean;
+  /** Optional reusable brand/license logo (see Brand) — distinct from the
+   * free-text `brand` field above so existing products keep working
+   * unchanged; this is additive. */
+  brand_id: string | null;
+  brand_logo?: Brand;
   stock_quantity: number;
   stock_status: StockStatus;
   category_id: string;
@@ -89,6 +100,21 @@ export interface Banner {
   link_url: string | null;
   alt_text: string | null;
   enabled: boolean;
+  sort_order: number;
+}
+
+/**
+ * A reusable logo — either a toy manufacturer/brand (Blokees, Hot Toys,
+ * ZD Toy) or a character/franchise license (Transformers, One Piece,
+ * Gundam). Upload the logo once here, then attach it to as many products
+ * as needed from the product form — no re-uploading per product.
+ */
+export interface Brand {
+  id: string;
+  name: string;
+  slug: string;
+  logo_url: string | null;
+  status: "active" | "hidden";
   sort_order: number;
 }
 

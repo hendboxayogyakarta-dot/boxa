@@ -1,6 +1,7 @@
-import { getAllApprovedReviews, getBanners, getCategories, getProducts, getSiteSettings } from "@/lib/data";
+import { getAllApprovedReviews, getBanners, getBrands, getCategories, getProducts, getSiteSettings } from "@/lib/data";
 import { BannerCarousel } from "@/components/sections/banner-carousel";
 import { CategoryIconStrip } from "@/components/sections/category-icon-strip";
+import { BrandStrip } from "@/components/sections/brand-strip";
 import { UspStrip } from "@/components/sections/usp-strip";
 import { ProductRail } from "@/components/sections/product-rail";
 import { CategoryShowcase } from "@/components/sections/category-showcase";
@@ -14,10 +15,11 @@ import type { Product } from "@/lib/types";
 export const revalidate = 60;
 
 export default async function HomePage() {
-  const [settings, banners, categories, allProducts, featured, newArrivals, rareSecret, reviews] = await Promise.all([
+  const [settings, banners, categories, brands, allProducts, featured, newArrivals, rareSecret, reviews] = await Promise.all([
     getSiteSettings(),
     getBanners(),
     getCategories(),
+    getBrands(),
     getProducts(),
     getProducts({ featured: true }),
     getProducts({ isNew: true }),
@@ -38,6 +40,7 @@ export default async function HomePage() {
       <BannerCarousel banners={banners} settings={settings} />
       <UspStrip tagline={settings.tagline} />
       <CategoryIconStrip categories={categories} />
+      <BrandStrip brands={brands} />
 
       {sectionEnabled("featured") && (
         <ProductRail title="Pilihan BOXA" subtitle="Produk yang lagi kami rekomendasikan" products={featured} viewAllHref="/shop?featured=1" />

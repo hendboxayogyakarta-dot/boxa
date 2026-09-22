@@ -1,7 +1,7 @@
 import { saveProduct } from "@/lib/actions/products";
 import { ProductImagesField } from "@/components/admin/product-images-field";
 import { SubmitButton } from "@/components/admin/submit-button";
-import type { Category, Product } from "@/lib/types";
+import type { Brand, Category, Product } from "@/lib/types";
 
 function Field({ label, children, hint }: { label: string; children: React.ReactNode; hint?: string }) {
   return (
@@ -16,7 +16,15 @@ function Field({ label, children, hint }: { label: string; children: React.React
 const inputClass =
   "mt-1 w-full rounded-lg border border-line px-3 py-2 text-sm outline-none focus:border-maroon";
 
-export function ProductForm({ product, categories }: { product?: Product; categories: Category[] }) {
+export function ProductForm({
+  product,
+  categories,
+  brands,
+}: {
+  product?: Product;
+  categories: Category[];
+  brands: Brand[];
+}) {
   return (
     <form action={saveProduct} className="max-w-3xl space-y-8">
       {product && <input type="hidden" name="id" value={product.id} />}
@@ -41,11 +49,22 @@ export function ProductForm({ product, categories }: { product?: Product; catego
               ))}
             </select>
           </Field>
-          <Field label="Brand">
+          <Field label="Brand (teks bebas)">
             <input name="brand" defaultValue={product?.brand ?? ""} className={inputClass} />
           </Field>
           <Field label="Seri">
             <input name="series" defaultValue={product?.series ?? ""} className={inputClass} />
+          </Field>
+          <Field
+            label="Logo Brand / Lisensi (opsional)"
+            hint="Pilih supaya logonya muncul di produk. Belum ada pilihannya? Tambah dulu di menu Brand & Lisensi — upload sekali, pakai di produk manapun."
+          >
+            <select name="brand_id" defaultValue={product?.brand_id ?? ""} className={inputClass}>
+              <option value="">Tidak ada logo</option>
+              {brands.map((b) => (
+                <option key={b.id} value={b.id}>{b.name}</option>
+              ))}
+            </select>
           </Field>
         </div>
         <Field label="Deskripsi Singkat">
@@ -71,6 +90,21 @@ export function ProductForm({ product, categories }: { product?: Product; catego
           >
             <input type="number" name="local_price" min={0} defaultValue={product?.local_price ?? ""} className={inputClass} />
           </Field>
+        </div>
+        <label className="flex items-center gap-2 text-sm text-ink-soft">
+          <input
+            type="checkbox"
+            name="offline_available"
+            defaultChecked={product?.offline_available ?? true}
+            className="rounded border-line"
+          />
+          Tersedia untuk ambil offline / COD di Yogyakarta
+        </label>
+        <p className="text-xs text-muted">
+          Matikan untuk produk affiliate/dropship (misalnya link Shopee) yang BOXA tidak simpan
+          fisiknya — tombol &amp; harga lokal otomatis disembunyikan, tinggal harga online saja.
+        </p>
+        <div className="grid gap-4 sm:grid-cols-2">
           <Field label="Jumlah Stok">
             <input type="number" name="stock_quantity" min={0} defaultValue={product?.stock_quantity ?? 0} className={inputClass} />
           </Field>

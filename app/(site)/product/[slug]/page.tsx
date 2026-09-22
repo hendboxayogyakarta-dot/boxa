@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getApprovedReviews, getProductBySlug, getRelatedProducts } from "@/lib/data";
@@ -50,6 +51,11 @@ export default async function ProductPage({
   const avgRating =
     reviews.length > 0 ? reviews.reduce((s, r) => s + r.rating, 0) / reviews.length : null;
 
+  // Local pickup pricing only makes sense when there's a local price to
+  // show AND the product is actually available offline — an affiliate
+  // link with offline_available off falls back to the plain online CTA.
+  const showLocalPricing = product.local_price != null && product.offline_available;
+
   return (
     <div className="relative">
       <div aria-hidden className="site-glow pointer-events-none absolute inset-x-0 top-0 h-[500px] opacity-40" />
@@ -61,9 +67,16 @@ export default async function ProductPage({
 
           {/* Info */}
           <div>
-            <span className="text-xs font-semibold uppercase tracking-widest text-flame">
-              {product.category?.name ?? "BOXA Collectible"}
-            </span>
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-semibold uppercase tracking-widest text-flame">
+                {product.category?.name ?? "BOXA Collectible"}
+              </span>
+              {product.brand_logo?.logo_url && (
+                <span className="relative h-5 w-5 shrink-0 overflow-hidden rounded-full border border-line bg-white">
+                  <Image src={product.brand_logo.logo_url} alt={product.brand_logo.name} fill sizes="20px" className="object-contain" />
+                </span>
+              )}
+            </div>
             <h1 className="mt-2 font-display text-3xl font-extrabold uppercase leading-[1.02] tracking-tight text-ink sm:text-4xl">
               {product.name}
             </h1>
@@ -119,8 +132,10 @@ export default async function ProductPage({
 
             {/* Local pickup pricing replaces the plain CTA below when set —
                 see PriceComparison. Keeps the single-price experience
-                completely unchanged for every product that doesn't have one. */}
-            {product.local_price == null && (
+                completely unchanged for every product that doesn't have
+                one, and also when offline_available is off (affiliate /
+                dropship items BOXA doesn't physically stock). */}
+            {!showLocalPricing && (
               <div className="mt-7">
                 <OrderCta product={product} />
                 {product.delivery_available && (
@@ -133,7 +148,7 @@ export default async function ProductPage({
           </div>
         </div>
 
-        {product.local_price != null && (
+        {showLocalPricing && (
           <div className="mt-8">
             <PriceComparison product={product} />
           </div>

@@ -33,6 +33,11 @@ export function ProductCard({ product }: { product: Product }) {
         <div className="absolute left-2 top-2">
           <ProductBadges product={product} />
         </div>
+        {product.brand_logo?.logo_url && (
+          <span className="absolute right-2 top-2 flex h-7 w-7 items-center justify-center overflow-hidden rounded-full border border-line bg-white shadow-sm">
+            <Image src={product.brand_logo.logo_url} alt={product.brand_logo.name} fill sizes="28px" className="object-contain p-0.5" />
+          </span>
+        )}
         {hasLocalPrice && savings > 0 && (
           <div className="absolute bottom-2 right-2 flex items-center gap-1 rounded-full bg-flame px-2 py-1 text-[10px] font-bold text-cream shadow-sm">
             <Tag size={10} />

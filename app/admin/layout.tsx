@@ -9,6 +9,7 @@ import {
   Settings,
   Image as ImageIcon,
   GalleryHorizontal,
+  Award,
   LogOut,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
@@ -18,6 +19,7 @@ const NAV = [
   { label: "Ringkasan", href: "/admin", icon: LayoutDashboard },
   { label: "Produk", href: "/admin/products", icon: Package },
   { label: "Kategori", href: "/admin/categories", icon: Tags },
+  { label: "Brand & Lisensi", href: "/admin/brands", icon: Award },
   { label: "Banner", href: "/admin/banners", icon: GalleryHorizontal },
   { label: "Ulasan", href: "/admin/reviews", icon: Star },
   { label: "Media", href: "/admin/media", icon: ImageIcon },

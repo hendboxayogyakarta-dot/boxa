@@ -48,7 +48,12 @@ export function SiteThemeProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>
-      <div className={`site-root ${theme}`}>{children}</div>
+      {/* bg-cream/text-ink here (not just the `dark` class) is the fix —
+          without its own background, sections that don't set one of their
+          own were falling through to <body>, which always stays light
+          since it reads the un-scoped root token, not this wrapper's
+          dark-scoped override. */}
+      <div className={`site-root ${theme} min-h-screen bg-cream text-ink`}>{children}</div>
     </ThemeContext.Provider>
   );
 }
