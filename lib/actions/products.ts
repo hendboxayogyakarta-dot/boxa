@@ -31,9 +31,12 @@ export async function saveProduct(formData: FormData) {
   const { supabase } = await requireAdmin();
 
   const id = str(formData, "id");
-  const name = str(formData, "name");
-  if (!name) throw new Error("Nama produk wajib diisi.");
-  const slug = slugify(str(formData, "slug") ?? name);
+  const rawName = str(formData, "name");
+  const name = rawName ?? "Produk Tanpa Nama";
+  // Auto-generated names get a unique suffix so two blank-name drafts
+  // don't collide on the unique slug column.
+  const slugSource = str(formData, "slug") ?? (rawName ?? `${name}-${Date.now().toString(36)}`);
+  const slug = slugify(slugSource);
 
   const payload = {
     name,
@@ -43,6 +46,7 @@ export async function saveProduct(formData: FormData) {
     description: str(formData, "description") ?? "",
     price: num(formData, "price") ?? 0,
     compare_price: num(formData, "compare_price"),
+    local_price: num(formData, "local_price"),
     stock_quantity: num(formData, "stock_quantity") ?? 0,
     stock_status: str(formData, "stock_status") ?? "in_stock",
     category_id: str(formData, "category_id"),

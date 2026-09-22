@@ -58,6 +58,9 @@ create table products (
   description text,
   price numeric(12,2) not null check (price >= 0),
   compare_price numeric(12,2),
+  -- Optional cheaper price for local pickup in Yogyakarta ("Original Toys,
+  -- Local Prices" USP). Null = product only has the one price.
+  local_price numeric(12,2) check (local_price is null or local_price >= 0),
   stock_quantity int not null default 0,
   stock_status stock_status not null default 'in_stock',
   category_id uuid references categories(id) on delete set null,
@@ -315,13 +318,21 @@ create policy "analytics_admin_read" on analytics_events for select using (is_ad
 -- ---------------------------------------------------------------------
 insert into website_settings (id, brand_name, tagline, whatsapp_number, instagram_url, tiktok_url, shopee_url, address, hero, delivery, seo)
 values (
-  1, 'BOXA.YK', 'Mainan pilihan dari Yogyakarta',
+  1, 'BOXA.YK', 'Original Toys, Local Prices.',
   '6281234567890', 'https://instagram.com/boxa.yk', 'https://tiktok.com/@boxa.yk', 'https://shopee.co.id/boxayk',
   'Yogyakarta, Indonesia',
-  '{"enabled": true, "badge": "BOXA Featured", "title": "Temukan Mainan yang Layak Kamu Punya.", "subtitle": "Mainan pilihan, review jujur, dan informasi yang jelas dari BOXA.YK.", "cta_text": "Pesan Sekarang", "cta_href": "/shop", "secondary_cta_text": "Kenalan dengan BOXA", "secondary_cta_href": "/tentang", "featured_product_id": null}'::jsonb,
+  '{"enabled": true, "badge": "BOXA Featured", "title": "Original Toys, Local Prices.", "subtitle": "Mainan orisinal dengan harga lebih hemat kalau kamu ambil langsung di Yogyakarta.", "cta_text": "Pesan Sekarang", "cta_href": "/shop", "secondary_cta_text": "Kenalan dengan BOXA", "secondary_cta_href": "/tentang", "featured_product_id": null}'::jsonb,
   '{"enabled": true, "service_area": "Antar area Yogyakarta", "free_delivery_enabled": true, "free_delivery_minimum": 300000, "notes": "Gratis antar untuk pembelian di atas Rp300.000, area Kota Yogyakarta."}'::jsonb,
   '{"site_title": "BOXA.YK — Mainan pilihan dari Yogyakarta", "meta_description": "Toko mainan dan collectible kurasi dari Yogyakarta."}'::jsonb
 ) on conflict (id) do nothing;
+
+insert into categories (name, slug, description, status, sort_order) values
+  ('Blokees', 'blokees', 'Building toys ala LEGO, seri lokal & impor.', 'active', 1),
+  ('Licensed Toys', 'licensed-toys', 'Karakter resmi dari film, anime, dan game favorit.', 'active', 2),
+  ('Blind Box', 'blind-box', 'Seri kejutan, cocok buat koleksi.', 'active', 3),
+  ('Collectibles', 'collectibles', 'Figure dan koleksi edisi terbatas.', 'active', 4),
+  ('Double Collection', 'double-collection', 'Barang preloved, dicek kondisinya sama BOXA.', 'active', 5)
+on conflict (slug) do nothing;
 
 insert into homepage_sections (key, title, subtitle, enabled, sort_order) values
   ('featured', 'Pilihan BOXA', 'Produk yang lagi kami rekomendasikan', true, 1),

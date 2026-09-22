@@ -5,9 +5,14 @@ import { getApprovedReviews, getProductBySlug, getRelatedProducts } from "@/lib/
 import { formatIDR, conditionLabel, stockLabel } from "@/lib/utils";
 import { ProductBadges } from "@/components/badges";
 import { OrderCta } from "@/components/order-cta";
+import { PriceComparison } from "@/components/price-comparison";
 import { RatingStars } from "@/components/rating-stars";
 import { ProductCard } from "@/components/product-card";
 import { CheckCircle2, MapPin, ShieldCheck, XCircle } from "lucide-react";
+
+// Cache each product page for 60s instead of querying Supabase on every
+// single visit — product info doesn't change second-to-second.
+export const revalidate = 60;
 
 export async function generateMetadata({
   params,
@@ -126,16 +131,27 @@ export default async function ProductPage({
               )}
             </dl>
 
-            <div className="mt-7">
-              <OrderCta product={product} />
-              {product.delivery_available && (
-                <p className="mt-2.5 text-center text-xs text-muted sm:text-left">
-                  {product.instant_delivery_available ? "Pengiriman instan tersedia · " : ""}Antar area Yogyakarta
-                </p>
-              )}
-            </div>
+            {/* Local pickup pricing replaces the plain CTA below when set —
+                see PriceComparison. Keeps the single-price experience
+                completely unchanged for every product that doesn't have one. */}
+            {product.local_price == null && (
+              <div className="mt-7">
+                <OrderCta product={product} />
+                {product.delivery_available && (
+                  <p className="mt-2.5 text-center text-xs text-muted sm:text-left">
+                    {product.instant_delivery_available ? "Pengiriman instan tersedia · " : ""}Antar area Yogyakarta
+                  </p>
+                )}
+              </div>
+            )}
           </div>
         </div>
+
+        {product.local_price != null && (
+          <div className="mt-8">
+            <PriceComparison product={product} />
+          </div>
+        )}
 
         {/* Editorial details */}
         <div className="mt-16 grid gap-10 border-t border-line pt-10 lg:grid-cols-[1fr_320px]">

@@ -17,7 +17,7 @@ export const mockProducts: Product[] = [
     id: "p1", name: "Blokees Fantasy Castle 1580pcs", slug: "blokees-fantasy-castle-1580pcs", sku: "BLK-CST-01",
     short_description: "Set kastil fantasi, 1580 keping, minifigure 6 karakter.",
     description: "Set building block bertema kastil fantasi dengan 1580 keping dan 6 minifigure. Cocok buat koleksi maupun dipajang setelah dirakit.\n\nSemua part original, box masih segel dari distributor resmi.",
-    price: 425000, compare_price: 499000, stock_quantity: 6, stock_status: "in_stock",
+    price: 425000, compare_price: 499000, local_price: 380000, stock_quantity: 6, stock_status: "in_stock",
     category_id: "c1", brand: "Blokees", series: "Fantasy Series", condition: "new_sealed", sealed_or_built: "sealed",
     rarity: "common", is_featured: true, is_new: true, is_rare: false, is_secret: false, is_boxa_approved: true, boxa_score: 8.6,
     location: "Yogyakarta", delivery_available: true, instant_delivery_available: true,
@@ -43,14 +43,14 @@ export const mockProducts: Product[] = [
     pros: ["Gampang dirakit", "Harga ramah untuk pemula"],
     cons: ["Detail lebih simpel dibanding Master Grade"],
     what_is_included: ["Runner model kit", "Stiker", "Instruksi"], what_is_not_included: ["Cat", "Nozzle tambahan"],
-    sold_count: 61, view_count: 890, status: "published", images: [img("i2", "boxa-gundam-1")],
+    sold_count: 61, view_count: 890, local_price: null, status: "published", images: [img("i2", "boxa-gundam-1")],
     created_at: "2026-07-15", updated_at: "2026-08-20",
   },
   {
     id: "p3", name: "Pop Mart Crybaby Blind Box", slug: "pop-mart-crybaby-blind-box", sku: "BB-POP-03",
     short_description: "Blind box seri Crybaby, 1 box random figure.",
     description: "Satu box berisi satu figure random dari seri Crybaby. Ada kemungkinan dapat secret edition.",
-    price: 149000, compare_price: null, stock_quantity: 20, stock_status: "in_stock",
+    price: 149000, compare_price: null, local_price: 129000, stock_quantity: 20, stock_status: "in_stock",
     category_id: "c3", brand: "Pop Mart", series: "Crybaby", condition: "new_sealed", sealed_or_built: "sealed",
     rarity: "secret", is_featured: true, is_new: true, is_rare: true, is_secret: true, is_boxa_approved: true, boxa_score: 7.8,
     location: "Yogyakarta", delivery_available: true, instant_delivery_available: false,
@@ -74,7 +74,7 @@ export const mockProducts: Product[] = [
     pros: ["Sendi masih kencang", "Warna orisinil, tidak pudar", "Lengkap dengan aksesoris"],
     cons: ["Box ada lecet minor di sudut", "Stok cuma 1, tidak restock"],
     what_is_included: ["Figure Optimus Prime", "Aksesoris senjata", "Box original"], what_is_not_included: ["Stand display"],
-    sold_count: 8, view_count: 260, status: "published", images: [img("i4", "boxa-optimus-1")],
+    sold_count: 8, view_count: 260, local_price: null, status: "published", images: [img("i4", "boxa-optimus-1")],
     created_at: "2026-05-20", updated_at: "2026-09-05",
   },
   {
@@ -88,7 +88,7 @@ export const mockProducts: Product[] = [
     cta_type: "WHATSAPP", shopee_url: null, whatsapp_url: "https://wa.me/6281234567890", external_order_url: null,
     warranty_type: null, warranty_description: null, pros: [], cons: [],
     what_is_included: ["240 keping building block"], what_is_not_included: [],
-    sold_count: 45, view_count: 300, status: "published", images: [img("i5", "boxa-racer-1")],
+    sold_count: 45, view_count: 300, local_price: null, status: "published", images: [img("i5", "boxa-racer-1")],
     created_at: "2026-04-11", updated_at: "2026-08-01",
   },
   {
@@ -104,7 +104,7 @@ export const mockProducts: Product[] = [
     pros: ["Detail cat rapi", "Ada hologram resmi", "Box collector edition"],
     cons: ["Harga lebih tinggi dari figure reguler"],
     what_is_included: ["Figure", "Base display", "Sertifikat keaslian"], what_is_not_included: [],
-    sold_count: 19, view_count: 740, status: "published", images: [img("i6", "boxa-luffy-1")],
+    sold_count: 19, view_count: 740, local_price: null, status: "published", images: [img("i6", "boxa-luffy-1")],
     created_at: "2026-08-25", updated_at: "2026-09-15",
   },
 ];
@@ -123,7 +123,7 @@ export const mockReviews: Review[] = [
 
 export const mockSettings: SiteSettings = {
   brand_name: "BOXA.YK",
-  tagline: "Mainan pilihan dari Yogyakarta",
+  tagline: "Original Toys, Local Prices.",
   logo_url: null,
   favicon_url: null,
   primary_color: "#591C1F",
@@ -137,8 +137,8 @@ export const mockSettings: SiteSettings = {
   hero: {
     enabled: true,
     badge: "BOXA Featured",
-    title: "Temukan Mainan yang Layak Kamu Punya.",
-    subtitle: "Mainan pilihan, review jujur, dan informasi yang jelas dari BOXA.YK.",
+    title: "Original Toys, Local Prices.",
+    subtitle: "Mainan orisinal dengan harga lebih hemat kalau kamu ambil langsung di Yogyakarta.",
     image_url: null,
     cta_text: "Pesan Sekarang",
     cta_href: "/shop",

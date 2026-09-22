@@ -30,6 +30,11 @@ export interface Product {
   description: string; // rich text (markdown-ish)
   price: number;
   compare_price: number | null;
+  /** Optional cheaper price for local pickup in Yogyakarta — BOXA's
+   * "Original Toys, Local Prices" USP. Null/undefined means this product
+   * only has the one (online) price, and the product page shows the
+   * existing single-price experience unchanged. */
+  local_price: number | null;
   stock_quantity: number;
   stock_status: StockStatus;
   category_id: string;

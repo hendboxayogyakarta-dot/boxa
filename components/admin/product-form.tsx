@@ -65,6 +65,12 @@ export function ProductForm({ product, categories }: { product?: Product; catego
           <Field label="Harga Coret (opsional)">
             <input type="number" name="compare_price" min={0} defaultValue={product?.compare_price ?? ""} className={inputClass} />
           </Field>
+          <Field
+            label="Harga Lokal — Yogyakarta (opsional)"
+            hint="Isi kalau produk ini punya harga lebih hemat untuk ambil langsung di Yogyakarta. Kosongkan kalau cuma satu harga (online)."
+          >
+            <input type="number" name="local_price" min={0} defaultValue={product?.local_price ?? ""} className={inputClass} />
+          </Field>
           <Field label="Jumlah Stok">
             <input type="number" name="stock_quantity" min={0} defaultValue={product?.stock_quantity ?? 0} className={inputClass} />
           </Field>

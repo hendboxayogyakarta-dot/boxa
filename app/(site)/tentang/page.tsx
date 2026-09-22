@@ -7,6 +7,9 @@ export default function AboutPage() {
       <h1 className="mt-2 font-display text-3xl font-extrabold text-ink sm:text-4xl">
         Nggak semua yang kamu mau, harus kamu punya.
       </h1>
+      <p className="mt-3 font-display text-lg font-bold text-maroon">
+        Original Toys, Local Prices.
+      </p>
       <p className="mt-5 text-base leading-relaxed text-ink-soft">
         BOXA.YK bukan sekadar toko mainan online. Kami memilih produk, mengecek kondisinya,
         dan menyampaikan informasinya apa adanya — termasuk kalau ada kekurangannya. Prinsip
