@@ -1,4 +1,5 @@
 import { saveCategory } from "@/lib/actions/categories";
+import { ImageUploadField } from "@/components/admin/image-upload-field";
 import type { Category } from "@/lib/types";
 
 const inputClass =
@@ -24,10 +25,12 @@ export function CategoryForm({ category }: { category?: Category }) {
         <textarea name="description" defaultValue={category?.description ?? ""} rows={3} className={inputClass} />
       </label>
 
-      <label className="block">
-        <span className="text-sm font-medium text-ink">URL Gambar</span>
-        <input name="image_url" defaultValue={category?.image_url ?? ""} className={inputClass} />
-      </label>
+      <div>
+        <span className="text-sm font-medium text-ink">Gambar Kategori</span>
+        <div className="mt-1">
+          <ImageUploadField name="image_url" bucket="media-library" initialUrl={category?.image_url} aspect="aspect-video" />
+        </div>
+      </div>
 
       <div className="grid grid-cols-2 gap-4">
         <label className="block">
