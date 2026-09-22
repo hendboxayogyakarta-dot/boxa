@@ -6,9 +6,10 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    // Run on every route except static assets, so the Supabase session
-    // cookie stays fresh everywhere, and specifically gate /admin/*.
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|webp)$).*)",
-  ],
+  // Only /admin needs the auth check — this was previously matching every
+  // route (including the public homepage, shop, and product pages), which
+  // meant an extra Supabase Auth round-trip on every single public page
+  // load. Scoping it to /admin/* removes that cost for every visitor who
+  // isn't in the dashboard.
+  matcher: ["/admin/:path*"],
 };

@@ -28,8 +28,8 @@
   --color-ink-soft: var(--color-ink-soft);
   --color-muted: var(--color-muted);
   --color-line: var(--color-line);
-  --font-display: "Baloo 2", ui-rounded, system-ui, sans-serif;
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-baloo), ui-rounded, system-ui, sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }
 
 body {
