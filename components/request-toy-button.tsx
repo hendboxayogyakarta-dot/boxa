@@ -1,4 +1,5 @@
 import { MessageCircle } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 /**
  * Not every toy someone wants is in the catalog yet. This opens WhatsApp
@@ -13,7 +14,10 @@ export function RequestToyButton({ whatsappNumber, className = "" }: { whatsappN
       href={`https://wa.me/${whatsappNumber}?text=${message}`}
       target="_blank"
       rel="noreferrer"
-      className={`inline-flex items-center gap-2 rounded-full border border-maroon px-4 py-2 text-sm font-semibold text-maroon transition-colors hover:bg-maroon hover:text-cream ${className}`}
+      className={cn(
+        "inline-flex items-center gap-2 rounded-full border border-maroon px-4 py-2 text-sm font-semibold text-maroon transition-colors hover:bg-maroon hover:text-cream",
+        className
+      )}
     >
       <MessageCircle size={15} />
       Request Mainan
