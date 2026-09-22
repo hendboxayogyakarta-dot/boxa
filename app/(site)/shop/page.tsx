@@ -41,23 +41,23 @@ export default async function ShopPage({
   }
 
   return (
-    <div className="mx-auto max-w-[1400px] px-5 py-10 sm:px-8">
-      <h1 className="font-display text-3xl font-bold text-site-text">Semua Produk</h1>
-      <p className="mt-1 text-sm text-site-text-muted">
+    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
+      <h1 className="font-display text-3xl font-bold text-ink">Semua Produk</h1>
+      <p className="mt-1 text-sm text-muted">
         {q ? `Hasil pencarian untuk "${q}"` : "Mainan dan collectible pilihan BOXA.YK"}
       </p>
 
       <div className="mt-6 grid gap-8 md:grid-cols-[220px_1fr]">
         <aside className="space-y-6">
           <div>
-            <h2 className="mb-2 text-sm font-semibold text-site-text">Kategori</h2>
+            <h2 className="mb-2 text-sm font-semibold text-ink">Kategori</h2>
             <ul className="space-y-1">
               <li>
                 <Link
                   href={hrefFor({ category: undefined })}
                   className={cn(
                     "block rounded-lg px-2 py-1.5 text-sm",
-                    !category ? "bg-flame text-site-bg" : "text-site-text-muted hover:bg-site-surface"
+                    !category ? "bg-maroon text-cream" : "text-ink-soft hover:bg-cream-warm"
                   )}
                 >
                   Semua
@@ -69,7 +69,7 @@ export default async function ShopPage({
                     href={hrefFor({ category: c.slug })}
                     className={cn(
                       "block rounded-lg px-2 py-1.5 text-sm",
-                      category === c.slug ? "bg-flame text-site-bg" : "text-site-text-muted hover:bg-site-surface"
+                      category === c.slug ? "bg-maroon text-cream" : "text-ink-soft hover:bg-cream-warm"
                     )}
                   >
                     {c.name}
@@ -80,15 +80,15 @@ export default async function ShopPage({
           </div>
 
           <div>
-            <h2 className="mb-2 text-sm font-semibold text-site-text">Cepat</h2>
+            <h2 className="mb-2 text-sm font-semibold text-ink">Cepat</h2>
             <div className="flex flex-wrap gap-2 md:flex-col">
-              <Link href="/shop?rare=1" className="rounded-full border border-site-border px-3 py-1 text-xs font-medium text-site-text-muted hover:border-flame">
+              <Link href="/shop?rare=1" className="rounded-full border border-line px-3 py-1 text-xs font-medium text-ink-soft hover:border-maroon">
                 Rare / Secret
               </Link>
-              <Link href="/shop?new=1" className="rounded-full border border-site-border px-3 py-1 text-xs font-medium text-site-text-muted hover:border-flame">
+              <Link href="/shop?new=1" className="rounded-full border border-line px-3 py-1 text-xs font-medium text-ink-soft hover:border-maroon">
                 Baru Datang
               </Link>
-              <Link href="/shop?featured=1" className="rounded-full border border-site-border px-3 py-1 text-xs font-medium text-site-text-muted hover:border-flame">
+              <Link href="/shop?featured=1" className="rounded-full border border-line px-3 py-1 text-xs font-medium text-ink-soft hover:border-maroon">
                 Pilihan BOXA
               </Link>
             </div>
@@ -97,7 +97,7 @@ export default async function ShopPage({
 
         <div>
           <div className="mb-4 flex items-center justify-between">
-            <span className="text-sm text-site-text-muted">{products.length} produk</span>
+            <span className="text-sm text-muted">{products.length} produk</span>
             <div className="flex gap-2">
               {SORTS.map((s) => (
                 <Link
@@ -106,8 +106,8 @@ export default async function ShopPage({
                   className={cn(
                     "hidden rounded-full border px-3 py-1.5 text-xs font-medium sm:inline-block",
                     sort === s.value
-                      ? "border-flame bg-flame text-site-bg"
-                      : "border-site-border text-site-text-muted hover:border-flame"
+                      ? "border-maroon bg-maroon text-cream"
+                      : "border-line text-ink-soft hover:border-maroon"
                   )}
                 >
                   {s.label}
@@ -117,9 +117,9 @@ export default async function ShopPage({
           </div>
 
           {products.length === 0 ? (
-            <div className="rounded-2xl border border-dashed border-site-border bg-site-surface py-16 text-center">
-              <p className="font-display text-lg font-semibold text-site-text">Belum ada produk di sini</p>
-              <p className="mt-1 text-sm text-site-text-muted">Coba kategori lain atau kata kunci berbeda.</p>
+            <div className="rounded-2xl border border-dashed border-line bg-white py-16 text-center">
+              <p className="font-display text-lg font-semibold text-ink">Belum ada produk di sini</p>
+              <p className="mt-1 text-sm text-muted">Coba kategori lain atau kata kunci berbeda.</p>
             </div>
           ) : (
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">

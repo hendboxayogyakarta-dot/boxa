@@ -20,7 +20,7 @@ Auth + Storage), deployed to Vercel.
   uncommenting query code like the previous revision required.
 
 **Visual redesign (this revision):** the customer-facing site moved from a
-light marketplace look to a dark, cinematic, editorial one. Nothing in the
+light marketplace look to a dark, cinematic look — reverted back to the original light, warm marketplace look per feedback, now with the interactive product-switching hero and asymmetric category layout carried over as the "more modern" upgrade. Nothing in the
 backend, admin dashboard, database schema, or CTA/CMS data model changed —
 this was scoped as a visual/UX pass only, per your brief.
 

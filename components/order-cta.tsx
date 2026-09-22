@@ -32,7 +32,7 @@ export function OrderCta({ product }: { product: Product }) {
     return (
       <button
         disabled
-        className="flex w-full cursor-not-allowed items-center justify-center gap-2 rounded-full bg-site-surface px-6 py-3.5 text-sm font-bold uppercase tracking-wide text-site-text-faint"
+        className="flex w-full cursor-not-allowed items-center justify-center gap-2 rounded-full bg-ink/15 px-6 py-3.5 text-sm font-semibold text-ink/50"
       >
         Stok Habis
       </button>
@@ -46,7 +46,7 @@ export function OrderCta({ product }: { product: Product }) {
         target="_blank"
         rel="noreferrer"
         onClick={handleClick}
-        className="flex flex-1 items-center justify-center gap-2 rounded-full bg-flame px-6 py-3.5 text-sm font-bold uppercase tracking-wide text-site-bg shadow-[0_0_24px_-6px_theme(colors.flame)] transition-transform hover:scale-[1.02]"
+        className="flex flex-1 items-center justify-center gap-2 rounded-full bg-maroon px-6 py-3.5 text-sm font-semibold text-cream transition-colors hover:bg-maroon-deep"
       >
         {icon}
         {label}
@@ -57,7 +57,7 @@ export function OrderCta({ product }: { product: Product }) {
           target="_blank"
           rel="noreferrer"
           onClick={handleClick}
-          className="flex items-center justify-center gap-2 rounded-full border border-site-border-strong px-5 py-3.5 text-sm font-semibold text-site-text transition-colors hover:border-flame hover:text-flame"
+          className="flex items-center justify-center gap-2 rounded-full border border-line px-5 py-3.5 text-sm font-semibold text-ink-soft transition-colors hover:border-maroon hover:text-maroon"
         >
           <MessageCircle size={16} />
           Tanya via WhatsApp

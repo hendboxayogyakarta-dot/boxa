@@ -30,17 +30,6 @@
   --color-line: var(--color-line);
   --font-display: "Baloo 2", ui-rounded, system-ui, sans-serif;
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-
-  /* Dark "cinematic" theme utilities (bg-site-*, text-site-*, border-site-*)
-     — only meaningful inside .boxa-site, see below. */
-  --color-site-bg: var(--site-bg);
-  --color-site-bg-raised: var(--site-bg-raised);
-  --color-site-surface: var(--site-surface);
-  --color-site-border: var(--site-border);
-  --color-site-border-strong: var(--site-border-strong);
-  --color-site-text: var(--site-text);
-  --color-site-text-muted: var(--site-text-muted);
-  --color-site-text-faint: var(--site-text-faint);
 }
 
 body {
@@ -55,6 +44,7 @@ body {
   }
   .hover-lift:hover {
     transform: translateY(-3px);
+    box-shadow: 0 12px 24px -12px rgba(36, 22, 18, 0.18);
   }
 }
 
@@ -71,40 +61,12 @@ body {
   scrollbar-color: var(--color-maroon) var(--color-cream-warm);
 }
 
-/* -------------------------------------------------------------------
- * Customer-facing "cinematic" dark theme, scoped to .boxa-site so the
- * /admin dashboard keeps its existing light theme untouched. Applied
- * once on the wrapper in app/(site)/layout.tsx.
- * ------------------------------------------------------------------- */
-.boxa-site {
-  --site-bg: #150B0C;
-  --site-bg-raised: #1E1112;
-  --site-surface: #241416;
-  --site-border: rgba(245, 239, 230, 0.1);
-  --site-border-strong: rgba(245, 239, 230, 0.18);
-  --site-text: #F5EFE6;
-  --site-text-muted: #B3A199;
-  --site-text-faint: #8A776E;
-
-  background: var(--site-bg);
-  color: var(--site-text);
-  font-family: var(--font-sans);
-  min-height: 100vh;
-}
-
-.boxa-site ::selection {
-  background: var(--color-flame);
-  color: var(--site-bg);
-}
-
-.boxa-site * {
-  scrollbar-color: var(--color-flame) var(--site-bg-raised);
-}
-
+/* Soft radial glow used behind the hero / editorial sections for a bit
+   of depth without going full dark-cinematic. */
 .site-glow {
   background: radial-gradient(
-    60% 60% at 70% 30%,
-    color-mix(in srgb, var(--color-flame) 22%, transparent),
+    55% 55% at 75% 25%,
+    color-mix(in srgb, var(--color-flame) 16%, transparent),
     transparent 70%
   );
 }
