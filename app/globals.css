@@ -1,0 +1,61 @@
+@import "tailwindcss";
+
+:root {
+  --color-maroon: #591C1F;
+  --color-maroon-deep: #3E1114;
+  --color-flame: #E4590C;
+  --color-flame-light: #F3803B;
+  --color-ember: #F5A924;
+  --color-coral: #E8654F;
+  --color-cream: #FBF5EC;
+  --color-cream-warm: #F4ECDE;
+  --color-ink: #241612;
+  --color-ink-soft: #4A3830;
+  --color-muted: #8C7A70;
+  --color-line: #E7DDCE;
+}
+
+@theme inline {
+  --color-maroon: var(--color-maroon);
+  --color-maroon-deep: var(--color-maroon-deep);
+  --color-flame: var(--color-flame);
+  --color-flame-light: var(--color-flame-light);
+  --color-ember: var(--color-ember);
+  --color-coral: var(--color-coral);
+  --color-cream: var(--color-cream);
+  --color-cream-warm: var(--color-cream-warm);
+  --color-ink: var(--color-ink);
+  --color-ink-soft: var(--color-ink-soft);
+  --color-muted: var(--color-muted);
+  --color-line: var(--color-line);
+  --font-display: "Baloo 2", ui-rounded, system-ui, sans-serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+body {
+  background: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hover-lift {
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .hover-lift:hover {
+    transform: translateY(-3px);
+  }
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+::selection {
+  background: var(--color-flame);
+  color: var(--color-cream);
+}
+
+* {
+  scrollbar-color: var(--color-maroon) var(--color-cream-warm);
+}
