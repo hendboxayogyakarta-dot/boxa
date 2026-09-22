@@ -1,4 +1,4 @@
-import type { Category, Product, Review, SiteSettings } from "./types";
+import type { Banner, Category, Product, Review, SiteSettings } from "./types";
 
 export const mockCategories: Category[] = [
   { id: "c1", name: "Blokees", slug: "blokees", description: "Building toys ala LEGO, seri lokal & impor.", image_url: null, icon: "Blocks", status: "active", sort_order: 1 },
@@ -107,6 +107,12 @@ export const mockProducts: Product[] = [
     sold_count: 19, view_count: 740, status: "published", images: [img("i6", "boxa-luffy-1")],
     created_at: "2026-08-25", updated_at: "2026-09-15",
   },
+];
+
+export const mockBanners: Banner[] = [
+  { id: "b1", image_url: "https://picsum.photos/seed/boxa-banner-1/1600/500", link_url: "/shop?featured=1", alt_text: "Pilihan BOXA", enabled: true, sort_order: 1 },
+  { id: "b2", image_url: "https://picsum.photos/seed/boxa-banner-2/1600/500", link_url: "/shop?rare=1", alt_text: "Rare & Secret Finds", enabled: true, sort_order: 2 },
+  { id: "b3", image_url: "https://picsum.photos/seed/boxa-banner-3/1600/500", link_url: "/shop?new=1", alt_text: "Baru Datang", enabled: true, sort_order: 3 },
 ];
 
 export const mockReviews: Review[] = [

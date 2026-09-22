@@ -78,6 +78,15 @@ export interface Review {
   created_at: string;
 }
 
+export interface Banner {
+  id: string;
+  image_url: string;
+  link_url: string | null;
+  alt_text: string | null;
+  enabled: boolean;
+  sort_order: number;
+}
+
 export interface HeroSettings {
   enabled: boolean;
   badge: string;

@@ -1,4 +1,5 @@
 import { saveProduct } from "@/lib/actions/products";
+import { ProductImagesField } from "@/components/admin/product-images-field";
 import type { Category, Product } from "@/lib/types";
 
 function Field({ label, children, hint }: { label: string; children: React.ReactNode; hint?: string }) {
@@ -125,16 +126,9 @@ export function ProductForm({ product, categories }: { product?: Product; catego
       </section>
 
       <section className="space-y-4 rounded-2xl border border-line bg-white p-5">
-        <h2 className="font-display text-base font-bold text-ink">Gambar</h2>
-        <Field label="URL Gambar" hint="Satu URL per baris. Gambar pertama jadi gambar utama. Unggah lewat Media Library dulu untuk dapat URL-nya.">
-          <textarea
-            name="images"
-            rows={4}
-            defaultValue={product?.images.map((i) => i.url).join("\n")}
-            className={inputClass}
-            placeholder="https://..."
-          />
-        </Field>
+        <h2 className="font-display text-base font-bold text-ink">Foto Produk</h2>
+        <p className="text-xs text-muted">Bisa unggah beberapa foto sekaligus. Foto pertama otomatis jadi foto utama — geser urutannya kalau perlu.</p>
+        <ProductImagesField initialUrls={product?.images.map((i) => i.url) ?? []} />
       </section>
 
       <section className="space-y-4 rounded-2xl border border-line bg-white p-5">

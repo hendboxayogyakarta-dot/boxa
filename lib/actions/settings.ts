@@ -15,6 +15,12 @@ function bool(formData: FormData, key: string): boolean {
 export async function updateSettings(formData: FormData) {
   const { supabase } = await requireAdmin();
 
+  // Merge into the existing hero JSON rather than overwrite it — the CMS
+  // form only edits title/subtitle now (the banner carousel replaced the
+  // rest), so badge/CTA fields from earlier setup are preserved as-is.
+  const { data: existing } = await supabase.from("website_settings").select("hero").eq("id", 1).single();
+  const currentHero = existing?.hero ?? {};
+
   const payload = {
     brand_name: str(formData, "brand_name") || "BOXA.YK",
     tagline: str(formData, "tagline"),
@@ -27,16 +33,9 @@ export async function updateSettings(formData: FormData) {
     secondary_color: str(formData, "secondary_color") || "#E4590C",
     accent_color: str(formData, "accent_color") || "#F5A924",
     hero: {
-      enabled: bool(formData, "hero_enabled"),
-      badge: str(formData, "hero_badge"),
+      ...currentHero,
       title: str(formData, "hero_title"),
       subtitle: str(formData, "hero_subtitle"),
-      cta_text: str(formData, "hero_cta_text"),
-      cta_href: str(formData, "hero_cta_href") || "/shop",
-      secondary_cta_text: str(formData, "hero_secondary_cta_text") || null,
-      secondary_cta_href: str(formData, "hero_secondary_cta_href") || null,
-      image_url: null,
-      featured_product_id: null,
     },
     delivery: {
       enabled: bool(formData, "delivery_enabled"),
@@ -55,6 +54,18 @@ export async function updateSettings(formData: FormData) {
   const { error } = await supabase.from("website_settings").update(payload).eq("id", 1);
   if (error) throw new Error(error.message);
 
+  revalidatePath("/", "layout");
+}
+
+/**
+ * Called directly from a client component (not bound to a <form> action),
+ * so it takes a plain argument rather than FormData — used right after a
+ * logo file finishes uploading to Storage.
+ */
+export async function updateLogoUrl(url: string) {
+  const { supabase } = await requireAdmin();
+  const { error } = await supabase.from("website_settings").update({ logo_url: url }).eq("id", 1);
+  if (error) throw new Error(error.message);
   revalidatePath("/", "layout");
 }
 

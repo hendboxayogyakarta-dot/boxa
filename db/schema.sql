@@ -163,6 +163,20 @@ create table homepage_sections (
 );
 
 -- ---------------------------------------------------------------------
+-- BANNERS  (homepage sliding banner carousel, Shopee-style)
+-- ---------------------------------------------------------------------
+create table banners (
+  id uuid primary key default gen_random_uuid(),
+  image_url text not null,
+  link_url text,
+  alt_text text,
+  enabled boolean not null default true,
+  sort_order int not null default 0,
+  created_at timestamptz not null default now()
+);
+create index idx_banners_enabled on banners(enabled);
+
+-- ---------------------------------------------------------------------
 -- NAVIGATION ITEMS
 -- ---------------------------------------------------------------------
 create table navigation_items (
@@ -237,6 +251,7 @@ alter table reviews enable row level security;
 alter table website_settings enable row level security;
 alter table homepage_sections enable row level security;
 alter table navigation_items enable row level security;
+alter table banners enable row level security;
 alter table media enable row level security;
 alter table analytics_events enable row level security;
 
@@ -279,6 +294,12 @@ create policy "sections_admin_write" on homepage_sections for all using (is_admi
 
 create policy "nav_public_read" on navigation_items for select using (true);
 create policy "nav_admin_write" on navigation_items for all using (is_admin()) with check (is_admin());
+
+-- banners: public can read enabled ones; admins full CRUD
+create policy "banners_public_read" on banners for select using (enabled = true or is_admin());
+create policy "banners_admin_write" on banners for insert with check (is_admin());
+create policy "banners_admin_update" on banners for update using (is_admin()) with check (is_admin());
+create policy "banners_admin_delete" on banners for delete using (is_admin());
 
 -- media: admin-only (internal library, not public-facing)
 create policy "media_admin_all" on media for all using (is_admin()) with check (is_admin());

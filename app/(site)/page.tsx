@@ -1,5 +1,6 @@
-import { getAllApprovedReviews, getCategories, getProducts, getSiteSettings } from "@/lib/data";
-import { HeroShowcase } from "@/components/sections/hero-showcase";
+import { getAllApprovedReviews, getBanners, getCategories, getProducts, getSiteSettings } from "@/lib/data";
+import { BannerCarousel } from "@/components/sections/banner-carousel";
+import { CategoryIconStrip } from "@/components/sections/category-icon-strip";
 import { ProductRail } from "@/components/sections/product-rail";
 import { CategoryShowcase } from "@/components/sections/category-showcase";
 import { CurationSection } from "@/components/sections/curation-section";
@@ -7,8 +8,9 @@ import { ReviewsSection, DeliveryBanner } from "@/components/sections/misc-secti
 import type { Product } from "@/lib/types";
 
 export default async function HomePage() {
-  const [settings, categories, allProducts, featured, newArrivals, rareSecret, reviews] = await Promise.all([
+  const [settings, banners, categories, allProducts, featured, newArrivals, rareSecret, reviews] = await Promise.all([
     getSiteSettings(),
+    getBanners(),
     getCategories(),
     getProducts(),
     getProducts({ featured: true }),
@@ -27,7 +29,8 @@ export default async function HomePage() {
 
   return (
     <>
-      <HeroShowcase hero={settings.hero} products={featured.length > 0 ? featured : allProducts} />
+      <BannerCarousel banners={banners} settings={settings} />
+      <CategoryIconStrip categories={categories} />
 
       {sectionEnabled("featured") && (
         <ProductRail title="Pilihan BOXA" subtitle="Produk yang lagi kami rekomendasikan" products={featured} viewAllHref="/shop?featured=1" />

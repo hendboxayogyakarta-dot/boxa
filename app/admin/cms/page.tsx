@@ -1,5 +1,8 @@
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import { getSiteSettings } from "@/lib/data";
 import { updateSettings, toggleSection } from "@/lib/actions/settings";
+import { LogoUploader } from "@/components/admin/logo-uploader";
 
 const inputClass =
   "mt-1 w-full rounded-lg border border-line px-3 py-2 text-sm outline-none focus:border-maroon";
@@ -28,6 +31,12 @@ export default async function AdminCmsPage() {
       <form action={updateSettings} className="mt-6 max-w-2xl space-y-8">
         <section className="space-y-4 rounded-2xl border border-line bg-white p-5">
           <h2 className="font-display text-base font-bold text-ink">Branding</h2>
+          <div>
+            <span className="text-sm font-medium text-ink">Logo</span>
+            <div className="mt-1">
+              <LogoUploader currentUrl={settings.logo_url} />
+            </div>
+          </div>
           <div className="grid gap-4 sm:grid-cols-2">
             <Field label="Nama Brand">
               <input name="brand_name" defaultValue={settings.brand_name} className={inputClass} />
@@ -48,40 +57,29 @@ export default async function AdminCmsPage() {
         </section>
 
         <section className="space-y-4 rounded-2xl border border-line bg-white p-5">
-          <h2 className="font-display text-base font-bold text-ink">Hero Homepage</h2>
-          <label className="flex items-center gap-2 text-sm text-ink-soft">
-            <input type="checkbox" name="hero_enabled" defaultChecked={settings.hero.enabled} className="rounded border-line" />
-            Tampilkan hero
-          </label>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <Field label="Badge">
-              <input name="hero_badge" defaultValue={settings.hero.badge} className={inputClass} />
-            </Field>
-            <Field label="Judul">
-              <input name="hero_title" defaultValue={settings.hero.title} className={inputClass} />
-            </Field>
+          <div className="flex items-center justify-between">
+            <h2 className="font-display text-base font-bold text-ink">Banner Homepage</h2>
+            <Link href="/admin/banners" className="flex items-center gap-1 text-xs font-semibold text-maroon hover:text-flame">
+              Kelola Banner <ArrowRight size={13} />
+            </Link>
           </div>
-          <Field label="Subjudul">
-            <textarea name="hero_subtitle" defaultValue={settings.hero.subtitle} rows={2} className={inputClass} />
-          </Field>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <Field label="Teks CTA Utama">
-              <input name="hero_cta_text" defaultValue={settings.hero.cta_text} className={inputClass} />
-            </Field>
-            <Field label="Link CTA Utama">
-              <input name="hero_cta_href" defaultValue={settings.hero.cta_href} className={inputClass} />
-            </Field>
-            <Field label="Teks CTA Kedua">
-              <input name="hero_secondary_cta_text" defaultValue={settings.hero.secondary_cta_text ?? ""} className={inputClass} />
-            </Field>
-            <Field label="Link CTA Kedua">
-              <input name="hero_secondary_cta_href" defaultValue={settings.hero.secondary_cta_href ?? ""} className={inputClass} />
-            </Field>
-          </div>
-          <p className="text-xs text-muted">
-            Hero juga otomatis menampilkan produk-produk berlabel &ldquo;Featured&rdquo; secara bergantian —
-            atur label itu lewat halaman Produk.
+          <p className="text-sm text-muted">
+            Gambar yang bergeser di paling atas halaman depan diatur dari halaman{" "}
+            <Link href="/admin/banners" className="font-semibold text-maroon">Banner</Link> — tinggal
+            unggah gambar, tidak perlu isi teks manual.
           </p>
+          <div className="border-t border-line pt-4">
+            <p className="text-xs font-semibold uppercase tracking-wide text-muted">Teks Cadangan</p>
+            <p className="mt-1 text-xs text-muted">Dipakai kalau belum ada banner yang diunggah sama sekali.</p>
+            <div className="mt-3 grid gap-4 sm:grid-cols-2">
+              <Field label="Judul">
+                <input name="hero_title" defaultValue={settings.hero.title} className={inputClass} />
+              </Field>
+              <Field label="Subjudul">
+                <input name="hero_subtitle" defaultValue={settings.hero.subtitle} className={inputClass} />
+              </Field>
+            </div>
+          </div>
         </section>
 
         <section className="space-y-4 rounded-2xl border border-line bg-white p-5">

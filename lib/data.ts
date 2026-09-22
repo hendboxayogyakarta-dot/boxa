@@ -1,5 +1,5 @@
-import type { Category, Product, Review, SiteSettings } from "./types";
-import { mockCategories, mockProducts, mockReviews, mockSettings } from "./mock-data";
+import type { Banner, Category, Product, Review, SiteSettings } from "./types";
+import { mockBanners, mockCategories, mockProducts, mockReviews, mockSettings } from "./mock-data";
 import { createClient } from "./supabase/server";
 
 /**
@@ -54,6 +54,24 @@ async function getHomepageSections() {
     .select("*")
     .order("sort_order");
   return (data as SiteSettings["homepage_sections"]) ?? mockSettings.homepage_sections;
+}
+
+export async function getBanners(): Promise<Banner[]> {
+  if (!SUPABASE_CONFIGURED) return mockBanners.filter((b) => b.enabled);
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("banners")
+    .select("*")
+    .eq("enabled", true)
+    .order("sort_order");
+  return (data as Banner[]) ?? [];
+}
+
+export async function getAllBannersForAdmin(): Promise<Banner[]> {
+  if (!SUPABASE_CONFIGURED) return mockBanners;
+  const supabase = await createClient();
+  const { data } = await supabase.from("banners").select("*").order("sort_order");
+  return (data as Banner[]) ?? [];
 }
 
 /** Admin variant: all categories regardless of status (RLS already limits

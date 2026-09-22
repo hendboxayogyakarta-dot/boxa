@@ -73,6 +73,29 @@ Every Server Action re-checks the session and `profiles.role` itself
 (`lib/actions/require-admin.ts`) before writing anything — RLS is still
 the real backstop, this is defense in depth.
 
+**Homepage & uploads (this revision):**
+- The top of the homepage is now a Shopee-style sliding banner carousel
+  (`components/sections/banner-carousel.tsx`) instead of the interactive
+  product hero — admin uploads banner images one at a time from
+  `/admin/banners`, each with its own link and on/off toggle. Falls back
+  to a simple text banner (from the CMS "Teks Cadangan" fields) when no
+  banners exist yet, so the homepage never looks broken on a fresh install.
+- A round category icon row (`category-icon-strip.tsx`) sits under the
+  banner, Shopee-style.
+- **Logo upload**: `/admin/cms` → Branding now has a real upload widget
+  (`components/admin/logo-uploader.tsx`) — uploads to Storage and updates
+  `website_settings.logo_url` immediately; the header/footer pick it up
+  automatically, falling back to the flame icon if no logo is set.
+- **Product photo upload is now upload, not URL-pasting**: the product
+  form's image section (`components/admin/product-images-field.tsx`)
+  lets you pick multiple files at once, uploads them straight to the
+  `product-images` bucket, shows thumbnails, and lets you reorder (first
+  = primary) or remove — no more copying URLs from the media library by
+  hand.
+- New `banners` table — see `db/schema.sql`. If your database already
+  exists, don't re-run the whole file (you'll get "already exists"
+  errors on the enums); just run the incremental snippet below.
+
 **Still needs a live Supabase project to actually persist anything** —
 without it, these forms render but submitting throws (mock mode is
 read/preview-only, which the banner in `/admin` says explicitly). Also
