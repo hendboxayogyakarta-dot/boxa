@@ -111,6 +111,79 @@ export async function saveProduct(formData: FormData) {
   redirect("/admin/products");
 }
 
+export interface QuickProductInput {
+  name: string;
+  category_id: string | null;
+  brand_id: string | null;
+  price: number;
+  local_price: number | null;
+  stock_quantity: number;
+  image_url: string | null;
+  status: "draft" | "published";
+}
+
+/**
+ * Bulk product creation for the Quick Add page — the whole point is filling
+ * in many rows client-side (auto-saved to localStorage as a draft, not the
+ * database) and only touching Supabase once, here, when the admin hits the
+ * final "Upload" button. cta_type defaults to SHOPEE for every row, matching
+ * the affiliate-first setup (see price-comparison.tsx) — edit a product's
+ * full details afterwards if any of them need a different link type.
+ */
+export async function saveProductsBatch(
+  items: QuickProductInput[]
+): Promise<{ successCount: number; total: number; errors: string[] }> {
+  const { supabase } = await requireAdmin();
+
+  let successCount = 0;
+  const errors: string[] = [];
+
+  for (const item of items) {
+    const name = item.name?.trim();
+    if (!name) continue; // skip blank rows silently
+
+    const slug = slugify(`${name}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`);
+
+    const { data, error } = await supabase
+      .from("products")
+      .insert({
+        name,
+        slug,
+        price: item.price || 0,
+        local_price: item.local_price,
+        stock_quantity: item.stock_quantity || 0,
+        stock_status: (item.stock_quantity || 0) > 0 ? "in_stock" : "sold_out",
+        category_id: item.category_id,
+        brand_id: item.brand_id,
+        cta_type: "SHOPEE",
+        status: item.status,
+        description: "",
+      })
+      .select("id")
+      .single();
+
+    if (error || !data) {
+      errors.push(`${name}: ${error?.message ?? "gagal disimpan"}`);
+      continue;
+    }
+
+    if (item.image_url) {
+      const { error: imgError } = await supabase
+        .from("product_images")
+        .insert({ product_id: data.id, url: item.image_url, is_primary: true, sort_order: 0 });
+      if (imgError) errors.push(`${name}: foto gagal disimpan (${imgError.message})`);
+    }
+
+    successCount++;
+  }
+
+  revalidatePath("/admin/products");
+  revalidatePath("/shop");
+  revalidatePath("/");
+
+  return { successCount, total: items.length, errors };
+}
+
 export async function deleteProduct(formData: FormData) {
   const { supabase } = await requireAdmin();
   const id = str(formData, "id");

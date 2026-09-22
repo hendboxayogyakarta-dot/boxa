@@ -24,7 +24,7 @@ export function ProductGallery({ images, productName }: { images: ProductImage[]
   }
 
   if (images.length === 0) {
-    return <div className="aspect-square w-full rounded-3xl bg-cream-warm" />;
+    return <div className="aspect-square w-full rounded-3xl bg-photo-frame" />;
   }
 
   return (
@@ -33,7 +33,7 @@ export function ProductGallery({ images, productName }: { images: ProductImage[]
       <div
         ref={trackRef}
         onScroll={handleScroll}
-        className="flex aspect-square w-full snap-x snap-mandatory overflow-x-auto rounded-3xl bg-cream-warm [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="flex aspect-square w-full snap-x snap-mandatory overflow-x-auto rounded-3xl bg-photo-frame [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {images.map((img, i) => (
           <div key={img.id} className="relative w-full shrink-0 snap-center">
@@ -71,7 +71,7 @@ export function ProductGallery({ images, productName }: { images: ProductImage[]
               key={img.id}
               onClick={() => goTo(i)}
               className={cn(
-                "relative aspect-square overflow-hidden rounded-xl bg-cream-warm ring-2 transition-colors",
+                "relative aspect-square overflow-hidden rounded-xl bg-photo-frame ring-2 transition-colors",
                 i === active ? "ring-maroon" : "ring-transparent hover:ring-line"
               )}
             >

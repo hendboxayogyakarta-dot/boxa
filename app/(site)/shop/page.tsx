@@ -128,7 +128,7 @@ export default async function ShopPage({
                     href={c.href}
                     className={cn(
                       "block rounded-lg px-2 py-1.5 text-sm",
-                      c.active ? "bg-maroon text-cream" : "text-ink-soft hover:bg-cream-warm"
+                      c.active ? "bg-maroon text-on-brand" : "text-ink-soft hover:bg-cream-warm"
                     )}
                   >
                     {c.label}
@@ -148,7 +148,7 @@ export default async function ShopPage({
                       href={b.href}
                       className={cn(
                         "block rounded-lg px-2 py-1.5 text-sm",
-                        b.active ? "bg-maroon text-cream" : "text-ink-soft hover:bg-cream-warm"
+                        b.active ? "bg-maroon text-on-brand" : "text-ink-soft hover:bg-cream-warm"
                       )}
                     >
                       {b.label}
@@ -168,7 +168,7 @@ export default async function ShopPage({
                   href={q.href}
                   className={cn(
                     "rounded-full border px-3 py-1 text-xs font-medium",
-                    q.active ? "border-maroon bg-maroon text-cream" : "border-line text-ink-soft hover:border-maroon"
+                    q.active ? "border-maroon bg-maroon text-on-brand" : "border-line text-ink-soft hover:border-maroon"
                   )}
                 >
                   {q.label}
@@ -189,7 +189,7 @@ export default async function ShopPage({
                   className={cn(
                     "rounded-full border px-3 py-1.5 text-xs font-medium",
                     sort === s.value
-                      ? "border-maroon bg-maroon text-cream"
+                      ? "border-maroon bg-maroon text-on-brand"
                       : "border-line text-ink-soft hover:border-maroon"
                   )}
                 >

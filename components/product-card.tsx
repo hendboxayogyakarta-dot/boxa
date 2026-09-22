@@ -16,7 +16,7 @@ export function ProductCard({ product }: { product: Product }) {
       href={`/product/${product.slug}`}
       className="hover-lift group flex flex-col overflow-hidden rounded-2xl border border-line bg-white"
     >
-      <div className="relative aspect-square overflow-hidden bg-cream-warm">
+      <div className="relative aspect-square overflow-hidden bg-photo-frame">
         {primaryImage ? (
           <Image
             src={primaryImage.url}
@@ -39,7 +39,7 @@ export function ProductCard({ product }: { product: Product }) {
           </span>
         )}
         {hasLocalPrice && savings > 0 && (
-          <div className="absolute bottom-2 right-2 flex items-center gap-1 rounded-full bg-flame px-2 py-1 text-[10px] font-bold text-cream shadow-sm">
+          <div className="absolute bottom-2 right-2 flex items-center gap-1 rounded-full bg-flame px-2 py-1 text-[10px] font-bold text-on-brand shadow-sm">
             <Tag size={10} />
             Hemat {formatIDR(savings)}
           </div>

@@ -1,18 +1,6 @@
-import { MessageCircle, ShoppingBag, ExternalLink, MapPin, Sparkles } from "lucide-react";
+import { MessageCircle, ShoppingBag, MapPin, Sparkles } from "lucide-react";
 import type { Product } from "@/lib/types";
 import { formatIDR } from "@/lib/utils";
-
-function resolveOnlineCta(product: Product): { href: string; icon: React.ReactNode; label: string } {
-  switch (product.cta_type) {
-    case "SHOPEE":
-      return { href: product.shopee_url ?? "#", icon: <ShoppingBag size={16} />, label: "Beli di Shopee" };
-    case "EXTERNAL_URL":
-      return { href: product.external_order_url ?? "#", icon: <ExternalLink size={16} />, label: "Beli Online" };
-    case "WHATSAPP":
-    default:
-      return { href: product.whatsapp_url ?? "#", icon: <MessageCircle size={16} />, label: "Beli Online" };
-  }
-}
 
 /**
  * BOXA's "Original Toys, Local Prices" USP made concrete: same product,
@@ -23,8 +11,12 @@ function resolveOnlineCta(product: Product): { href: string; icon: React.ReactNo
 export function PriceComparison({ product }: { product: Product }) {
   if (product.local_price == null) return null;
 
-  const online = resolveOnlineCta(product);
+  // Online always routes to the Shopee affiliate link — that's the whole
+  // point of the online side of this comparison. WhatsApp stays reserved
+  // for the local pickup / COD side below.
+  const noShopeeLink = !product.shopee_url;
   const soldOut = product.stock_status === "sold_out";
+  const onlineDisabled = soldOut || noShopeeLink;
   const savings = product.price - product.local_price;
   const hasSavings = savings > 0;
 
@@ -45,25 +37,25 @@ export function PriceComparison({ product }: { product: Product }) {
           <span className="mt-1 font-display text-2xl font-extrabold text-ink">{formatIDR(product.price)}</span>
           <span className="mt-0.5 text-xs text-muted">Beli online / diantar</span>
           <a
-            href={online.href}
+            href={product.shopee_url ?? "#"}
             target="_blank"
             rel="noreferrer"
-            aria-disabled={soldOut}
+            aria-disabled={onlineDisabled}
             className={`mt-4 flex items-center justify-center gap-2 rounded-full px-4 py-2.5 text-sm font-semibold transition-colors ${
-              soldOut
+              onlineDisabled
                 ? "pointer-events-none bg-ink/10 text-ink/40"
-                : "bg-ink text-cream hover:bg-ink-soft"
+                : "bg-ink text-on-brand hover:bg-ink-soft"
             }`}
           >
-            {online.icon}
-            {soldOut ? "Stok Habis" : online.label}
+            <ShoppingBag size={16} />
+            {soldOut ? "Stok Habis" : noShopeeLink ? "Link Belum Ada" : "Pesan via Shopee"}
           </a>
         </div>
 
         {/* Local */}
         <div className="relative flex flex-col rounded-2xl border-2 border-flame bg-white p-4">
           {hasSavings && (
-            <span className="absolute -top-3 right-4 rounded-full bg-flame px-2.5 py-0.5 text-[11px] font-bold text-cream shadow-sm">
+            <span className="absolute -top-3 right-4 rounded-full bg-flame px-2.5 py-0.5 text-[11px] font-bold text-on-brand shadow-sm">
               Hemat {formatIDR(savings)}
             </span>
           )}
@@ -80,7 +72,7 @@ export function PriceComparison({ product }: { product: Product }) {
             className={`mt-4 flex items-center justify-center gap-2 rounded-full px-4 py-2.5 text-sm font-semibold transition-colors ${
               soldOut
                 ? "pointer-events-none bg-ink/10 text-ink/40"
-                : "bg-flame text-cream hover:bg-flame-light"
+                : "bg-flame text-on-brand hover:bg-flame-light"
             }`}
           >
             <MessageCircle size={16} />

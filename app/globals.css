@@ -13,6 +13,18 @@
   --color-ink-soft: #4A3830;
   --color-muted: #8C7A70;
   --color-line: #E7DDCE;
+
+  /* Fixed tokens — deliberately NOT overridden under .site-root.dark below.
+   * --color-on-brand: light text placed on a colored surface (maroon/flame
+   * buttons, badges, the maroon footer) that must stay light regardless of
+   * theme — using --color-cream for this was the dark-mode contrast bug
+   * (that token flips to near-black in dark mode, since it doubles as the
+   * page background). --color-photo-frame: the white backdrop behind
+   * product photos, most of which are transparent PNGs shot for a white
+   * background — this must also stay white in both themes or transparent
+   * areas pick up the (dark, in dark mode) page background instead. */
+  --color-on-brand: #FBF5EC;
+  --color-photo-frame: #FFFFFF;
 }
 
 @theme inline {
@@ -28,6 +40,8 @@
   --color-ink-soft: var(--color-ink-soft);
   --color-muted: var(--color-muted);
   --color-line: var(--color-line);
+  --color-on-brand: var(--color-on-brand);
+  --color-photo-frame: var(--color-photo-frame);
   --font-display: var(--font-baloo), ui-rounded, system-ui, sans-serif;
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }

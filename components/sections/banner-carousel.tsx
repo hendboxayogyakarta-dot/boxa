@@ -20,13 +20,13 @@ export function BannerCarousel({ banners, settings }: { banners: Banner[]; setti
     return (
       <section className="bg-maroon">
         <div className="mx-auto max-w-7xl px-4 py-14 text-center sm:px-6">
-          <h1 className="font-display text-3xl font-extrabold text-cream sm:text-4xl">
+          <h1 className="font-display text-3xl font-extrabold text-on-brand sm:text-4xl">
             {settings.hero.title}
           </h1>
-          <p className="mx-auto mt-3 max-w-md text-sm text-cream/80">{settings.hero.subtitle}</p>
+          <p className="mx-auto mt-3 max-w-md text-sm text-on-brand/80">{settings.hero.subtitle}</p>
           <Link
             href="/shop"
-            className="mt-6 inline-block rounded-full bg-flame px-6 py-3 text-sm font-semibold text-cream hover:bg-flame-light"
+            className="mt-6 inline-block rounded-full bg-flame px-6 py-3 text-sm font-semibold text-on-brand hover:bg-flame-light"
           >
             Lihat Koleksi
           </Link>
@@ -62,14 +62,14 @@ export function BannerCarousel({ banners, settings }: { banners: Banner[]; setti
             <button
               aria-label="Sebelumnya"
               onClick={() => setActive((i) => (i - 1 + banners.length) % banners.length)}
-              className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-ink/40 p-1.5 text-cream opacity-0 transition-opacity group-hover:opacity-100"
+              className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-ink/40 p-1.5 text-on-brand opacity-0 transition-opacity group-hover:opacity-100"
             >
               <ChevronLeft size={18} />
             </button>
             <button
               aria-label="Berikutnya"
               onClick={() => setActive((i) => (i + 1) % banners.length)}
-              className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-ink/40 p-1.5 text-cream opacity-0 transition-opacity group-hover:opacity-100"
+              className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-ink/40 p-1.5 text-on-brand opacity-0 transition-opacity group-hover:opacity-100"
             >
               <ChevronRight size={18} />
             </button>

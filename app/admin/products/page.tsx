@@ -2,7 +2,7 @@ import Link from "next/link";
 import { getAllProductsForAdmin } from "@/lib/data";
 import { formatIDR, stockLabel } from "@/lib/utils";
 import { deleteProduct, toggleProductStatus } from "@/lib/actions/products";
-import { Plus, Pencil } from "lucide-react";
+import { Plus, Pencil, Zap } from "lucide-react";
 
 export default async function AdminProductsPage() {
   const products = await getAllProductsForAdmin();
@@ -11,12 +11,20 @@ export default async function AdminProductsPage() {
     <div>
       <div className="flex items-center justify-between">
         <h1 className="font-display text-2xl font-bold text-ink">Produk</h1>
-        <Link
-          href="/admin/products/new"
-          className="flex items-center gap-1.5 rounded-full bg-maroon px-4 py-2 text-sm font-semibold text-cream"
-        >
-          <Plus size={16} /> Tambah Produk
-        </Link>
+        <div className="flex items-center gap-2">
+          <Link
+            href="/admin/products/quick-add"
+            className="flex items-center gap-1.5 rounded-full border border-maroon px-4 py-2 text-sm font-semibold text-maroon"
+          >
+            <Zap size={16} /> Tambah Cepat
+          </Link>
+          <Link
+            href="/admin/products/new"
+            className="flex items-center gap-1.5 rounded-full bg-maroon px-4 py-2 text-sm font-semibold text-cream"
+          >
+            <Plus size={16} /> Tambah Produk
+          </Link>
+        </div>
       </div>
 
       <div className="mt-5 overflow-hidden rounded-2xl border border-line bg-white">

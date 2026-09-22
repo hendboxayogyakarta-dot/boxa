@@ -69,7 +69,7 @@ export function SiteHeader({ settings }: { settings: SiteSettings }) {
           href={`https://wa.me/${settings.whatsapp_number}`}
           target="_blank"
           rel="noreferrer"
-          className="hidden items-center gap-1.5 rounded-full bg-flame px-4 py-2 text-sm font-semibold text-cream transition-colors hover:bg-flame-light sm:inline-flex"
+          className="hidden items-center gap-1.5 rounded-full bg-flame px-4 py-2 text-sm font-semibold text-on-brand transition-colors hover:bg-flame-light sm:inline-flex"
         >
           <MessageCircle size={15} />
           Chat BOXA

@@ -70,7 +70,7 @@ export function ProductImagesField({ initialUrls }: { initialUrls: string[] }) {
       {urls.length > 0 && (
         <div className="mb-3 grid grid-cols-3 gap-2 sm:grid-cols-5">
           {urls.map((url, i) => (
-            <div key={url + i} className="group relative aspect-square overflow-hidden rounded-xl border border-line bg-cream-warm">
+            <div key={url + i} className="group relative aspect-square overflow-hidden rounded-xl border border-line bg-photo-frame">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={url} alt={`Foto ${i + 1}`} className="h-full w-full object-cover" />
               {i === 0 && (

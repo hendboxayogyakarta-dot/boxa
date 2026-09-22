@@ -38,10 +38,10 @@ export function CategoryShowcase({
               )}
               <div className="absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/10 to-transparent" />
               <div className="relative z-10 p-5">
-                <h3 className={`font-display font-extrabold text-cream ${big ? "text-3xl" : "text-xl"}`}>
+                <h3 className={`font-display font-extrabold text-on-brand ${big ? "text-3xl" : "text-xl"}`}>
                   {c.name}
                 </h3>
-                <p className="mt-1 max-w-xs text-xs text-cream/80">{c.description}</p>
+                <p className="mt-1 max-w-xs text-xs text-on-brand/80">{c.description}</p>
               </div>
             </Link>
           );

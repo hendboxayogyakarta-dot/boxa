@@ -46,7 +46,7 @@ export function OrderCta({ product }: { product: Product }) {
         target="_blank"
         rel="noreferrer"
         onClick={handleClick}
-        className="flex flex-1 items-center justify-center gap-2 rounded-full bg-maroon px-6 py-3.5 text-sm font-semibold text-cream transition-colors hover:bg-maroon-deep"
+        className="flex flex-1 items-center justify-center gap-2 rounded-full bg-maroon px-6 py-3.5 text-sm font-semibold text-on-brand transition-colors hover:bg-maroon-deep"
       >
         {icon}
         {label}

@@ -27,14 +27,14 @@ export function DeliveryBanner({ settings }: { settings: SiteSettings }) {
   if (!settings.delivery.enabled) return null;
   return (
     <section className="mx-auto max-w-7xl px-4 pb-14 sm:px-6">
-      <div className="relative flex flex-col items-start gap-4 overflow-hidden rounded-3xl bg-maroon px-6 py-8 text-cream sm:flex-row sm:items-center sm:justify-between sm:px-10">
+      <div className="relative flex flex-col items-start gap-4 overflow-hidden rounded-3xl bg-maroon px-6 py-8 text-on-brand sm:flex-row sm:items-center sm:justify-between sm:px-10">
         <div aria-hidden className="pointer-events-none absolute -right-10 -top-10 h-48 w-48 rounded-full bg-flame/25 blur-3xl" />
         <div className="relative z-10">
           <div className="flex items-center gap-2 font-display text-xl font-bold">
             <Truck size={20} />
             {settings.delivery.service_area}
           </div>
-          <p className="mt-2 max-w-md text-sm text-cream/80">{settings.delivery.notes}</p>
+          <p className="mt-2 max-w-md text-sm text-on-brand/80">{settings.delivery.notes}</p>
         </div>
         <a
           href={`https://wa.me/${settings.whatsapp_number}`}

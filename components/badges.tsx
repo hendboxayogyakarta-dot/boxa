@@ -28,20 +28,20 @@ export function ProductBadges({ product }: { product: Product }) {
   return (
     <div className="flex flex-wrap gap-1.5">
       {product.stock_status === "sold_out" && (
-        <Badge className="bg-ink/80 text-cream">Habis</Badge>
+        <Badge className="bg-ink/80 text-on-brand">Habis</Badge>
       )}
       {product.is_secret && (
-        <Badge className="bg-maroon text-cream" icon={<Lock size={12} />}>
+        <Badge className="bg-maroon text-on-brand" icon={<Lock size={12} />}>
           Secret
         </Badge>
       )}
       {product.is_rare && !product.is_secret && (
-        <Badge className="bg-coral text-cream" icon={<Gem size={12} />}>
+        <Badge className="bg-coral text-on-brand" icon={<Gem size={12} />}>
           Rare
         </Badge>
       )}
       {product.is_new && (
-        <Badge className="bg-flame text-cream" icon={<Sparkles size={12} />}>
+        <Badge className="bg-flame text-on-brand" icon={<Sparkles size={12} />}>
           Baru
         </Badge>
       )}

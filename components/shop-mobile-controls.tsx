@@ -40,7 +40,7 @@ export function ShopMobileControls({
           <SlidersHorizontal size={15} />
           Filter
           {activeFilterCount > 0 && (
-            <span className="flex h-4 w-4 items-center justify-center rounded-full bg-maroon text-[10px] font-bold text-cream">
+            <span className="flex h-4 w-4 items-center justify-center rounded-full bg-maroon text-[10px] font-bold text-on-brand">
               {activeFilterCount}
             </span>
           )}
@@ -76,7 +76,7 @@ export function ShopMobileControls({
                     onClick={() => setOpen(null)}
                     className={cn(
                       "block rounded-xl px-3 py-2.5 text-sm",
-                      s.active ? "bg-maroon text-cream" : "text-ink-soft hover:bg-cream-warm"
+                      s.active ? "bg-maroon text-on-brand" : "text-ink-soft hover:bg-cream-warm"
                     )}
                   >
                     {s.label}
@@ -95,7 +95,7 @@ export function ShopMobileControls({
                         onClick={() => setOpen(null)}
                         className={cn(
                           "rounded-full border px-3 py-1.5 text-sm",
-                          c.active ? "border-maroon bg-maroon text-cream" : "border-line text-ink-soft"
+                          c.active ? "border-maroon bg-maroon text-on-brand" : "border-line text-ink-soft"
                         )}
                       >
                         {c.label}
@@ -115,7 +115,7 @@ export function ShopMobileControls({
                           onClick={() => setOpen(null)}
                           className={cn(
                             "rounded-full border px-3 py-1.5 text-sm",
-                            b.active ? "border-maroon bg-maroon text-cream" : "border-line text-ink-soft"
+                            b.active ? "border-maroon bg-maroon text-on-brand" : "border-line text-ink-soft"
                           )}
                         >
                           {b.label}
@@ -135,7 +135,7 @@ export function ShopMobileControls({
                         onClick={() => setOpen(null)}
                         className={cn(
                           "rounded-full border px-3 py-1.5 text-sm",
-                          q.active ? "border-maroon bg-maroon text-cream" : "border-line text-ink-soft"
+                          q.active ? "border-maroon bg-maroon text-on-brand" : "border-line text-ink-soft"
                         )}
                       >
                         {q.label}
@@ -146,7 +146,7 @@ export function ShopMobileControls({
 
                 <button
                   onClick={() => setOpen(null)}
-                  className="w-full rounded-full bg-maroon py-3 text-sm font-semibold text-cream"
+                  className="w-full rounded-full bg-maroon py-3 text-sm font-semibold text-on-brand"
                 >
                   Lihat {resultCount} Produk
                 </button>
