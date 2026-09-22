@@ -82,6 +82,9 @@ export function ProductForm({ product, categories }: { product?: Product; catego
               <option value="preorder">Pre-Order</option>
             </select>
           </Field>
+          <Field label="Jumlah Terjual" hint="Tampil sebagai 'X terjual' di kartu produk. Bisa diisi manual, misalnya kalau pindahan dari toko lain.">
+            <input type="number" name="sold_count" min={0} defaultValue={product?.sold_count ?? 0} className={inputClass} />
+          </Field>
         </div>
       </section>
 

@@ -7,6 +7,7 @@ import Image from "next/image";
 import { Menu, Search, X, MessageCircle, Flame } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { SiteSettings } from "@/lib/types";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 const NAV = [
   { label: "Beranda", href: "/" },
@@ -62,6 +63,8 @@ export function SiteHeader({ settings }: { settings: SiteSettings }) {
           </div>
         </form>
 
+        <ThemeToggle className="hidden sm:flex" />
+
         <a
           href={`https://wa.me/${settings.whatsapp_number}`}
           target="_blank"
@@ -103,6 +106,10 @@ export function SiteHeader({ settings }: { settings: SiteSettings }) {
               </Link>
             ))}
           </nav>
+          <div className="mt-3 flex items-center gap-2 border-t border-line pt-3">
+            <ThemeToggle />
+            <span className="text-sm text-ink-soft">Mode gelap</span>
+          </div>
         </div>
       )}
     </header>

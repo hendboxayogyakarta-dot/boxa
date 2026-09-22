@@ -49,6 +49,7 @@ export async function saveProduct(formData: FormData) {
     local_price: num(formData, "local_price"),
     stock_quantity: num(formData, "stock_quantity") ?? 0,
     stock_status: str(formData, "stock_status") ?? "in_stock",
+    sold_count: num(formData, "sold_count") ?? 0,
     category_id: str(formData, "category_id"),
     brand: str(formData, "brand"),
     series: str(formData, "series"),

@@ -63,6 +63,29 @@ body {
 
 /* Soft radial glow used behind the hero / editorial sections for a bit
    of depth without going full dark-cinematic. */
+/* -------------------------------------------------------------------
+ * Dark mode — scoped to .site-root.dark only (the wrapper the public
+ * site renders inside), so /admin is never affected regardless of what
+ * a shopper picked. Because every component already uses these same
+ * custom properties (bg-cream, text-ink, border-line, etc.) instead of
+ * hardcoded colors, overriding the variables here is enough to flip the
+ * whole storefront — no need to touch individual component files.
+ * `bg-white` is a plain Tailwind utility (not one of our tokens), so it
+ * gets one explicit override below to keep cards/forms consistent.
+ * ------------------------------------------------------------------- */
+.site-root.dark {
+  --color-cream: #17100D;
+  --color-cream-warm: #221812;
+  --color-ink: #F3E9DE;
+  --color-ink-soft: #D9C8BA;
+  --color-muted: #A6907F;
+  --color-line: #3A2A21;
+}
+
+.site-root.dark .bg-white {
+  background-color: var(--color-cream-warm);
+}
+
 .site-glow {
   background: radial-gradient(
     55% 55% at 75% 25%,

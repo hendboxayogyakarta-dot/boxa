@@ -36,8 +36,8 @@ export default async function HomePage() {
   return (
     <>
       <BannerCarousel banners={banners} settings={settings} />
-      <CategoryIconStrip categories={categories} />
       <UspStrip tagline={settings.tagline} />
+      <CategoryIconStrip categories={categories} />
 
       {sectionEnabled("featured") && (
         <ProductRail title="Pilihan BOXA" subtitle="Produk yang lagi kami rekomendasikan" products={featured} viewAllHref="/shop?featured=1" />

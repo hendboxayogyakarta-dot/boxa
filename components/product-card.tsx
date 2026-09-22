@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Tag } from "lucide-react";
 import type { Product } from "@/lib/types";
 import { formatIDR } from "@/lib/utils";
 import { ProductBadges } from "./badges";
@@ -7,6 +8,8 @@ import { ProductBadges } from "./badges";
 export function ProductCard({ product }: { product: Product }) {
   const primaryImage = product.images.find((i) => i.is_primary) ?? product.images[0];
   const soldOut = product.stock_status === "sold_out";
+  const hasLocalPrice = product.local_price != null;
+  const savings = hasLocalPrice ? product.price - product.local_price! : 0;
 
   return (
     <Link
@@ -30,22 +33,44 @@ export function ProductCard({ product }: { product: Product }) {
         <div className="absolute left-2 top-2">
           <ProductBadges product={product} />
         </div>
+        {hasLocalPrice && savings > 0 && (
+          <div className="absolute bottom-2 right-2 flex items-center gap-1 rounded-full bg-flame px-2 py-1 text-[10px] font-bold text-cream shadow-sm">
+            <Tag size={10} />
+            Hemat {formatIDR(savings)}
+          </div>
+        )}
       </div>
       <div className="flex flex-1 flex-col gap-1 p-3">
         {product.brand && (
           <span className="text-xs text-muted">{product.brand}</span>
         )}
         <h3 className="line-clamp-2 text-sm font-semibold text-ink">{product.name}</h3>
-        <div className="mt-auto flex items-baseline gap-2 pt-1">
-          <span className="font-display text-base font-bold text-maroon">
-            {formatIDR(product.price)}
-          </span>
-          {product.compare_price && (
-            <span className="text-xs text-muted line-through">
-              {formatIDR(product.compare_price)}
+
+        {hasLocalPrice ? (
+          <div className="mt-auto pt-1">
+            <span className="text-[10px] font-semibold uppercase tracking-wide text-flame">
+              Harga Lokal — Yogyakarta
             </span>
-          )}
-        </div>
+            <div className="font-display text-base font-bold text-maroon">
+              {formatIDR(product.local_price!)}
+            </div>
+            <div className="text-xs text-muted">
+              Online <span className="line-through">{formatIDR(product.price)}</span>
+            </div>
+          </div>
+        ) : (
+          <div className="mt-auto flex items-baseline gap-2 pt-1">
+            <span className="font-display text-base font-bold text-maroon">
+              {formatIDR(product.price)}
+            </span>
+            {product.compare_price && (
+              <span className="text-xs text-muted line-through">
+                {formatIDR(product.compare_price)}
+              </span>
+            )}
+          </div>
+        )}
+
         {product.sold_count > 0 && (
           <span className="text-xs text-muted">{product.sold_count} terjual</span>
         )}

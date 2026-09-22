@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getApprovedReviews, getProductBySlug, getRelatedProducts } from "@/lib/data";
@@ -6,6 +5,7 @@ import { formatIDR, conditionLabel, stockLabel } from "@/lib/utils";
 import { ProductBadges } from "@/components/badges";
 import { OrderCta } from "@/components/order-cta";
 import { PriceComparison } from "@/components/price-comparison";
+import { ProductGallery } from "@/components/product-gallery";
 import { RatingStars } from "@/components/rating-stars";
 import { ProductCard } from "@/components/product-card";
 import { CheckCircle2, MapPin, ShieldCheck, XCircle } from "lucide-react";
@@ -57,22 +57,7 @@ export default async function ProductPage({
       <div className="relative mx-auto max-w-7xl px-4 py-8 sm:px-6">
         <div className="grid gap-12 lg:grid-cols-[1.1fr_0.9fr]">
           {/* Gallery */}
-          <div>
-            <div className="relative aspect-square overflow-hidden rounded-3xl bg-cream-warm">
-              {product.images[0] && (
-                <Image src={product.images[0].url} alt={product.name} fill className="object-cover" priority />
-              )}
-            </div>
-            {product.images.length > 1 && (
-              <div className="mt-3 grid grid-cols-5 gap-2">
-                {product.images.map((img) => (
-                  <div key={img.id} className="relative aspect-square overflow-hidden rounded-xl bg-cream-warm">
-                    <Image src={img.url} alt={product.name} fill className="object-cover" />
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+          <ProductGallery images={product.images} productName={product.name} />
 
           {/* Info */}
           <div>
@@ -95,6 +80,7 @@ export default async function ProductPage({
                   <RatingStars rating={avgRating} /> ({reviews.length})
                 </span>
               )}
+              {product.sold_count > 0 && <span>{product.sold_count} terjual</span>}
             </div>
 
             <div className="mt-5 font-display text-4xl font-extrabold text-maroon">
