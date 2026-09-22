@@ -15,7 +15,7 @@ export function RequestToyButton({ whatsappNumber, className = "" }: { whatsappN
       target="_blank"
       rel="noreferrer"
       className={cn(
-        "inline-flex items-center gap-2 rounded-full border border-maroon px-4 py-2 text-sm font-semibold text-maroon transition-colors hover:bg-maroon hover:text-on-brand",
+        "inline-flex items-center gap-2 rounded-full border border-maroon px-4 py-2 text-sm font-semibold text-accent transition-colors hover:bg-maroon hover:text-on-brand",
         className
       )}
     >

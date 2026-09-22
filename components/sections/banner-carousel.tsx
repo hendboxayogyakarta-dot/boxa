@@ -79,7 +79,7 @@ export function BannerCarousel({ banners, settings }: { banners: Banner[]; setti
                   key={b.id}
                   aria-label={`Banner ${i + 1}`}
                   onClick={() => setActive(i)}
-                  className={`h-1.5 rounded-full transition-all ${i === active ? "w-5 bg-cream" : "w-1.5 bg-cream/50"}`}
+                  className={`h-1.5 rounded-full transition-all ${i === active ? "w-5 bg-on-brand" : "w-1.5 bg-on-brand/50"}`}
                 />
               ))}
             </div>

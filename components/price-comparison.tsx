@@ -1,6 +1,6 @@
-import { MessageCircle, ShoppingBag, MapPin, Sparkles } from "lucide-react";
+import { MessageCircle, ShoppingBag, MapPin } from "lucide-react";
 import type { Product } from "@/lib/types";
-import { formatIDR } from "@/lib/utils";
+import { formatIDR, buildWhatsAppOrderLink } from "@/lib/utils";
 
 /**
  * BOXA's "Original Toys, Local Prices" USP made concrete: same product,
@@ -8,8 +8,13 @@ import { formatIDR } from "@/lib/utils";
  * otherwise the product page keeps the plain single-price <OrderCta>
  * unchanged (see the conditional in the product page).
  */
-export function PriceComparison({ product }: { product: Product }) {
+export function PriceComparison({ product, whatsappNumber }: { product: Product; whatsappNumber: string }) {
   if (product.local_price == null) return null;
+
+  // No per-product WhatsApp link needed — the message is generated from
+  // the product's own name/condition/price, so it's already clear what
+  // the shopper wants to confirm when it lands in BOXA's WhatsApp.
+  const localWhatsAppLink = buildWhatsAppOrderLink(whatsappNumber, product, "Harga Lokal", product.local_price);
 
   // Online always routes to the Shopee affiliate link — that's the whole
   // point of the online side of this comparison. WhatsApp stays reserved
@@ -22,8 +27,7 @@ export function PriceComparison({ product }: { product: Product }) {
 
   return (
     <div className="rounded-3xl border border-line bg-cream-warm p-5 sm:p-6">
-      <div className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-widest text-flame">
-        <Sparkles size={13} />
+      <div className="text-xs font-semibold uppercase tracking-widest text-flame">
         Original Toys, Local Prices
       </div>
       <p className="mt-1.5 text-sm text-ink-soft">
@@ -62,10 +66,10 @@ export function PriceComparison({ product }: { product: Product }) {
           <span className="flex items-center gap-1 text-xs font-semibold uppercase tracking-widest text-flame">
             <MapPin size={12} /> Lokal — Yogyakarta
           </span>
-          <span className="mt-1 font-display text-2xl font-extrabold text-maroon">{formatIDR(product.local_price)}</span>
+          <span className="mt-1 font-display text-2xl font-extrabold text-accent">{formatIDR(product.local_price)}</span>
           <span className="mt-0.5 text-xs text-muted">Ambil langsung / COD lokal</span>
           <a
-            href={product.whatsapp_url ?? `https://wa.me/`}
+            href={localWhatsAppLink}
             target="_blank"
             rel="noreferrer"
             aria-disabled={soldOut}

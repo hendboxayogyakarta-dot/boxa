@@ -23,7 +23,7 @@ export function SiteHeader({ settings }: { settings: SiteSettings }) {
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-cream/85 backdrop-blur-md">
       <div className="mx-auto flex max-w-7xl items-center gap-4 px-4 py-3.5 sm:px-6">
-        <Link href="/" className="flex items-center gap-1.5 font-display text-xl font-extrabold tracking-tight text-maroon">
+        <Link href="/" className="flex items-center gap-1.5 font-display text-xl font-extrabold tracking-tight text-accent">
           {settings.logo_url ? (
             <span className="relative block h-8 w-8 shrink-0">
               <Image src={settings.logo_url} alt={settings.brand_name} fill sizes="32px" className="object-contain" />
@@ -42,8 +42,8 @@ export function SiteHeader({ settings }: { settings: SiteSettings }) {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "text-sm font-medium text-ink-soft transition-colors hover:text-maroon",
-                  active && "text-maroon"
+                  "text-sm font-medium text-ink-soft transition-colors hover:text-accent",
+                  active && "text-accent"
                 )}
               >
                 {item.label}
@@ -84,17 +84,22 @@ export function SiteHeader({ settings }: { settings: SiteSettings }) {
         </button>
       </div>
 
+      {/* Search always visible at the top on mobile — Shopee-style, not
+          tucked behind the hamburger menu. */}
+      <form action="/shop" className="border-t border-line px-4 py-2.5 md:hidden">
+        <div className="flex items-center gap-2 rounded-full border border-line bg-white px-3 py-2">
+          <Search size={16} className="shrink-0 text-muted" />
+          <input
+            name="q"
+            placeholder="Cari mainan, brand, seri..."
+            className="w-full bg-transparent text-sm outline-none placeholder:text-muted"
+          />
+        </div>
+      </form>
+
       {open && (
         <div className="border-t border-line bg-cream px-4 pb-4 md:hidden">
-          <form action="/shop" className="my-3 flex items-center gap-2 rounded-full border border-line bg-white px-3 py-2">
-            <Search size={16} className="text-muted" />
-            <input
-              name="q"
-              placeholder="Cari mainan..."
-              className="w-full bg-transparent text-sm outline-none placeholder:text-muted"
-            />
-          </form>
-          <nav className="flex flex-col gap-1">
+          <nav className="mt-3 flex flex-col gap-1">
             {NAV.map((item) => (
               <Link
                 key={item.href}

@@ -1,4 +1,4 @@
-import { ShieldCheck, MessageCircle, Sparkles } from "lucide-react";
+import { ShieldCheck, MessageCircle, Gem } from "lucide-react";
 
 export default function AboutPage() {
   return (
@@ -7,7 +7,7 @@ export default function AboutPage() {
       <h1 className="mt-2 font-display text-3xl font-extrabold text-ink sm:text-4xl">
         Nggak semua yang kamu mau, harus kamu punya.
       </h1>
-      <p className="mt-3 font-display text-lg font-bold text-maroon">
+      <p className="mt-3 font-display text-lg font-bold text-accent">
         Original Toys, Local Prices.
       </p>
       <p className="mt-5 text-base leading-relaxed text-ink-soft">
@@ -29,7 +29,7 @@ export default function AboutPage() {
           <p className="mt-1.5 text-sm text-muted">Kondisi produk kami periksa sebelum ditawarkan.</p>
         </div>
         <div className="rounded-2xl border border-line bg-white p-5">
-          <Sparkles className="text-flame" size={22} />
+          <Gem className="text-flame" size={22} />
           <h3 className="mt-3 font-display text-base font-bold text-ink">Dikurasi</h3>
           <p className="mt-1.5 text-sm text-muted">Setiap produk punya alasan untuk masuk BOXA.</p>
         </div>

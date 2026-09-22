@@ -25,6 +25,15 @@
    * areas pick up the (dark, in dark mode) page background instead. */
   --color-on-brand: #FBF5EC;
   --color-photo-frame: #FFFFFF;
+
+  /* --color-accent: emphasis text (prices, logo, active nav, links) that
+   * was hardcoded to maroon everywhere. Maroon is a dark color designed
+   * to read on the light cream page background — once a card's own
+   * background flips dark (bg-white/bg-cream under .site-root.dark),
+   * dark maroon text on a now-dark card is low-contrast/hard to read.
+   * This token keeps the exact same maroon in light mode (zero visual
+   * change there) but swaps to a lighter warm tone in dark mode. */
+  --color-accent: #591C1F;
 }
 
 @theme inline {
@@ -42,6 +51,7 @@
   --color-line: var(--color-line);
   --color-on-brand: var(--color-on-brand);
   --color-photo-frame: var(--color-photo-frame);
+  --color-accent: var(--color-accent);
   --font-display: var(--font-baloo), ui-rounded, system-ui, sans-serif;
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }
@@ -94,6 +104,7 @@ body {
   --color-ink-soft: #D9C8BA;
   --color-muted: #A6907F;
   --color-line: #3A2A21;
+  --color-accent: #E8825A;
 }
 
 .site-root.dark .bg-white {

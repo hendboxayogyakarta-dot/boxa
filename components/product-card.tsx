@@ -56,7 +56,7 @@ export function ProductCard({ product }: { product: Product }) {
             <span className="text-[10px] font-semibold uppercase tracking-wide text-flame">
               Harga Lokal — Yogyakarta
             </span>
-            <div className="font-display text-base font-bold text-maroon">
+            <div className="font-display text-base font-bold text-accent">
               {formatIDR(product.local_price!)}
             </div>
             <div className="text-xs text-muted">
@@ -65,7 +65,7 @@ export function ProductCard({ product }: { product: Product }) {
           </div>
         ) : (
           <div className="mt-auto flex items-baseline gap-2 pt-1">
-            <span className="font-display text-base font-bold text-maroon">
+            <span className="font-display text-base font-bold text-accent">
               {formatIDR(product.price)}
             </span>
             {product.compare_price && (

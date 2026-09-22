@@ -30,7 +30,7 @@ export function MobileBottomNav({ settings }: { settings: SiteSettings }) {
               href={href}
               className={cn(
                 "flex flex-col items-center gap-0.5 py-2.5 text-[10px] font-medium",
-                active ? "text-maroon" : "text-muted"
+                active ? "text-accent" : "text-muted"
               )}
             >
               <Icon size={20} strokeWidth={active ? 2.4 : 2} />

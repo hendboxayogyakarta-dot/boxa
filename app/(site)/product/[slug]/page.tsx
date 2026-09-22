@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { getApprovedReviews, getProductBySlug, getRelatedProducts } from "@/lib/data";
+import { getApprovedReviews, getProductBySlug, getRelatedProducts, getSiteSettings } from "@/lib/data";
 import { formatIDR, conditionLabel, stockLabel } from "@/lib/utils";
 import { ProductBadges } from "@/components/badges";
 import { OrderCta } from "@/components/order-cta";
@@ -43,9 +43,10 @@ export default async function ProductPage({
   const product = await getProductBySlug(slug);
   if (!product) notFound();
 
-  const [reviews, related] = await Promise.all([
+  const [reviews, related, settings] = await Promise.all([
     getApprovedReviews(product.id),
     getRelatedProducts(product),
+    getSiteSettings(),
   ]);
 
   const avgRating =
@@ -96,14 +97,25 @@ export default async function ProductPage({
               {product.sold_count > 0 && <span>{product.sold_count} terjual</span>}
             </div>
 
-            <div className="mt-5 font-display text-4xl font-extrabold text-maroon">
-              {formatIDR(product.price)}
-              {product.compare_price && (
-                <span className="ml-3 text-lg font-normal text-muted line-through">
-                  {formatIDR(product.compare_price)}
-                </span>
-              )}
-            </div>
+            {/* The 2-price choice (Online vs Lokal) sits right where the
+                price goes — before the description — so it's the very
+                first decision a shopper sees, not something they have to
+                scroll down for. Products without a local_price keep the
+                plain single price exactly as before. */}
+            {showLocalPricing ? (
+              <div className="mt-5">
+                <PriceComparison product={product} whatsappNumber={settings.whatsapp_number} />
+              </div>
+            ) : (
+              <div className="mt-5 font-display text-4xl font-extrabold text-accent">
+                {formatIDR(product.price)}
+                {product.compare_price && (
+                  <span className="ml-3 text-lg font-normal text-muted line-through">
+                    {formatIDR(product.compare_price)}
+                  </span>
+                )}
+              </div>
+            )}
 
             <p className="mt-4 text-sm leading-relaxed text-ink-soft">{product.short_description}</p>
 
@@ -137,7 +149,7 @@ export default async function ProductPage({
                 dropship items BOXA doesn't physically stock). */}
             {!showLocalPricing && (
               <div className="mt-7">
-                <OrderCta product={product} />
+                <OrderCta product={product} whatsappNumber={settings.whatsapp_number} />
                 {product.delivery_available && (
                   <p className="mt-2.5 text-center text-xs text-muted sm:text-left">
                     {product.instant_delivery_available ? "Pengiriman instan tersedia · " : ""}Antar area Yogyakarta
@@ -147,12 +159,6 @@ export default async function ProductPage({
             )}
           </div>
         </div>
-
-        {showLocalPricing && (
-          <div className="mt-8">
-            <PriceComparison product={product} />
-          </div>
-        )}
 
         {/* Editorial details */}
         <div className="mt-16 grid gap-10 border-t border-line pt-10 lg:grid-cols-[1fr_320px]">

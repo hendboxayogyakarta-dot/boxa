@@ -26,7 +26,7 @@ export function ProductRail({
         {viewAllHref && (
           <Link
             href={viewAllHref}
-            className="hidden items-center gap-1 text-sm font-semibold text-maroon hover:text-flame sm:inline-flex"
+            className="hidden items-center gap-1 text-sm font-semibold text-accent hover:text-flame sm:inline-flex"
           >
             Lihat semua <ArrowRight size={15} />
           </Link>

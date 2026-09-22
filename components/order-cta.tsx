@@ -2,8 +2,12 @@
 
 import { MessageCircle, ShoppingBag, ExternalLink } from "lucide-react";
 import type { Product } from "@/lib/types";
+import { buildWhatsAppOrderLink } from "@/lib/utils";
 
-function resolveHref(product: Product): { href: string; icon: React.ReactNode; label: string } {
+function resolveHref(
+  product: Product,
+  whatsappLink: string
+): { href: string; icon: React.ReactNode; label: string } {
   switch (product.cta_type) {
     case "SHOPEE":
       return { href: product.shopee_url ?? "#", icon: <ShoppingBag size={18} />, label: "Pesan di Shopee" };
@@ -11,13 +15,16 @@ function resolveHref(product: Product): { href: string; icon: React.ReactNode; l
       return { href: product.external_order_url ?? "#", icon: <ExternalLink size={18} />, label: "Pesan Sekarang" };
     case "WHATSAPP":
     default:
-      return { href: product.whatsapp_url ?? "#", icon: <MessageCircle size={18} />, label: "Pesan Sekarang" };
+      return { href: whatsappLink, icon: <MessageCircle size={18} />, label: "Pesan Sekarang" };
   }
 }
 
-export function OrderCta({ product }: { product: Product }) {
+export function OrderCta({ product, whatsappNumber }: { product: Product; whatsappNumber: string }) {
   const soldOut = product.stock_status === "sold_out";
-  const { href, icon, label } = resolveHref(product);
+  // Auto-built from the product's own name/condition/price — no manual
+  // per-product WhatsApp link to maintain.
+  const whatsappLink = buildWhatsAppOrderLink(whatsappNumber, product, "Harga", product.price);
+  const { href, icon, label } = resolveHref(product, whatsappLink);
 
   function handleClick() {
     fetch("/api/cta-click", {
@@ -51,13 +58,13 @@ export function OrderCta({ product }: { product: Product }) {
         {icon}
         {label}
       </a>
-      {product.whatsapp_url && product.cta_type !== "WHATSAPP" && (
+      {product.cta_type !== "WHATSAPP" && (
         <a
-          href={product.whatsapp_url}
+          href={whatsappLink}
           target="_blank"
           rel="noreferrer"
           onClick={handleClick}
-          className="flex items-center justify-center gap-2 rounded-full border border-line px-5 py-3.5 text-sm font-semibold text-ink-soft transition-colors hover:border-maroon hover:text-maroon"
+          className="flex items-center justify-center gap-2 rounded-full border border-line px-5 py-3.5 text-sm font-semibold text-ink-soft transition-colors hover:border-maroon hover:text-accent"
         >
           <MessageCircle size={16} />
           Tanya via WhatsApp

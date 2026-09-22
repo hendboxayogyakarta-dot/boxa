@@ -38,7 +38,7 @@ export function DeliveryBanner({ settings }: { settings: SiteSettings }) {
         </div>
         <a
           href={`https://wa.me/${settings.whatsapp_number}`}
-          className="relative z-10 whitespace-nowrap rounded-full bg-cream px-6 py-3 text-sm font-semibold text-maroon"
+          className="relative z-10 whitespace-nowrap rounded-full bg-on-brand px-6 py-3 text-sm font-semibold text-accent"
         >
           Tanya Ongkir
         </a>

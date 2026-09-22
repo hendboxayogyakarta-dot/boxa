@@ -18,7 +18,7 @@ export function CategoryIconStrip({ categories }: { categories: Category[] }) {
               {c.image_url ? (
                 <Image src={c.image_url} alt={c.name} fill sizes="56px" className="object-cover" />
               ) : (
-                <span className="font-display text-lg font-bold text-maroon">{c.name.charAt(0)}</span>
+                <span className="font-display text-lg font-bold text-accent">{c.name.charAt(0)}</span>
               )}
             </div>
             <span className="w-16 text-xs text-ink-soft">{c.name}</span>

@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { Flame, Gem, Lock, Sparkles } from "lucide-react";
+import { Flame, Gem, Lock } from "lucide-react";
 import type { Product } from "@/lib/types";
 
 function Badge({
@@ -41,7 +41,7 @@ export function ProductBadges({ product }: { product: Product }) {
         </Badge>
       )}
       {product.is_new && (
-        <Badge className="bg-flame text-on-brand" icon={<Sparkles size={12} />}>
+        <Badge className="bg-flame text-on-brand">
           Baru
         </Badge>
       )}

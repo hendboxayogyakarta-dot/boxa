@@ -23,6 +23,30 @@ export function conditionLabel(condition: string): string {
   return map[condition] ?? condition;
 }
 
+/**
+ * Builds a pre-filled WhatsApp message for a product enquiry/order, so an
+ * admin never has to hand-craft a chat link per product — just the site's
+ * one WhatsApp number plus whatever the product record already has (name,
+ * condition, the price being asked about) is enough.
+ */
+export function buildWhatsAppOrderLink(
+  whatsappNumber: string,
+  product: { name: string; condition: string },
+  priceLabel: string,
+  price: number
+): string {
+  const lines = [
+    "Halo BOXA, saya mau tanya/pesan produk ini:",
+    "",
+    product.name,
+    `Kondisi: ${conditionLabel(product.condition)}`,
+    `${priceLabel}: ${formatIDR(price)}`,
+    "",
+    "Apakah masih tersedia?",
+  ];
+  return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(lines.join("\n"))}`;
+}
+
 export function slugify(input: string): string {
   return input
     .toLowerCase()
