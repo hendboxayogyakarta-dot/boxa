@@ -1,5 +1,6 @@
 import { saveCategory } from "@/lib/actions/categories";
 import { ImageUploadField } from "@/components/admin/image-upload-field";
+import { SubmitButton } from "@/components/admin/submit-button";
 import type { Category } from "@/lib/types";
 
 const inputClass =
@@ -12,7 +13,7 @@ export function CategoryForm({ category }: { category?: Category }) {
 
       <label className="block">
         <span className="text-sm font-medium text-ink">Nama Kategori</span>
-        <input name="name" required defaultValue={category?.name} className={inputClass} />
+        <input name="name" defaultValue={category?.name} className={inputClass} />
       </label>
 
       <label className="block">
@@ -46,9 +47,7 @@ export function CategoryForm({ category }: { category?: Category }) {
         </label>
       </div>
 
-      <button type="submit" className="rounded-full bg-maroon px-6 py-2.5 text-sm font-semibold text-cream hover:bg-maroon-deep">
-        Simpan Kategori
-      </button>
+      <SubmitButton>Simpan Kategori</SubmitButton>
     </form>
   );
 }

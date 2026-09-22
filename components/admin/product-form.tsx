@@ -1,5 +1,6 @@
 import { saveProduct } from "@/lib/actions/products";
 import { ProductImagesField } from "@/components/admin/product-images-field";
+import { SubmitButton } from "@/components/admin/submit-button";
 import type { Category, Product } from "@/lib/types";
 
 function Field({ label, children, hint }: { label: string; children: React.ReactNode; hint?: string }) {
@@ -24,7 +25,7 @@ export function ProductForm({ product, categories }: { product?: Product; catego
         <h2 className="font-display text-base font-bold text-ink">Informasi Dasar</h2>
         <div className="grid gap-4 sm:grid-cols-2">
           <Field label="Nama Produk">
-            <input name="name" required defaultValue={product?.name} className={inputClass} />
+            <input name="name" defaultValue={product?.name} className={inputClass} />
           </Field>
           <Field label="Slug" hint="Kosongkan untuk dibuat otomatis dari nama.">
             <input name="slug" defaultValue={product?.slug} className={inputClass} placeholder="nama-produk" />
@@ -59,7 +60,7 @@ export function ProductForm({ product, categories }: { product?: Product; catego
         <h2 className="font-display text-base font-bold text-ink">Harga & Stok</h2>
         <div className="grid gap-4 sm:grid-cols-2">
           <Field label="Harga (Rp)">
-            <input type="number" name="price" required min={0} defaultValue={product?.price} className={inputClass} />
+            <input type="number" name="price" min={0} defaultValue={product?.price} className={inputClass} />
           </Field>
           <Field label="Harga Coret (opsional)">
             <input type="number" name="compare_price" min={0} defaultValue={product?.compare_price ?? ""} className={inputClass} />
@@ -204,12 +205,7 @@ export function ProductForm({ product, categories }: { product?: Product; catego
       </section>
 
       <div className="flex justify-end gap-3">
-        <button
-          type="submit"
-          className="rounded-full bg-maroon px-6 py-2.5 text-sm font-semibold text-cream hover:bg-maroon-deep"
-        >
-          Simpan Produk
-        </button>
+        <SubmitButton>Simpan Produk</SubmitButton>
       </div>
     </form>
   );

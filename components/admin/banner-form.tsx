@@ -1,5 +1,6 @@
 import { saveBanner } from "@/lib/actions/banners";
 import { BannerImageField } from "@/components/admin/banner-image-field";
+import { SubmitButton } from "@/components/admin/submit-button";
 import type { Banner } from "@/lib/types";
 
 const inputClass =
@@ -39,9 +40,7 @@ export function BannerForm({ banner }: { banner?: Banner }) {
         </label>
       </div>
 
-      <button type="submit" className="rounded-full bg-maroon px-6 py-2.5 text-sm font-semibold text-cream hover:bg-maroon-deep">
-        Simpan Banner
-      </button>
+      <SubmitButton>Simpan Banner</SubmitButton>
     </form>
   );
 }

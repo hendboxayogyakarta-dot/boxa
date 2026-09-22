@@ -64,7 +64,8 @@ export async function getBanners(): Promise<Banner[]> {
     .select("*")
     .eq("enabled", true)
     .order("sort_order");
-  return (data as Banner[]) ?? [];
+  // Drafts saved without an image yet shouldn't reach the public carousel.
+  return ((data as Banner[]) ?? []).filter((b) => Boolean(b.image_url));
 }
 
 export async function getAllBannersForAdmin(): Promise<Banner[]> {
