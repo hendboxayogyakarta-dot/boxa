@@ -1,4 +1,5 @@
 import { createServerClient } from "@supabase/ssr";
+import { createClient as createSupabaseJsClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 
 /**
@@ -29,6 +30,34 @@ export async function createClient() {
         },
       },
     }
+  );
+}
+
+/**
+ * Public-read client — plain anon-key client with NO cookie access.
+ *
+ * This is the important part: calling `cookies()` (which the regular
+ * createClient() above does, via @supabase/ssr) is a Next.js "Dynamic API"
+ * that forces the ENTIRE route to render dynamically on every request —
+ * it silently overrides any `export const revalidate = ...` on the page.
+ * Every public page (home, shop, product) was going through the
+ * cookie-bound client for plain public reads (products, categories,
+ * banners, reviews), which meant every navigation did a full fresh
+ * server render + live Supabase round-trip, every time, with no caching
+ * at all — this is why the site felt heavy moving between pages.
+ *
+ * Public data doesn't need a session — RLS already allows anon reads on
+ * published products, active categories, enabled banners, approved
+ * reviews, and website_settings regardless of who's asking. So public
+ * reads use this cookie-free client instead, which lets Next.js actually
+ * cache/ISR the route per the page's `revalidate` export. Only
+ * admin-authenticated reads and every write still use createClient().
+ */
+export function createPublicClient() {
+  return createSupabaseJsClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    { auth: { persistSession: false } }
   );
 }
 
