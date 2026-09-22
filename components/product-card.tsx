@@ -11,9 +11,9 @@ export function ProductCard({ product }: { product: Product }) {
   return (
     <Link
       href={`/product/${product.slug}`}
-      className="hover-lift group flex flex-col overflow-hidden rounded-2xl border border-line bg-white"
+      className="hover-lift group flex flex-col overflow-hidden rounded-2xl border border-site-border bg-site-surface transition-colors hover:border-flame/50"
     >
-      <div className="relative aspect-square overflow-hidden bg-cream-warm">
+      <div className="relative aspect-square overflow-hidden bg-site-bg-raised">
         {primaryImage ? (
           <Image
             src={primaryImage.url}
@@ -21,11 +21,11 @@ export function ProductCard({ product }: { product: Product }) {
             fill
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
             className={`object-cover transition-transform duration-500 group-hover:scale-105 ${
-              soldOut ? "grayscale-[40%] opacity-70" : ""
+              soldOut ? "grayscale-[40%] opacity-60" : ""
             }`}
           />
         ) : (
-          <div className="flex h-full items-center justify-center text-muted">No image</div>
+          <div className="flex h-full items-center justify-center text-site-text-faint">No image</div>
         )}
         <div className="absolute left-2 top-2">
           <ProductBadges product={product} />
@@ -33,21 +33,21 @@ export function ProductCard({ product }: { product: Product }) {
       </div>
       <div className="flex flex-1 flex-col gap-1 p-3">
         {product.brand && (
-          <span className="text-xs text-muted">{product.brand}</span>
+          <span className="text-xs text-site-text-faint">{product.brand}</span>
         )}
-        <h3 className="line-clamp-2 text-sm font-semibold text-ink">{product.name}</h3>
+        <h3 className="line-clamp-2 text-sm font-semibold text-site-text">{product.name}</h3>
         <div className="mt-auto flex items-baseline gap-2 pt-1">
-          <span className="font-display text-base font-bold text-maroon">
+          <span className="font-display text-base font-bold text-flame">
             {formatIDR(product.price)}
           </span>
           {product.compare_price && (
-            <span className="text-xs text-muted line-through">
+            <span className="text-xs text-site-text-faint line-through">
               {formatIDR(product.compare_price)}
             </span>
           )}
         </div>
         {product.sold_count > 0 && (
-          <span className="text-xs text-muted">{product.sold_count} terjual</span>
+          <span className="text-xs text-site-text-faint">{product.sold_count} terjual</span>
         )}
       </div>
     </Link>

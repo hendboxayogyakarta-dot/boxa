@@ -79,6 +79,7 @@ export interface Review {
 
 export interface HeroSettings {
   enabled: boolean;
+  badge: string;
   title: string;
   subtitle: string;
   image_url: string | null;
@@ -86,6 +87,14 @@ export interface HeroSettings {
   cta_href: string;
   secondary_cta_text: string | null;
   secondary_cta_href: string | null;
+  /**
+   * When set, the hero pulls name/image/price/category live from this
+   * product (admin picks a product as the hero — see spec section 4);
+   * title/subtitle/cta above act as manual overrides on top of it.
+   * The homepage cycles through the featured-products list either way,
+   * this just anchors slide 1.
+   */
+  featured_product_id: string | null;
 }
 
 export interface HomepageSection {

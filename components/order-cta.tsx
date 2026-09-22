@@ -11,7 +11,7 @@ function resolveHref(product: Product): { href: string; icon: React.ReactNode; l
       return { href: product.external_order_url ?? "#", icon: <ExternalLink size={18} />, label: "Pesan Sekarang" };
     case "WHATSAPP":
     default:
-      return { href: product.whatsapp_url ?? "#", icon: <MessageCircle size={18} />, label: "Pesan via WhatsApp" };
+      return { href: product.whatsapp_url ?? "#", icon: <MessageCircle size={18} />, label: "Pesan Sekarang" };
   }
 }
 
@@ -20,8 +20,6 @@ export function OrderCta({ product }: { product: Product }) {
   const { href, icon, label } = resolveHref(product);
 
   function handleClick() {
-    // Fire-and-forget click tracking (see app/api/cta-click/route.ts).
-    // Never blocks navigation — analytics failures should not stop a sale.
     fetch("/api/cta-click", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -34,7 +32,7 @@ export function OrderCta({ product }: { product: Product }) {
     return (
       <button
         disabled
-        className="flex w-full cursor-not-allowed items-center justify-center gap-2 rounded-full bg-ink/20 px-6 py-3.5 text-sm font-semibold text-ink/50"
+        className="flex w-full cursor-not-allowed items-center justify-center gap-2 rounded-full bg-site-surface px-6 py-3.5 text-sm font-bold uppercase tracking-wide text-site-text-faint"
       >
         Stok Habis
       </button>
@@ -42,15 +40,29 @@ export function OrderCta({ product }: { product: Product }) {
   }
 
   return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noreferrer"
-      onClick={handleClick}
-      className="flex w-full items-center justify-center gap-2 rounded-full bg-maroon px-6 py-3.5 text-sm font-semibold text-cream transition-colors hover:bg-maroon-deep"
-    >
-      {icon}
-      {label}
-    </a>
+    <div className="flex flex-col gap-2.5 sm:flex-row">
+      <a
+        href={href}
+        target="_blank"
+        rel="noreferrer"
+        onClick={handleClick}
+        className="flex flex-1 items-center justify-center gap-2 rounded-full bg-flame px-6 py-3.5 text-sm font-bold uppercase tracking-wide text-site-bg shadow-[0_0_24px_-6px_theme(colors.flame)] transition-transform hover:scale-[1.02]"
+      >
+        {icon}
+        {label}
+      </a>
+      {product.whatsapp_url && product.cta_type !== "WHATSAPP" && (
+        <a
+          href={product.whatsapp_url}
+          target="_blank"
+          rel="noreferrer"
+          onClick={handleClick}
+          className="flex items-center justify-center gap-2 rounded-full border border-site-border-strong px-5 py-3.5 text-sm font-semibold text-site-text transition-colors hover:border-flame hover:text-flame"
+        >
+          <MessageCircle size={16} />
+          Tanya via WhatsApp
+        </a>
+      )}
+    </div>
   );
 }

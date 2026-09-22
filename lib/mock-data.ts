@@ -130,13 +130,15 @@ export const mockSettings: SiteSettings = {
   address: "Yogyakarta, Indonesia",
   hero: {
     enabled: true,
+    badge: "BOXA Featured",
     title: "Temukan Mainan yang Layak Kamu Punya.",
     subtitle: "Mainan pilihan, review jujur, dan informasi yang jelas dari BOXA.YK.",
     image_url: null,
-    cta_text: "Lihat Koleksi",
+    cta_text: "Pesan Sekarang",
     cta_href: "/shop",
     secondary_cta_text: "Kenalan dengan BOXA",
     secondary_cta_href: "/tentang",
+    featured_product_id: null,
   },
   delivery: {
     enabled: true,

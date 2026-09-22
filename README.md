@@ -1,36 +1,67 @@
 # BOXA.YK
 
 Curated toy & collectible marketplace for Yogyakarta. Next.js (App Router) +
-TypeScript + Tailwind CSS, built to run on Supabase (Postgres + Auth +
-Storage) and deploy to Vercel.
+TypeScript + Tailwind CSS + Framer Motion, built on Supabase (Postgres +
+Auth + Storage), deployed to Vercel.
 
-## What's actually built vs. what's scaffolded
+## Status
 
-This repo is genuinely functional right now — `npm run dev` gives you a
-complete, working customer site (home, shop with filters/search/sort,
-product detail pages, about page) rendered from a typed mock dataset. That's
-**Phase 1** from the brief, done for real, not a mockup.
+**Backend wiring (this revision):**
+- `lib/data.ts` now runs real Supabase queries when `NEXT_PUBLIC_SUPABASE_URL`
+  is set (previously these were commented-out TODOs) — falls back to typed
+  mock data when it isn't, so local dev never breaks.
+- `/admin/*` is now actually gated: `proxy.ts` (Next's middleware) redirects
+  unauthenticated visitors to `/login`, and `app/admin/layout.tsx` does a
+  second check that the signed-in user's `profiles.role` is `admin` or
+  `staff` — mirroring the `is_admin()` function every RLS policy in
+  `db/schema.sql` relies on. A real Supabase project + `profiles` row is
+  still required for this to do anything; see setup below.
+- **Just adding your Supabase env vars is enough now** — no more manually
+  uncommenting query code like the previous revision required.
 
-What's **scaffolded but not wired to a live backend** (because that needs
-your own Supabase project, credentials, and a deploy target this environment
-doesn't have access to):
+**Visual redesign (this revision):** the customer-facing site moved from a
+light marketplace look to a dark, cinematic, editorial one. Nothing in the
+backend, admin dashboard, database schema, or CTA/CMS data model changed —
+this was scoped as a visual/UX pass only, per your brief.
 
-- **Database**: `db/schema.sql` is the complete schema — every table, enum,
-  index, and RLS policy described in the brief (products, categories,
-  images, reviews, website_settings, homepage_sections, navigation_items,
-  media, analytics_events, profiles). Nothing is running against it yet.
-- **Admin dashboard** (`/admin`): the UI shell, navigation, and all pages
-  exist and render real data from the shared data layer — but there's no
-  Supabase Auth check yet, and the product/category/review CRUD forms
-  aren't wired to mutations. See the `TODO` comments in
-  `app/admin/layout.tsx` and `app/admin/products/page.tsx`.
-- **Image uploads / media library**: needs a Supabase Storage bucket.
-- **Analytics**: `app/api/cta-click/route.ts` logs the shape of the event
-  but doesn't insert into Postgres yet.
+- No reference image was attached to the redesign brief (checked again) —
+  built from the written description (cinematic dark UI, left rail nav,
+  floating cards, oversized product imagery), reinterpreted for BOXA rather
+  than copied from any specific source.
+- New dark theme lives entirely under a `.boxa-site` CSS scope
+  (`app/globals.css`) so `/admin` keeps its original light theme — the
+  redesign only touches `app/(site)/*`.
 
-Everything is written so that connecting Supabase is a matter of filling in
-`lib/data.ts` (each function already has the real query commented directly
-underneath the mock fallback) rather than rewriting components.
+## What's built vs. still scaffolded
+
+Fully working against the mock data layer right now:
+- Cinematic homepage: `HeroShowcase` (product-switching hero with a
+  right-side numbered slide control and floating showcase cards),
+  `CategoryShowcase` (asymmetric tiles), `CurationSection` ("why BOXA
+  picked it"), product rails, reviews, delivery banner.
+- Left vertical nav rail (`BoxaSidebar`, desktop only) + minimal top nav
+  (`BoxaTopNav`) with a full-screen `SearchOverlay`.
+- Redesigned, editorial product detail page with dual CTA (primary order
+  button + WhatsApp).
+- Shop/listing page kept intentionally more conventional/practical (per
+  the brief's distinction between a cinematic homepage and a practical
+  shop page), reskinned to the dark palette.
+- Mobile: sidebar and the hero's right-side slide control hide below `md`;
+  hero, showcase cards, and nav collapse to a single-column, scrollable
+  mobile layout.
+
+Still needs a live Supabase project to do anything beyond mock data:
+- Admin dashboard CRUD forms (product/category/review create & edit) —
+  the pages render and read real data once connected, but mutations
+  aren't wired to Server Actions yet.
+- Image uploads / media library (needs a Storage bucket).
+- Hero CMS editor UI — the data model supports a full custom hero
+  (`hero.badge`, `hero.featured_product_id`, manual title/subtitle/CTA
+  overrides — see `lib/types.ts` `HeroSettings`), but there's no admin
+  form to edit it yet; edit the `website_settings.hero` JSON directly in
+  Supabase for now.
+- Analytics (`app/api/cta-click/route.ts` logs the event shape, doesn't
+  insert into Postgres yet).
 
 ## 1. Local setup
 
@@ -39,74 +70,69 @@ npm install
 npm run dev
 ```
 
-Open http://localhost:3000 — the site works immediately with no environment
-variables set (it uses `lib/mock-data.ts`).
+Open http://localhost:3000 — works immediately with no environment
+variables set.
 
 ## 2. Connect Supabase
 
 1. Create a project at https://supabase.com.
-2. In the SQL editor, paste and run `db/schema.sql` top to bottom. It
-   creates every table, enum, index, RLS policy, and seeds
-   `website_settings` + `homepage_sections` with sensible defaults so the
-   site renders correctly the moment it's connected.
-3. In **Storage**, create two public buckets: `product-images` and
-   `media-library`. Add RLS policies on `storage.objects` mirroring the
-   `is_admin()` pattern already used in `schema.sql` (public `SELECT`,
-   admin-only `INSERT`/`UPDATE`/`DELETE`).
+2. Run `db/schema.sql` in the SQL editor (creates every table, enum,
+   index, RLS policy, and seeds `website_settings` + `homepage_sections`).
+3. In **Storage**, create `product-images` and `media-library` buckets
+   (public read, admin-only write — mirror the `is_admin()` pattern from
+   `schema.sql`).
 4. In **Authentication**, create your first admin user, then insert a row
-   into `profiles` for that user with `role = 'admin'`.
+   into `profiles` for that user with `role = 'admin'`. Without this row,
+   `/admin` will bounce a logged-in user back to `/login`.
 5. Copy `.env.local.example` to `.env.local` and fill in the three values
    from **Project Settings > API**.
-6. In `next.config.ts`, add your Supabase project's storage domain to
-   `images.remotePatterns` (something like
-   `{ protocol: "https", hostname: "YOUR_PROJECT.supabase.co" }`).
-7. In `lib/data.ts`, uncomment the real Supabase query in each function and
-   remove the mock fallback above it.
-8. In `app/admin/layout.tsx`, add the session/role check described in the
-   `TODO` comment at the top of the file, so `/admin` actually requires
-   login.
+6. In `next.config.ts`, add your Supabase storage domain to
+   `images.remotePatterns`.
+7. Visit `/login` and sign in — you'll land on `/admin`.
 
 ## 3. Deploy
 
-- Push this repo to GitHub.
-- Import it into Vercel.
-- Add the same three environment variables from `.env.local` in the
-  Vercel project settings.
-- Connect your Hostinger-purchased domain to the Vercel project once ready
-  (Vercel's domain settings walk through the DNS records needed).
+Push to GitHub → import into Vercel → add the same env vars → connect your
+Hostinger domain once ready.
 
 ## Project structure
 
 ```
 app/
-  page.tsx                 Homepage (CMS-section driven)
-  shop/page.tsx             Product listing, filters, search, sort
-  product/[slug]/page.tsx   Product detail
-  tentang/page.tsx          About BOXA
-  admin/                    Admin dashboard shell (see TODOs)
-  api/cta-click/route.ts    CTA click tracking endpoint
-components/                UI components (header, footer, product card, CTA...)
+  layout.tsx                 Minimal root shell (fonts only)
+  (site)/                    Customer-facing dark theme route group
+    layout.tsx                 Sidebar + top nav + footer wrapper
+    page.tsx                   Homepage
+    shop/page.tsx               Listing, filters, search, sort
+    product/[slug]/page.tsx     Editorial product detail
+    tentang/page.tsx            About BOXA
+  admin/                      Admin dashboard (light theme, own layout)
+  login/page.tsx               Supabase Auth sign-in
+  api/cta-click/route.ts       CTA click tracking endpoint
+proxy.ts                      Session refresh + /admin route gate
+components/
+  boxa-sidebar.tsx, boxa-topnav.tsx, boxa-footer.tsx, search-overlay.tsx
+  sections/hero-showcase.tsx, category-showcase.tsx, curation-section.tsx,
+            product-rail.tsx, misc-sections.tsx
+  product-card.tsx, order-cta.tsx, badges.tsx, rating-stars.tsx
 lib/
-  types.ts                  Types matching the DB schema exactly
-  data.ts                   Single seam between UI and data source
-  mock-data.ts               Typed demo content (swap out once Supabase is live)
-  supabase/                 Browser/server/admin Supabase clients
-db/schema.sql               Full Postgres schema + RLS policies
+  types.ts, data.ts, mock-data.ts
+  supabase/client.ts, server.ts, middleware.ts
+db/schema.sql
 ```
 
-## Brand
+## Brand & theme
 
-Colors, type, and voice are documented inline in `app/globals.css`
-(`@theme` tokens) and `lib/mock-data.ts` (`mockSettings`, which mirrors the
-`website_settings` table). Palette: deep maroon (`#591C1F`) for nav/CTA,
-flame orange (`#E4590C`) as the energetic accent, warm ember yellow
-(`#F5A924`) for badges, coral (`#E8654F`) as a supporting accent, on a warm
-cream background (`#FBF5EC`) so product photography stays the focus.
-Display type is Baloo 2 (rounded, friendly — echoes the logo's bold rounded
-wordmark); body/UI text is Inter.
+Dark theme tokens are defined once in `app/globals.css` under `.boxa-site`:
+background `#150B0C`, raised surface `#1E1112`, card surface `#241416`,
+warm white text `#F5EFE6`. Brand accents are unchanged from the original
+identity — maroon `#591C1F`, flame orange `#E4590C`, ember `#F5A924`, coral
+`#E8654F` — now used as emphasis against dark rather than as the base
+palette. Display type stays Baloo 2 (rounded, friendly), body/UI stays
+Inter, now set in uppercase with wide tracking for nav/labels per the
+brief's editorial direction.
 
-**No logo file was attached to the original brief** — the color system
-above was built from the written description (maroon background, flame
-icon, warm coral accent, bold rounded type). Once you have the actual
-BOXA.YK logo file, drop it in `public/` and wire it into
-`components/site-header.tsx` and `website_settings.logo_url`.
+Still no logo file has been attached in this project's conversation —
+palette was built from the written description both times. Drop the real
+file in `public/` and wire it into `boxa-sidebar.tsx` / `boxa-topnav.tsx`
+whenever you have it.

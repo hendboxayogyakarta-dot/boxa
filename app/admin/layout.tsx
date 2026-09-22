@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import {
   LayoutDashboard,
   Package,
@@ -7,7 +8,10 @@ import {
   Palette,
   Settings,
   Image as ImageIcon,
+  LogOut,
 } from "lucide-react";
+import { createClient } from "@/lib/supabase/server";
+import { LogoutButton } from "./logout-button";
 
 const NAV = [
   { label: "Ringkasan", href: "/admin", icon: LayoutDashboard },
@@ -19,25 +23,51 @@ const NAV = [
   { label: "Pengaturan", href: "/admin/settings", icon: Settings },
 ];
 
+const SUPABASE_CONFIGURED = Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL);
+
 /**
- * TODO before this route is safe to expose:
- * 1. Wrap this layout with a server-side Supabase Auth session check
- *    (redirect to /admin/login when there's no session or the user's
- *    `profiles.role` isn't 'admin'). See db/schema.sql for the profiles
- *    table + RLS policies this depends on.
- * 2. Never rely on hiding this sidebar as the only protection — every
- *    admin route handler / server action must re-check the session and
- *    role itself, per RLS.
+ * Auth flow:
+ * 1. middleware.ts already blocks unauthenticated visitors from any
+ *    /admin/* route and bounces them to /login.
+ * 2. Here we do a second, defense-in-depth check: the session must belong
+ *    to a `profiles` row with role 'admin' or 'staff' (mirrors the
+ *    is_admin() function that every RLS policy in db/schema.sql relies
+ *    on) — a valid login alone isn't enough to see admin data.
+ * When Supabase isn't connected yet (no env vars), we skip both checks so
+ * local development still works against the mock data layer, with a
+ * visible banner so nobody mistakes it for a real logged-in session.
  */
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+  let email: string | null = null;
+
+  if (SUPABASE_CONFIGURED) {
+    const supabase = await createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) redirect("/login");
+
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .single();
+
+    if (!profile || !["admin", "staff"].includes(profile.role)) {
+      redirect("/login?error=not_authorized");
+    }
+    email = user.email ?? null;
+  }
+
   return (
     <div className="flex min-h-screen bg-cream-warm">
-      <aside className="hidden w-60 shrink-0 border-r border-line bg-white md:block">
+      <aside className="hidden w-60 shrink-0 border-r border-line bg-white md:flex md:flex-col">
         <div className="border-b border-line px-5 py-4">
           <span className="font-display text-lg font-extrabold text-maroon">BOXA.YK</span>
           <div className="text-xs text-muted">Admin</div>
         </div>
-        <nav className="flex flex-col gap-0.5 p-3">
+        <nav className="flex flex-1 flex-col gap-0.5 p-3">
           {NAV.map(({ label, href, icon: Icon }) => (
             <Link
               key={href}
@@ -49,11 +79,23 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             </Link>
           ))}
         </nav>
+        {SUPABASE_CONFIGURED && email && (
+          <div className="border-t border-line p-3">
+            <div className="truncate px-2 text-xs text-muted">{email}</div>
+            <LogoutButton />
+          </div>
+        )}
       </aside>
       <div className="flex-1">
         <header className="flex items-center justify-between border-b border-line bg-white px-6 py-3 md:hidden">
           <span className="font-display text-lg font-extrabold text-maroon">BOXA.YK Admin</span>
         </header>
+        {!SUPABASE_CONFIGURED && (
+          <div className="border-b border-line bg-ember/20 px-6 py-2 text-xs text-ink-soft">
+            Supabase belum disambungkan — admin ini berjalan tanpa login, menampilkan data
+            contoh (mock). Lihat README.md.
+          </div>
+        )}
         <main className="p-6">{children}</main>
       </div>
     </div>

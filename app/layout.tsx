@@ -1,8 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { SiteHeader } from "@/components/site-header";
-import { SiteFooter } from "@/components/site-footer";
-import { getSiteSettings } from "@/lib/data";
 
 export const metadata: Metadata = {
   title: {
@@ -13,19 +10,14 @@ export const metadata: Metadata = {
     "BOXA.YK adalah toko mainan dan collectible kurasi dari Yogyakarta. Barang dicek dulu, informasinya jujur, belinya gampang.",
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const settings = await getSiteSettings();
   return (
     <html lang="id">
       <head>
-        {/* Loaded as a stylesheet link rather than next/font so the build
-            doesn't require build-time network access to fonts.googleapis.com
-            (irrelevant on Vercel, which has it — this just keeps local/CI
-            builds resilient). Swap for next/font/google any time. */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
@@ -33,11 +25,7 @@ export default async function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="antialiased">
-        <SiteHeader settings={settings} />
-        <main>{children}</main>
-        <SiteFooter settings={settings} />
-      </body>
+      <body className="antialiased">{children}</body>
     </html>
   );
 }

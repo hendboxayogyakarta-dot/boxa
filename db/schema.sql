@@ -297,7 +297,7 @@ values (
   1, 'BOXA.YK', 'Mainan pilihan dari Yogyakarta',
   '6281234567890', 'https://instagram.com/boxa.yk', 'https://tiktok.com/@boxa.yk', 'https://shopee.co.id/boxayk',
   'Yogyakarta, Indonesia',
-  '{"enabled": true, "title": "Temukan Mainan yang Layak Kamu Punya.", "subtitle": "Mainan pilihan, review jujur, dan informasi yang jelas dari BOXA.YK.", "cta_text": "Lihat Koleksi", "cta_href": "/shop", "secondary_cta_text": "Kenalan dengan BOXA", "secondary_cta_href": "/tentang"}'::jsonb,
+  '{"enabled": true, "badge": "BOXA Featured", "title": "Temukan Mainan yang Layak Kamu Punya.", "subtitle": "Mainan pilihan, review jujur, dan informasi yang jelas dari BOXA.YK.", "cta_text": "Pesan Sekarang", "cta_href": "/shop", "secondary_cta_text": "Kenalan dengan BOXA", "secondary_cta_href": "/tentang", "featured_product_id": null}'::jsonb,
   '{"enabled": true, "service_area": "Antar area Yogyakarta", "free_delivery_enabled": true, "free_delivery_minimum": 300000, "notes": "Gratis antar untuk pembelian di atas Rp300.000, area Kota Yogyakarta."}'::jsonb,
   '{"site_title": "BOXA.YK — Mainan pilihan dari Yogyakarta", "meta_description": "Toko mainan dan collectible kurasi dari Yogyakarta."}'::jsonb
 ) on conflict (id) do nothing;
