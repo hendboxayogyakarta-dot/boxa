@@ -1,6 +1,6 @@
 import type { Banner, Category, Product, Review, SiteSettings } from "./types";
 import { mockBanners, mockCategories, mockProducts, mockReviews, mockSettings } from "./mock-data";
-import { createClient } from "./supabase/server";
+import { createClient, createPublicClient } from "./supabase/server";
 
 /**
  * This module is the single seam between the UI and the data source.
@@ -37,7 +37,7 @@ function mapSettingsRow(row: any): SiteSettings {
 export async function getSiteSettings(): Promise<SiteSettings> {
   if (!SUPABASE_CONFIGURED) return mockSettings;
 
-  const supabase = await createClient();
+  const supabase = createPublicClient();
   const [{ data: settingsRow }, sections] = await Promise.all([
     supabase.from("website_settings").select("*").eq("id", 1).single(),
     getHomepageSections(),
@@ -48,7 +48,7 @@ export async function getSiteSettings(): Promise<SiteSettings> {
 }
 
 async function getHomepageSections() {
-  const supabase = await createClient();
+  const supabase = createPublicClient();
   const { data } = await supabase
     .from("homepage_sections")
     .select("*")
@@ -58,7 +58,7 @@ async function getHomepageSections() {
 
 export async function getBanners(): Promise<Banner[]> {
   if (!SUPABASE_CONFIGURED) return mockBanners.filter((b) => b.enabled);
-  const supabase = await createClient();
+  const supabase = createPublicClient();
   const { data } = await supabase
     .from("banners")
     .select("*")
@@ -87,7 +87,7 @@ export async function getAllCategoriesForAdmin(): Promise<Category[]> {
 export async function getCategories(): Promise<Category[]> {
   if (!SUPABASE_CONFIGURED) return mockCategories;
 
-  const supabase = await createClient();
+  const supabase = createPublicClient();
   const { data } = await supabase
     .from("categories")
     .select("*")
@@ -108,7 +108,7 @@ export async function getProducts(filters?: {
     return filterAndSortMock(filters);
   }
 
-  const supabase = await createClient();
+  const supabase = createPublicClient();
   let query = supabase
     .from("products")
     .select("*, category:categories(*), images:product_images(*)")
@@ -189,7 +189,7 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
   if (!SUPABASE_CONFIGURED) {
     return mockProducts.find((p) => p.slug === slug) ?? null;
   }
-  const supabase = await createClient();
+  const supabase = createPublicClient();
   const { data } = await supabase
     .from("products")
     .select("*, category:categories(*), images:product_images(*)")
@@ -230,7 +230,7 @@ export async function getRelatedProducts(product: Product): Promise<Product[]> {
       .filter((p) => p.id !== product.id && p.category_id === product.category_id)
       .slice(0, 4);
   }
-  const supabase = await createClient();
+  const supabase = createPublicClient();
   const { data } = await supabase
     .from("products")
     .select("*, category:categories(*), images:product_images(*)")
@@ -245,7 +245,7 @@ export async function getApprovedReviews(productId: string): Promise<Review[]> {
   if (!SUPABASE_CONFIGURED) {
     return mockReviews.filter((r) => r.product_id === productId && r.status === "approved");
   }
-  const supabase = await createClient();
+  const supabase = createPublicClient();
   const { data } = await supabase
     .from("reviews")
     .select("*")
@@ -259,7 +259,7 @@ export async function getAllApprovedReviews(): Promise<Review[]> {
   if (!SUPABASE_CONFIGURED) {
     return mockReviews.filter((r) => r.status === "approved");
   }
-  const supabase = await createClient();
+  const supabase = createPublicClient();
   const { data } = await supabase
     .from("reviews")
     .select("*")
