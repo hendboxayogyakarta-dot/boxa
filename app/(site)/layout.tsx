@@ -3,16 +3,19 @@ import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { MobileBottomNav } from "@/components/mobile-bottom-nav";
 import { SiteThemeProvider } from "@/components/site-theme-provider";
+import { CartProvider } from "@/components/cart-context";
 
 export default async function SiteLayout({ children }: { children: React.ReactNode }) {
   const settings = await getSiteSettings();
 
   return (
     <SiteThemeProvider>
-      <SiteHeader settings={settings} />
-      <main className="pb-16 md:pb-0">{children}</main>
-      <SiteFooter settings={settings} />
-      <MobileBottomNav settings={settings} />
+      <CartProvider>
+        <SiteHeader settings={settings} />
+        <main className="pb-16 md:pb-0">{children}</main>
+        <SiteFooter settings={settings} />
+        <MobileBottomNav settings={settings} />
+      </CartProvider>
     </SiteThemeProvider>
   );
 }

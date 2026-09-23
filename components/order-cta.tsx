@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { MessageCircle, ShoppingBag, ExternalLink } from "lucide-react";
 import type { Product } from "@/lib/types";
 import { buildWhatsAppOrderLink } from "@/lib/utils";
@@ -9,8 +10,17 @@ function resolveHref(
   whatsappLink: string
 ): { href: string; icon: React.ReactNode; label: string } {
   switch (product.cta_type) {
-    case "SHOPEE":
-      return { href: product.shopee_url ?? "#", icon: <ShoppingBag size={18} />, label: "Pesan di Shopee" };
+    case "SHOPEE": {
+      const name = product.marketplace?.name ?? "Marketplace";
+      const icon = product.marketplace?.logo_url ? (
+        <span className="relative h-4 w-4 shrink-0 overflow-hidden rounded-full bg-on-brand">
+          <Image src={product.marketplace.logo_url} alt={name} fill sizes="16px" className="object-contain" />
+        </span>
+      ) : (
+        <ShoppingBag size={18} />
+      );
+      return { href: product.shopee_url ?? "#", icon, label: `Pesan via ${name}` };
+    }
     case "EXTERNAL_URL":
       return { href: product.external_order_url ?? "#", icon: <ExternalLink size={18} />, label: "Pesan Sekarang" };
     case "WHATSAPP":
@@ -39,7 +49,7 @@ export function OrderCta({ product, whatsappNumber }: { product: Product; whatsa
     return (
       <button
         disabled
-        className="flex w-full cursor-not-allowed items-center justify-center gap-2 rounded-full bg-ink/15 px-6 py-3.5 text-sm font-semibold text-ink/50"
+        className="flex w-full cursor-not-allowed items-center justify-center gap-2 rounded-full bg-line text-sm font-semibold text-muted px-6 py-3.5"
       >
         Stok Habis
       </button>

@@ -1,8 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Tag } from "lucide-react";
+import { Tag, Flame } from "lucide-react";
 import type { Product } from "@/lib/types";
-import { formatIDR } from "@/lib/utils";
+import { formatIDR, hasPrice } from "@/lib/utils";
 import { ProductBadges } from "./badges";
 
 export function ProductCard({ product }: { product: Product }) {
@@ -63,7 +63,7 @@ export function ProductCard({ product }: { product: Product }) {
               Online <span className="line-through">{formatIDR(product.price)}</span>
             </div>
           </div>
-        ) : (
+        ) : hasPrice(product.price) ? (
           <div className="mt-auto flex items-baseline gap-2 pt-1">
             <span className="font-display text-base font-bold text-accent">
               {formatIDR(product.price)}
@@ -73,6 +73,11 @@ export function ProductCard({ product }: { product: Product }) {
                 {formatIDR(product.compare_price)}
               </span>
             )}
+          </div>
+        ) : (
+          <div className="mt-auto flex items-center gap-1 pt-1 text-sm font-semibold text-flame">
+            <Flame size={14} />
+            Rekomendasi BOXA
           </div>
         )}
 

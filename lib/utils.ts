@@ -47,6 +47,35 @@ export function buildWhatsAppOrderLink(
   return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(lines.join("\n"))}`;
 }
 
+/**
+ * For affiliate listings added in a hurry — price left blank (0) shows a
+ * recommendation badge instead of "Rp 0", so an unfinished product still
+ * looks intentional rather than broken.
+ */
+export function hasPrice(price: number): boolean {
+  return price > 0;
+}
+
+/**
+ * Builds a generic-but-relevant description from whatever fields ARE
+ * filled in (category, brand, condition), for products where the admin
+ * hasn't had time to write a real one yet — always points shoppers to
+ * the marketplace link for the actual details/photos.
+ */
+export function getFallbackDescription(product: {
+  category?: { name: string } | null;
+  condition: string;
+  brand?: string | null;
+  marketplace?: { name: string } | null;
+}): string {
+  const bits: string[] = [];
+  if (product.category?.name) bits.push(product.category.name);
+  if (product.brand) bits.push(`dari ${product.brand}`);
+  const lead = bits.length > 0 ? bits.join(" ") + ". " : "";
+  const marketplaceName = product.marketplace?.name ?? "marketplace kami";
+  return `${lead}Kondisi: ${conditionLabel(product.condition)}. Cek detail lengkap dan foto asli produk via ${marketplaceName}.`;
+}
+
 export function slugify(input: string): string {
   return input
     .toLowerCase()

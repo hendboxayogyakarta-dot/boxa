@@ -63,6 +63,22 @@ create index idx_brands_slug on brands(slug);
 create index idx_brands_status on brands(status);
 
 -- ---------------------------------------------------------------------
+-- MARKETPLACES  (same shape as brands — Shopee, Tokopedia, Lazada, etc.
+-- Which one a product's online link points to, for the button's logo.)
+-- ---------------------------------------------------------------------
+create table marketplaces (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  slug text not null unique,
+  logo_url text,
+  status text not null default 'active' check (status in ('active', 'hidden')),
+  sort_order int not null default 0,
+  created_at timestamptz not null default now()
+);
+create index idx_marketplaces_slug on marketplaces(slug);
+create index idx_marketplaces_status on marketplaces(status);
+
+-- ---------------------------------------------------------------------
 -- PRODUCTS
 -- ---------------------------------------------------------------------
 create table products (
@@ -79,6 +95,7 @@ create table products (
   local_price numeric(12,2) check (local_price is null or local_price >= 0),
   offline_available boolean not null default true,
   brand_id uuid references brands(id) on delete set null,
+  marketplace_id uuid references marketplaces(id) on delete set null,
   stock_quantity int not null default 0,
   stock_status stock_status not null default 'in_stock',
   category_id uuid references categories(id) on delete set null,
@@ -119,6 +136,7 @@ create index idx_products_category on products(category_id);
 create index idx_products_status on products(status);
 create index idx_products_created_at on products(created_at desc);
 create index idx_products_brand on products(brand_id);
+create index idx_products_marketplace on products(marketplace_id);
 
 -- ---------------------------------------------------------------------
 -- PRODUCT IMAGES
@@ -268,6 +286,7 @@ $$ language sql security definer stable;
 alter table profiles enable row level security;
 alter table categories enable row level security;
 alter table brands enable row level security;
+alter table marketplaces enable row level security;
 alter table products enable row level security;
 alter table product_images enable row level security;
 alter table reviews enable row level security;
@@ -293,6 +312,12 @@ create policy "brands_public_read" on brands for select using (status = 'active'
 create policy "brands_admin_write" on brands for insert with check (is_admin());
 create policy "brands_admin_update" on brands for update using (is_admin()) with check (is_admin());
 create policy "brands_admin_delete" on brands for delete using (is_admin());
+
+-- marketplaces: public can read active; admins full CRUD
+create policy "marketplaces_public_read" on marketplaces for select using (status = 'active' or is_admin());
+create policy "marketplaces_admin_write" on marketplaces for insert with check (is_admin());
+create policy "marketplaces_admin_update" on marketplaces for update using (is_admin()) with check (is_admin());
+create policy "marketplaces_admin_delete" on marketplaces for delete using (is_admin());
 
 -- products: public can read published; admins full CRUD
 create policy "products_public_read" on products for select using (status = 'published' or is_admin());
@@ -362,6 +387,13 @@ insert into brands (name, slug, status, sort_order) values
 on conflict (slug) do nothing;
 -- Logos aren't set here — upload each one from /admin/brands after this
 -- runs (they need real files, not a placeholder URL).
+
+insert into marketplaces (name, slug, status, sort_order) values
+  ('Shopee', 'shopee', 'active', 1),
+  ('Tokopedia', 'tokopedia', 'active', 2),
+  ('Lazada', 'lazada', 'active', 3)
+on conflict (slug) do nothing;
+-- Logos aren't set here — upload each one from /admin/marketplaces.
 
 insert into categories (name, slug, description, status, sort_order) values
   ('Blokees', 'blokees', 'Building toys ala LEGO, seri lokal & impor.', 'active', 1),

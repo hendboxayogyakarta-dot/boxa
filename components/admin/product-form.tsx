@@ -1,7 +1,7 @@
 import { saveProduct } from "@/lib/actions/products";
 import { ProductImagesField } from "@/components/admin/product-images-field";
 import { SubmitButton } from "@/components/admin/submit-button";
-import type { Brand, Category, Product } from "@/lib/types";
+import type { Brand, Category, Marketplace, Product } from "@/lib/types";
 
 function Field({ label, children, hint }: { label: string; children: React.ReactNode; hint?: string }) {
   return (
@@ -20,10 +20,12 @@ export function ProductForm({
   product,
   categories,
   brands,
+  marketplaces,
 }: {
   product?: Product;
   categories: Category[];
   brands: Brand[];
+  marketplaces: Marketplace[];
 }) {
   return (
     <form action={saveProduct} className="max-w-3xl space-y-8">
@@ -184,15 +186,26 @@ export function ProductForm({
           <Field label="Jenis CTA">
             <select name="cta_type" defaultValue={product?.cta_type ?? "WHATSAPP"} className={inputClass}>
               <option value="WHATSAPP">WhatsApp</option>
-              <option value="SHOPEE">Shopee</option>
+              <option value="SHOPEE">Marketplace (link affiliate)</option>
               <option value="EXTERNAL_URL">Link Lain</option>
             </select>
           </Field>
           <Field label="Link WhatsApp">
             <input name="whatsapp_url" defaultValue={product?.whatsapp_url ?? ""} className={inputClass} />
           </Field>
-          <Field label="Link Shopee">
+          <Field label="Link Marketplace" hint="Link affiliate — boleh dari Shopee, Tokopedia, Lazada, atau marketplace lain.">
             <input name="shopee_url" defaultValue={product?.shopee_url ?? ""} className={inputClass} />
+          </Field>
+          <Field
+            label="Marketplace (logo tombol)"
+            hint="Menentukan logo & nama yang tampil di tombol beli online. Tambah pilihan baru di menu Marketplace."
+          >
+            <select name="marketplace_id" defaultValue={product?.marketplace_id ?? ""} className={inputClass}>
+              <option value="">Tanpa logo</option>
+              {marketplaces.map((m) => (
+                <option key={m.id} value={m.id}>{m.name}</option>
+              ))}
+            </select>
           </Field>
           <Field label="Link Eksternal Lain">
             <input name="external_order_url" defaultValue={product?.external_order_url ?? ""} className={inputClass} />

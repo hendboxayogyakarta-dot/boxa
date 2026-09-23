@@ -1,6 +1,8 @@
+import Image from "next/image";
 import { MessageCircle, ShoppingBag, MapPin } from "lucide-react";
 import type { Product } from "@/lib/types";
 import { formatIDR, buildWhatsAppOrderLink } from "@/lib/utils";
+import { AddToCartButton } from "@/components/add-to-cart-button";
 
 /**
  * BOXA's "Original Toys, Local Prices" USP made concrete: same product,
@@ -22,6 +24,7 @@ export function PriceComparison({ product, whatsappNumber }: { product: Product;
   const noShopeeLink = !product.shopee_url;
   const soldOut = product.stock_status === "sold_out";
   const onlineDisabled = soldOut || noShopeeLink;
+  const marketplaceName = product.marketplace?.name ?? "Marketplace";
   const savings = product.price - product.local_price;
   const hasSavings = savings > 0;
 
@@ -47,12 +50,18 @@ export function PriceComparison({ product, whatsappNumber }: { product: Product;
             aria-disabled={onlineDisabled}
             className={`mt-4 flex items-center justify-center gap-2 rounded-full px-4 py-2.5 text-sm font-semibold transition-colors ${
               onlineDisabled
-                ? "pointer-events-none bg-ink/10 text-ink/40"
-                : "bg-ink text-on-brand hover:bg-ink-soft"
+                ? "pointer-events-none bg-line text-muted"
+                : "bg-maroon text-on-brand hover:bg-maroon-deep"
             }`}
           >
-            <ShoppingBag size={16} />
-            {soldOut ? "Stok Habis" : noShopeeLink ? "Link Belum Ada" : "Pesan via Shopee"}
+            {product.marketplace?.logo_url ? (
+              <span className="relative h-4 w-4 shrink-0 overflow-hidden rounded-full bg-on-brand">
+                <Image src={product.marketplace.logo_url} alt={marketplaceName} fill sizes="16px" className="object-contain" />
+              </span>
+            ) : (
+              <ShoppingBag size={16} />
+            )}
+            {soldOut ? "Stok Habis" : noShopeeLink ? "Link Belum Ada" : `Pesan via ${marketplaceName}`}
           </a>
         </div>
 
@@ -75,13 +84,24 @@ export function PriceComparison({ product, whatsappNumber }: { product: Product;
             aria-disabled={soldOut}
             className={`mt-4 flex items-center justify-center gap-2 rounded-full px-4 py-2.5 text-sm font-semibold transition-colors ${
               soldOut
-                ? "pointer-events-none bg-ink/10 text-ink/40"
+                ? "pointer-events-none bg-line text-muted"
                 : "bg-flame text-on-brand hover:bg-flame-light"
             }`}
           >
             <MessageCircle size={16} />
             {soldOut ? "Stok Habis" : "Ambil di Yogyakarta"}
           </a>
+          {!soldOut && (
+            <AddToCartButton
+              item={{
+                productId: product.id,
+                slug: product.slug,
+                name: product.name,
+                imageUrl: product.images[0]?.url ?? null,
+                localPrice: product.local_price,
+              }}
+            />
+          )}
         </div>
       </div>
     </div>

@@ -2,14 +2,14 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getApprovedReviews, getProductBySlug, getRelatedProducts, getSiteSettings } from "@/lib/data";
-import { formatIDR, conditionLabel, stockLabel } from "@/lib/utils";
+import { formatIDR, conditionLabel, stockLabel, hasPrice, getFallbackDescription } from "@/lib/utils";
 import { ProductBadges } from "@/components/badges";
 import { OrderCta } from "@/components/order-cta";
 import { PriceComparison } from "@/components/price-comparison";
 import { ProductGallery } from "@/components/product-gallery";
 import { RatingStars } from "@/components/rating-stars";
 import { ProductCard } from "@/components/product-card";
-import { CheckCircle2, MapPin, ShieldCheck, XCircle } from "lucide-react";
+import { CheckCircle2, MapPin, ShieldCheck, XCircle, Flame } from "lucide-react";
 
 // Cache each product page for 60s instead of querying Supabase on every
 // single visit — product info doesn't change second-to-second.
@@ -106,7 +106,7 @@ export default async function ProductPage({
               <div className="mt-5">
                 <PriceComparison product={product} whatsappNumber={settings.whatsapp_number} />
               </div>
-            ) : (
+            ) : hasPrice(product.price) ? (
               <div className="mt-5 font-display text-4xl font-extrabold text-accent">
                 {formatIDR(product.price)}
                 {product.compare_price && (
@@ -115,9 +115,16 @@ export default async function ProductPage({
                   </span>
                 )}
               </div>
+            ) : (
+              <div className="mt-5 flex items-center gap-2 font-display text-2xl font-extrabold text-flame">
+                <Flame size={22} />
+                Rekomendasi BOXA
+              </div>
             )}
 
-            <p className="mt-4 text-sm leading-relaxed text-ink-soft">{product.short_description}</p>
+            <p className="mt-4 text-sm leading-relaxed text-ink-soft">
+              {product.short_description || getFallbackDescription(product)}
+            </p>
 
             <dl className="mt-6 grid grid-cols-2 gap-3 text-sm">
               <div className="rounded-xl border border-line bg-white p-3">
@@ -165,7 +172,7 @@ export default async function ProductPage({
           <div>
             <h2 className="font-display text-xl font-bold text-ink">Detail Produk</h2>
             <div className="mt-4 space-y-3 text-sm leading-relaxed text-ink-soft">
-              {product.description.split("\n\n").map((para, i) => (
+              {(product.description || getFallbackDescription(product)).split("\n\n").map((para, i) => (
                 <p key={i}>{para}</p>
               ))}
             </div>

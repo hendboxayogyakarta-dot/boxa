@@ -46,6 +46,11 @@ export interface Product {
    * unchanged; this is additive. */
   brand_id: string | null;
   brand_logo?: Brand;
+  /** Which marketplace the online purchase link (shopee_url) actually
+   * goes to — drives the online button's label/logo in PriceComparison
+   * and OrderCta. Defaults to showing a generic label when unset. */
+  marketplace_id: string | null;
+  marketplace?: Marketplace;
   stock_quantity: number;
   stock_status: StockStatus;
   category_id: string;
@@ -117,6 +122,15 @@ export interface Brand {
   status: "active" | "hidden";
   sort_order: number;
 }
+
+/** Same shape as Brand — a reusable logo, but for the marketplace a
+ * product's online purchase link points to (Shopee, Tokopedia, Lazada,
+ * ...). Since this is affiliate-based, different products can point
+ * anywhere; the logo + label just need to match wherever admin actually
+ * put the link. Kept as its own table/type (not reused as Brand) so
+ * "which factory made this toy" and "where do I buy it" stay separate
+ * concepts even though the shape is identical. */
+export type Marketplace = Brand;
 
 export interface HeroSettings {
   enabled: boolean;

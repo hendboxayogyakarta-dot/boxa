@@ -3,7 +3,6 @@ import { ProductCard } from "@/components/product-card";
 import { RequestToyButton } from "@/components/request-toy-button";
 import { ShopMobileControls } from "@/components/shop-mobile-controls";
 import Link from "next/link";
-import { Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 // Helps the common no-filter case (/shop with no query) get cached;
@@ -88,20 +87,8 @@ export default async function ShopPage({
         <RequestToyButton whatsappNumber={settings.whatsapp_number} className="hidden sm:inline-flex" />
       </div>
 
-      {/* Always-visible search — Shopee-style, not tucked in a header menu.
-          Hidden inputs keep whatever filters are already active. */}
-      <form action="/shop" className="mt-4 flex items-center gap-2 rounded-full border border-line bg-white px-4 py-2.5">
-        <Search size={16} className="shrink-0 text-muted" />
-        <input
-          name="q"
-          defaultValue={q}
-          placeholder="Cari mainan, brand, seri..."
-          className="w-full bg-transparent text-sm outline-none placeholder:text-muted"
-        />
-        {category && <input type="hidden" name="category" value={category} />}
-        {brand && <input type="hidden" name="brand" value={brand} />}
-        {sort !== "newest" && <input type="hidden" name="sort" value={sort} />}
-      </form>
+      {/* Search now lives once, in the header (always visible on mobile) —
+          having it here too was the duplicate search bar. */}
 
       {/* Mobile filter/sort bottom sheets — sidebar below is desktop-only */}
       <div className="mt-3">

@@ -8,11 +8,11 @@ import { Menu, Search, X, MessageCircle, Flame } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { SiteSettings } from "@/lib/types";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { CartButton } from "@/components/cart-button";
 
 const NAV = [
   { label: "Beranda", href: "/" },
   { label: "Semua Produk", href: "/shop" },
-  { label: "Rare / Secret", href: "/shop?rare=1" },
   { label: "Tentang BOXA", href: "/tentang" },
 ];
 
@@ -63,10 +63,12 @@ export function SiteHeader({ settings }: { settings: SiteSettings }) {
           </div>
         </form>
 
+        <CartButton whatsappNumber={settings.whatsapp_number} />
+
         <ThemeToggle className="hidden sm:flex" />
 
         <a
-          href={`https://wa.me/${settings.whatsapp_number}`}
+          href={`https://wa.me/${settings.whatsapp_number}?text=${encodeURIComponent("Halo BOXA, saya mau tanya-tanya soal produk (bukan request atau soal pesanan tertentu).")}`}
           target="_blank"
           rel="noreferrer"
           className="hidden items-center gap-1.5 rounded-full bg-flame px-4 py-2 text-sm font-semibold text-on-brand transition-colors hover:bg-flame-light sm:inline-flex"
