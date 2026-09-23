@@ -68,7 +68,7 @@ export function OrderCta({ product, whatsappNumber }: { product: Product; whatsa
         {icon}
         {label}
       </a>
-      {product.cta_type !== "WHATSAPP" && (
+      {product.cta_type !== "WHATSAPP" && product.offline_available && (
         <a
           href={whatsappLink}
           target="_blank"

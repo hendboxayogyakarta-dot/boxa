@@ -57,6 +57,17 @@ export function hasPrice(price: number): boolean {
 }
 
 /**
+ * A product with offline_available = false is a pure affiliate listing —
+ * no COD/local pickup, so its price display is replaced by a
+ * recommendation instead (see getFallbackDescription and the product
+ * card/detail page). Backed by boxa_score where set, so it reads as an
+ * actual evaluation rather than a generic "we recommend everything" badge.
+ */
+export function isRecommendationProduct(product: { offline_available: boolean }): boolean {
+  return !product.offline_available;
+}
+
+/**
  * Builds a generic-but-relevant description from whatever fields ARE
  * filled in (category, brand, condition), for products where the admin
  * hasn't had time to write a real one yet — always points shoppers to

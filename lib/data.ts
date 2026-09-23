@@ -138,6 +138,10 @@ export async function getProducts(filters?: {
   featured?: boolean;
   isNew?: boolean;
   rareOrSecret?: boolean;
+  /** Affiliate-only listings — no COD/local pickup, price is optional,
+   * CTA goes straight to the marketplace link. Backs the "Boxa
+   * Rekomendasi" nav section. */
+  recommendationOnly?: boolean;
   search?: string;
   sort?: "newest" | "price_asc" | "price_desc" | "popularity" | "featured";
 }): Promise<Product[]> {
@@ -157,6 +161,7 @@ export async function getProducts(filters?: {
   if (filters?.brand) {
     query = query.eq("brand_logo.slug", filters.brand);
   }
+  if (filters?.recommendationOnly) query = query.eq("offline_available", false);
   if (filters?.featured) query = query.eq("is_featured", true);
   if (filters?.isNew) query = query.eq("is_new", true);
   if (filters?.rareOrSecret) query = query.or("is_rare.eq.true,is_secret.eq.true");
@@ -200,6 +205,7 @@ function filterAndSortMock(filters?: Parameters<typeof getProducts>[0]): Product
       return b?.slug === filters.brand;
     });
   }
+  if (filters?.recommendationOnly) items = items.filter((p) => !p.offline_available);
   if (filters?.featured) items = items.filter((p) => p.is_featured);
   if (filters?.isNew) items = items.filter((p) => p.is_new);
   if (filters?.rareOrSecret) items = items.filter((p) => p.is_rare || p.is_secret);

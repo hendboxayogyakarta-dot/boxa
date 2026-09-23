@@ -2,14 +2,15 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getApprovedReviews, getProductBySlug, getRelatedProducts, getSiteSettings } from "@/lib/data";
-import { formatIDR, conditionLabel, stockLabel, hasPrice, getFallbackDescription } from "@/lib/utils";
+import { formatIDR, conditionLabel, stockLabel, hasPrice, isRecommendationProduct, getFallbackDescription } from "@/lib/utils";
+import { RecommendationBadge } from "@/components/recommendation-badge";
 import { ProductBadges } from "@/components/badges";
 import { OrderCta } from "@/components/order-cta";
 import { PriceComparison } from "@/components/price-comparison";
 import { ProductGallery } from "@/components/product-gallery";
 import { RatingStars } from "@/components/rating-stars";
 import { ProductCard } from "@/components/product-card";
-import { CheckCircle2, MapPin, ShieldCheck, XCircle, Flame } from "lucide-react";
+import { CheckCircle2, MapPin, ShieldCheck, XCircle } from "lucide-react";
 
 // Cache each product page for 60s instead of querying Supabase on every
 // single visit — product info doesn't change second-to-second.
@@ -106,6 +107,10 @@ export default async function ProductPage({
               <div className="mt-5">
                 <PriceComparison product={product} whatsappNumber={settings.whatsapp_number} />
               </div>
+            ) : isRecommendationProduct(product) ? (
+              <div className="mt-5">
+                <RecommendationBadge score={product.boxa_score} size="lg" />
+              </div>
             ) : hasPrice(product.price) ? (
               <div className="mt-5 font-display text-4xl font-extrabold text-accent">
                 {formatIDR(product.price)}
@@ -116,9 +121,8 @@ export default async function ProductPage({
                 )}
               </div>
             ) : (
-              <div className="mt-5 flex items-center gap-2 font-display text-2xl font-extrabold text-flame">
-                <Flame size={22} />
-                Rekomendasi BOXA
+              <div className="mt-5">
+                <RecommendationBadge score={null} size="lg" />
               </div>
             )}
 
@@ -157,7 +161,7 @@ export default async function ProductPage({
             {!showLocalPricing && (
               <div className="mt-7">
                 <OrderCta product={product} whatsappNumber={settings.whatsapp_number} />
-                {product.delivery_available && (
+                {product.delivery_available && !isRecommendationProduct(product) && (
                   <p className="mt-2.5 text-center text-xs text-muted sm:text-left">
                     {product.instant_delivery_available ? "Pengiriman instan tersedia · " : ""}Antar area Yogyakarta
                   </p>

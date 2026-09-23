@@ -31,6 +31,46 @@ export function ProductForm({
     <form action={saveProduct} className="max-w-3xl space-y-8">
       {product && <input type="hidden" name="id" value={product.id} />}
 
+      <section className="space-y-3 rounded-2xl border-2 border-flame/30 bg-flame/5 p-5">
+        <h2 className="font-display text-base font-bold text-ink">Jenis Produk</h2>
+        <p className="text-xs text-muted">Ini menentukan tombol, harga, dan tampilan produk di halaman depan.</p>
+        <div className="space-y-2">
+          <label className="flex items-start gap-2.5 rounded-xl border border-line bg-white p-3 text-sm">
+            <input
+              type="radio"
+              name="offline_available"
+              value="on"
+              defaultChecked={product?.offline_available ?? true}
+              className="mt-0.5"
+            />
+            <span>
+              <span className="font-semibold text-ink">COD / Lokal tersedia</span>
+              <span className="block text-xs text-muted">
+                Bisa diambil langsung / COD Yogyakarta. Isi harga online dan (opsional) harga lokal di bawah.
+              </span>
+            </span>
+          </label>
+          <label className="flex items-start gap-2.5 rounded-xl border border-line bg-white p-3 text-sm">
+            <input
+              type="radio"
+              name="offline_available"
+              value="off"
+              defaultChecked={product ? !product.offline_available : false}
+              className="mt-0.5"
+            />
+            <span>
+              <span className="font-semibold text-ink">Rekomendasi — Affiliate saja</span>
+              <span className="block text-xs text-muted">
+                BOXA tidak simpan fisiknya (link affiliate Shopee/marketplace lain). Harga boleh
+                dikosongkan — otomatis diganti narasi &ldquo;Rekomendasi BOXA&rdquo; + skor BOXA
+                (isi di bagian Kondisi &amp; Kurasi). Tombol beli langsung ke link marketplace,
+                tanpa opsi COD/WhatsApp.
+              </span>
+            </span>
+          </label>
+        </div>
+      </section>
+
       <section className="space-y-4 rounded-2xl border border-line bg-white p-5">
         <h2 className="font-display text-base font-bold text-ink">Informasi Dasar</h2>
         <div className="grid gap-4 sm:grid-cols-2">
@@ -80,7 +120,7 @@ export function ProductForm({
       <section className="space-y-4 rounded-2xl border border-line bg-white p-5">
         <h2 className="font-display text-base font-bold text-ink">Harga & Stok</h2>
         <div className="grid gap-4 sm:grid-cols-2">
-          <Field label="Harga (Rp)">
+          <Field label="Harga (Rp)" hint="Boleh dikosongkan untuk produk jenis Rekomendasi.">
             <input type="number" name="price" min={0} defaultValue={product?.price} className={inputClass} />
           </Field>
           <Field label="Harga Coret (opsional)">
@@ -88,24 +128,11 @@ export function ProductForm({
           </Field>
           <Field
             label="Harga Lokal — Yogyakarta (opsional)"
-            hint="Isi kalau produk ini punya harga lebih hemat untuk ambil langsung di Yogyakarta. Kosongkan kalau cuma satu harga (online)."
+            hint="Isi kalau produk ini punya harga lebih hemat untuk ambil langsung di Yogyakarta. Kosongkan kalau cuma satu harga (online), atau kalau jenis produknya Rekomendasi."
           >
             <input type="number" name="local_price" min={0} defaultValue={product?.local_price ?? ""} className={inputClass} />
           </Field>
         </div>
-        <label className="flex items-center gap-2 text-sm text-ink-soft">
-          <input
-            type="checkbox"
-            name="offline_available"
-            defaultChecked={product?.offline_available ?? true}
-            className="rounded border-line"
-          />
-          Tersedia untuk ambil offline / COD di Yogyakarta
-        </label>
-        <p className="text-xs text-muted">
-          Matikan untuk produk affiliate/dropship (misalnya link Shopee) yang BOXA tidak simpan
-          fisiknya — tombol &amp; harga lokal otomatis disembunyikan, tinggal harga online saja.
-        </p>
         <div className="grid gap-4 sm:grid-cols-2">
           <Field label="Jumlah Stok">
             <input type="number" name="stock_quantity" min={0} defaultValue={product?.stock_quantity ?? 0} className={inputClass} />
@@ -151,7 +178,7 @@ export function ProductForm({
               <option value="limited">Limited</option>
             </select>
           </Field>
-          <Field label="BOXA Score (0-10)">
+          <Field label="BOXA Score (0-10)" hint="Buat produk Rekomendasi, ini tampil sebagai skor di narasi 'Rekomendasi BOXA'.">
             <input type="number" name="boxa_score" min={0} max={10} step={0.1} defaultValue={product?.boxa_score ?? ""} className={inputClass} />
           </Field>
         </div>
