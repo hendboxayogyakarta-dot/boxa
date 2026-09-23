@@ -66,7 +66,7 @@ export function ProductCard({ product }: { product: Product }) {
           </div>
         ) : isRecommendationProduct(product) ? (
           <div className="mt-auto pt-1">
-            <RecommendationBadge score={product.boxa_score} />
+            <RecommendationBadge score={product.boxa_score} note={product.recommendation_note} />
           </div>
         ) : hasPrice(product.price) ? (
           <div className="mt-auto flex items-baseline gap-2 pt-1">

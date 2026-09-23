@@ -50,6 +50,7 @@ export async function saveProduct(formData: FormData) {
     offline_available: formData.get("offline_available") === "on",
     brand_id: str(formData, "brand_id"),
     marketplace_id: str(formData, "marketplace_id"),
+    recommendation_note: str(formData, "recommendation_note"),
     stock_quantity: num(formData, "stock_quantity") ?? 0,
     stock_status: str(formData, "stock_status") ?? "in_stock",
     sold_count: num(formData, "sold_count") ?? 0,
@@ -121,6 +122,12 @@ export interface QuickProductInput {
   stock_quantity: number;
   image_url: string | null;
   status: "draft" | "published";
+  /** Affiliate/recommendation rows only. */
+  isRecommendation?: boolean;
+  shopee_url?: string | null;
+  marketplace_id?: string | null;
+  boxa_score?: number | null;
+  recommendation_note?: string | null;
 }
 
 /**
@@ -145,18 +152,25 @@ export async function saveProductsBatch(
 
     const slug = slugify(`${name}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`);
 
+    const isRec = item.isRecommendation ?? false;
+
     const { data, error } = await supabase
       .from("products")
       .insert({
         name,
         slug,
-        price: item.price || 0,
-        local_price: item.local_price,
-        stock_quantity: item.stock_quantity || 0,
-        stock_status: (item.stock_quantity || 0) > 0 ? "in_stock" : "sold_out",
+        price: isRec ? 0 : item.price || 0,
+        local_price: isRec ? null : item.local_price,
+        stock_quantity: isRec ? 0 : item.stock_quantity || 0,
+        stock_status: isRec ? "in_stock" : (item.stock_quantity || 0) > 0 ? "in_stock" : "sold_out",
         category_id: item.category_id,
-        brand_id: item.brand_id,
+        brand_id: isRec ? null : item.brand_id,
+        marketplace_id: isRec ? item.marketplace_id ?? null : null,
         cta_type: "SHOPEE",
+        shopee_url: isRec ? item.shopee_url ?? null : null,
+        offline_available: !isRec,
+        boxa_score: isRec ? item.boxa_score ?? null : null,
+        recommendation_note: isRec ? item.recommendation_note ?? null : null,
         status: item.status,
         description: "",
       })

@@ -1,6 +1,6 @@
 import { Flame } from "lucide-react";
 import { getProducts } from "@/lib/data";
-import { ProductCard } from "@/components/product-card";
+import { RecommendationProductCard } from "@/components/recommendation-product-card";
 
 export const revalidate = 60;
 
@@ -30,9 +30,9 @@ export default async function RekomendasiPage() {
           <p className="mt-1 text-sm text-muted">Cek lagi lain waktu ya.</p>
         </div>
       ) : (
-        <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+        <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
           {products.map((p) => (
-            <ProductCard key={p.id} product={p} />
+            <RecommendationProductCard key={p.id} product={p} />
           ))}
         </div>
       )}

@@ -36,7 +36,10 @@ export function CartDrawer({
   return (
     <>
       <div className="fixed inset-0 z-50 bg-ink/40" onClick={onClose} />
-      <div className="fixed inset-y-0 right-0 z-50 flex w-full max-w-sm flex-col bg-cream shadow-xl">
+      <div
+        className="fixed inset-y-0 right-0 z-50 flex w-full max-w-sm flex-col bg-cream shadow-xl"
+        style={{ paddingTop: "env(safe-area-inset-top, 0px)", paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
+      >
         <div className="flex items-center justify-between border-b border-line p-4">
           <h2 className="font-display text-lg font-bold text-ink">Keranjang</h2>
           <button onClick={onClose} aria-label="Tutup" className="text-ink-soft">

@@ -5,10 +5,12 @@ import { useRouter } from "next/navigation";
 import { ImagePlus, Loader2, Plus, Trash2, CheckCircle2, AlertCircle } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { saveProductsBatch, type QuickProductInput } from "@/lib/actions/products";
-import type { Brand, Category } from "@/lib/types";
+import type { Brand, Category, Marketplace } from "@/lib/types";
 
 const STORAGE_KEY = "boxa-quick-add-draft";
 const SUPABASE_CONFIGURED = Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL);
+
+type Mode = "regular" | "affiliate";
 
 interface Row extends QuickProductInput {
   _key: string;
@@ -26,37 +28,57 @@ function emptyRow(): Row {
     stock_quantity: 1,
     image_url: null,
     status: "published",
+    shopee_url: null,
+    marketplace_id: null,
+    boxa_score: null,
+    recommendation_note: null,
   };
 }
 
 const inputClass = "w-full rounded-lg border border-line px-2.5 py-2 text-sm outline-none focus:border-maroon";
 
-export function QuickAddProducts({ categories, brands }: { categories: Category[]; brands: Brand[] }) {
+export function QuickAddProducts({
+  categories,
+  brands,
+  marketplaces,
+}: {
+  categories: Category[];
+  brands: Brand[];
+  marketplaces: Marketplace[];
+}) {
   const router = useRouter();
+  const [mode, setMode] = useState<Mode>("regular");
   const [rows, setRows] = useState<Row[]>([emptyRow()]);
   const [publishAll, setPublishAll] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState<{ successCount: number; total: number; errors: string[] } | null>(null);
   const loadedRef = useRef(false);
 
-  // Auto-save the draft to localStorage as they type — this is the "auto
-  // save" part. Nothing touches Supabase until "Upload Semua" is clicked.
+  const storageKey = `${STORAGE_KEY}-${mode}`;
+
+  // Auto-save the draft to localStorage as they type, per mode — this is
+  // the "auto save" part. Nothing touches Supabase until "Upload Semua".
   useEffect(() => {
-    const saved = localStorage.getItem(STORAGE_KEY);
+    loadedRef.current = false;
+    const saved = localStorage.getItem(storageKey);
     if (saved) {
       try {
         const parsed = JSON.parse(saved) as Row[];
-        if (Array.isArray(parsed) && parsed.length > 0) setRows(parsed);
+        setRows(Array.isArray(parsed) && parsed.length > 0 ? parsed : [emptyRow()]);
       } catch {
-        // ignore corrupt draft
+        setRows([emptyRow()]);
       }
+    } else {
+      setRows([emptyRow()]);
     }
     loadedRef.current = true;
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mode]);
 
   useEffect(() => {
-    if (!loadedRef.current) return; // don't overwrite the saved draft with the initial empty row before it's loaded
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(rows));
+    if (!loadedRef.current) return;
+    localStorage.setItem(storageKey, JSON.stringify(rows));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rows]);
 
   function updateRow(key: string, patch: Partial<Row>) {
@@ -90,7 +112,11 @@ export function QuickAddProducts({ categories, brands }: { categories: Category[
     setResult(null);
     const payload = rows
       .filter((r) => r.name.trim())
-      .map(({ _key, _uploading, ...rest }) => ({ ...rest, status: publishAll ? "published" as const : "draft" as const }));
+      .map(({ _key, _uploading, ...rest }) => ({
+        ...rest,
+        status: publishAll ? ("published" as const) : ("draft" as const),
+        isRecommendation: mode === "affiliate",
+      }));
 
     if (payload.length === 0) {
       setSubmitting(false);
@@ -102,8 +128,8 @@ export function QuickAddProducts({ categories, brands }: { categories: Category[
     setSubmitting(false);
 
     if (res.errors.length === 0) {
-      localStorage.removeItem(STORAGE_KEY);
-      setTimeout(() => router.push("/admin/products"), 1200);
+      localStorage.removeItem(storageKey);
+      setTimeout(() => router.push(mode === "affiliate" ? "/rekomendasi" : "/admin/products"), 1200);
     }
   }
 
@@ -111,6 +137,28 @@ export function QuickAddProducts({ categories, brands }: { categories: Category[
 
   return (
     <div>
+      {/* Mode toggle — regular COD products and affiliate/recommendation
+          listings need genuinely different (and different-sized) forms,
+          so switching resets to a blank set of rows for that mode. */}
+      <div className="mb-5 inline-flex rounded-full border border-line bg-white p-1">
+        <button
+          onClick={() => setMode("regular")}
+          className={`rounded-full px-4 py-1.5 text-sm font-semibold transition-colors ${
+            mode === "regular" ? "bg-maroon text-cream" : "text-ink-soft"
+          }`}
+        >
+          Produk Biasa
+        </button>
+        <button
+          onClick={() => setMode("affiliate")}
+          className={`rounded-full px-4 py-1.5 text-sm font-semibold transition-colors ${
+            mode === "affiliate" ? "bg-flame text-cream" : "text-ink-soft"
+          }`}
+        >
+          Rekomendasi / Affiliate
+        </button>
+      </div>
+
       <div className="space-y-3">
         {rows.map((row, i) => (
           <div key={row._key} className="rounded-2xl border border-line bg-white p-4">
@@ -137,50 +185,103 @@ export function QuickAddProducts({ categories, brands }: { categories: Category[
                 />
               </label>
 
-              <div className="grid flex-1 gap-2 sm:grid-cols-6">
-                <input
-                  placeholder={`Nama produk #${i + 1}`}
-                  value={row.name}
-                  onChange={(e) => updateRow(row._key, { name: e.target.value })}
-                  className={`${inputClass} sm:col-span-2`}
-                />
-                <select
-                  value={row.category_id ?? ""}
-                  onChange={(e) => updateRow(row._key, { category_id: e.target.value || null })}
-                  className={inputClass}
-                >
-                  <option value="">Kategori</option>
-                  {categories.map((c) => (
-                    <option key={c.id} value={c.id}>{c.name}</option>
-                  ))}
-                </select>
-                <select
-                  value={row.brand_id ?? ""}
-                  onChange={(e) => updateRow(row._key, { brand_id: e.target.value || null })}
-                  className={inputClass}
-                >
-                  <option value="">Brand</option>
-                  {brands.map((b) => (
-                    <option key={b.id} value={b.id}>{b.name}</option>
-                  ))}
-                </select>
-                <input
-                  type="number"
-                  min={0}
-                  placeholder="Harga"
-                  value={row.price || ""}
-                  onChange={(e) => updateRow(row._key, { price: Number(e.target.value) || 0 })}
-                  className={inputClass}
-                />
-                <input
-                  type="number"
-                  min={0}
-                  placeholder="Harga lokal"
-                  value={row.local_price ?? ""}
-                  onChange={(e) => updateRow(row._key, { local_price: e.target.value ? Number(e.target.value) : null })}
-                  className={inputClass}
-                />
-              </div>
+              {mode === "regular" ? (
+                <div className="grid flex-1 gap-2 sm:grid-cols-6">
+                  <input
+                    placeholder={`Nama produk #${i + 1}`}
+                    value={row.name}
+                    onChange={(e) => updateRow(row._key, { name: e.target.value })}
+                    className={`${inputClass} sm:col-span-2`}
+                  />
+                  <select
+                    value={row.category_id ?? ""}
+                    onChange={(e) => updateRow(row._key, { category_id: e.target.value || null })}
+                    className={inputClass}
+                  >
+                    <option value="">Kategori</option>
+                    {categories.map((c) => (
+                      <option key={c.id} value={c.id}>{c.name}</option>
+                    ))}
+                  </select>
+                  <select
+                    value={row.brand_id ?? ""}
+                    onChange={(e) => updateRow(row._key, { brand_id: e.target.value || null })}
+                    className={inputClass}
+                  >
+                    <option value="">Brand</option>
+                    {brands.map((b) => (
+                      <option key={b.id} value={b.id}>{b.name}</option>
+                    ))}
+                  </select>
+                  <input
+                    type="number"
+                    min={0}
+                    placeholder="Harga"
+                    value={row.price || ""}
+                    onChange={(e) => updateRow(row._key, { price: Number(e.target.value) || 0 })}
+                    className={inputClass}
+                  />
+                  <input
+                    type="number"
+                    min={0}
+                    placeholder="Harga lokal"
+                    value={row.local_price ?? ""}
+                    onChange={(e) => updateRow(row._key, { local_price: e.target.value ? Number(e.target.value) : null })}
+                    className={inputClass}
+                  />
+                </div>
+              ) : (
+                <div className="grid flex-1 gap-2 sm:grid-cols-6">
+                  <input
+                    placeholder={`Nama produk #${i + 1}`}
+                    value={row.name}
+                    onChange={(e) => updateRow(row._key, { name: e.target.value })}
+                    className={`${inputClass} sm:col-span-2`}
+                  />
+                  <select
+                    value={row.category_id ?? ""}
+                    onChange={(e) => updateRow(row._key, { category_id: e.target.value || null })}
+                    className={inputClass}
+                  >
+                    <option value="">Kategori</option>
+                    {categories.map((c) => (
+                      <option key={c.id} value={c.id}>{c.name}</option>
+                    ))}
+                  </select>
+                  <select
+                    value={row.marketplace_id ?? ""}
+                    onChange={(e) => updateRow(row._key, { marketplace_id: e.target.value || null })}
+                    className={inputClass}
+                  >
+                    <option value="">Marketplace</option>
+                    {marketplaces.map((m) => (
+                      <option key={m.id} value={m.id}>{m.name}</option>
+                    ))}
+                  </select>
+                  <input
+                    placeholder="Link affiliate"
+                    value={row.shopee_url ?? ""}
+                    onChange={(e) => updateRow(row._key, { shopee_url: e.target.value })}
+                    className={`${inputClass} sm:col-span-2`}
+                  />
+                  <input
+                    type="number"
+                    min={0}
+                    max={10}
+                    step={0.1}
+                    placeholder="Skor (0-10)"
+                    value={row.boxa_score ?? ""}
+                    onChange={(e) => updateRow(row._key, { boxa_score: e.target.value ? Number(e.target.value) : null })}
+                    className={inputClass}
+                  />
+                  <input
+                    placeholder='Narasi (opsional, mis. "Best Seller")'
+                    value={row.recommendation_note ?? ""}
+                    onChange={(e) => updateRow(row._key, { recommendation_note: e.target.value })}
+                    className={`${inputClass} sm:col-span-3`}
+                  />
+                </div>
+              )}
 
               <button
                 onClick={() => removeRow(row._key)}
@@ -211,7 +312,9 @@ export function QuickAddProducts({ categories, brands }: { categories: Category[
         <button
           onClick={handleSubmit}
           disabled={submitting || filledCount === 0 || !SUPABASE_CONFIGURED}
-          className="flex items-center gap-2 rounded-full bg-maroon px-6 py-2.5 text-sm font-semibold text-cream disabled:opacity-50"
+          className={`flex items-center gap-2 rounded-full px-6 py-2.5 text-sm font-semibold text-cream disabled:opacity-50 ${
+            mode === "affiliate" ? "bg-flame" : "bg-maroon"
+          }`}
         >
           {submitting && <Loader2 size={15} className="animate-spin" />}
           {submitting ? "Mengunggah..." : `Upload Semua (${filledCount} Produk)`}

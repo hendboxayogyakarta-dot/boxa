@@ -69,6 +69,9 @@ export function ProductForm({
             </span>
           </label>
         </div>
+        <Field label="Teks Rekomendasi (opsional)" hint={'Ganti label default "Rekomendasi BOXA" — misalnya "Best Seller" atau "Favorit Pelanggan". Cuma dipakai kalau jenis produknya Rekomendasi.'}>
+          <input name="recommendation_note" defaultValue={product?.recommendation_note ?? ""} placeholder="Rekomendasi BOXA" className={inputClass} />
+        </Field>
       </section>
 
       <section className="space-y-4 rounded-2xl border border-line bg-white p-5">

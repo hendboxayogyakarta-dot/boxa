@@ -94,6 +94,7 @@ create table products (
   -- Local Prices" USP). Null = product only has the one price.
   local_price numeric(12,2) check (local_price is null or local_price >= 0),
   offline_available boolean not null default true,
+  recommendation_note text,
   brand_id uuid references brands(id) on delete set null,
   marketplace_id uuid references marketplaces(id) on delete set null,
   stock_quantity int not null default 0,

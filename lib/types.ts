@@ -41,6 +41,10 @@ export interface Product {
    * local_price is set as a reference, turning this off hides the local
    * pickup option and falls back to the plain online-only experience. */
   offline_available: boolean;
+  /** Custom label for the recommendation badge (e.g. "Best Seller",
+   * "Favorit Pelanggan"). Only used when offline_available is false —
+   * falls back to the default "Rekomendasi BOXA" when empty. */
+  recommendation_note: string | null;
   /** Optional reusable brand/license logo (see Brand) — distinct from the
    * free-text `brand` field above so existing products keep working
    * unchanged; this is additive. */

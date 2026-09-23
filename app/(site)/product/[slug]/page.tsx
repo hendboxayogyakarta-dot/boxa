@@ -109,7 +109,7 @@ export default async function ProductPage({
               </div>
             ) : isRecommendationProduct(product) ? (
               <div className="mt-5">
-                <RecommendationBadge score={product.boxa_score} size="lg" />
+                <RecommendationBadge score={product.boxa_score} note={product.recommendation_note} size="lg" />
               </div>
             ) : hasPrice(product.price) ? (
               <div className="mt-5 font-display text-4xl font-extrabold text-accent">
