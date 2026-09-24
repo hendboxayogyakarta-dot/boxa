@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 
 const STORAGE_KEY = "boxa-cart";
 
@@ -17,6 +18,10 @@ interface CartContextValue {
   addItem: (item: CartItem) => void;
   removeItem: (productId: string) => void;
   clear: () => void;
+  isOpen: boolean;
+  openCart: () => void;
+  closeCart: () => void;
+  toggleCart: () => void;
 }
 
 const CartContext = createContext<CartContextValue>({
@@ -24,6 +29,10 @@ const CartContext = createContext<CartContextValue>({
   addItem: () => {},
   removeItem: () => {},
   clear: () => {},
+  isOpen: false,
+  openCart: () => {},
+  closeCart: () => {},
+  toggleCart: () => {},
 });
 
 export function useCart() {
@@ -37,10 +46,21 @@ export function useCart() {
  * the whole point is batching several COD/local-pickup items into one
  * WhatsApp message instead of sending one message per item (see
  * CartDrawer for that message).
+ *
+ * Whether the drawer is open ALSO lives here (single source of truth,
+ * one <CartDrawer> instance rendered once in the site layout) instead of
+ * each trigger button keeping its own local state — that was the bug:
+ * two separate "open" states (header button, bottom-nav button) that
+ * never learned about client-side navigation, so the drawer stayed
+ * visually stuck open over whatever page you navigated to underneath it.
+ * The pathname watcher below closes it automatically on every route
+ * change, and every trigger now shares the same isOpen/closeCart.
  */
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
   const [loaded, setLoaded] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
@@ -60,6 +80,13 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
   }, [items, loaded]);
 
+  // Close the drawer automatically whenever the route changes — including
+  // navigating to the SAME cart-triggering link twice, product links
+  // clicked from inside the drawer, and every nav item everywhere.
+  useEffect(() => {
+    setIsOpen(false);
+  }, [pathname]);
+
   function addItem(item: CartItem) {
     setItems((prev) => (prev.some((i) => i.productId === item.productId) ? prev : [...prev, item]));
   }
@@ -73,7 +100,18 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <CartContext.Provider value={{ items, addItem, removeItem, clear }}>
+    <CartContext.Provider
+      value={{
+        items,
+        addItem,
+        removeItem,
+        clear,
+        isOpen,
+        openCart: () => setIsOpen(true),
+        closeCart: () => setIsOpen(false),
+        toggleCart: () => setIsOpen((v) => !v),
+      }}
+    >
       {children}
     </CartContext.Provider>
   );

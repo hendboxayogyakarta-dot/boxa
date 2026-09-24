@@ -3,20 +3,20 @@
 import Image from "next/image";
 import Link from "next/link";
 import { X, Trash2, MessageCircle, MapPin } from "lucide-react";
+import { useEffect } from "react";
 import { useCart } from "./cart-context";
 import { formatIDR } from "@/lib/utils";
 
-export function CartDrawer({
-  open,
-  onClose,
-  whatsappNumber,
-}: {
-  open: boolean;
-  onClose: () => void;
-  whatsappNumber: string;
-}) {
-  const { items, removeItem, clear } = useCart();
+export function CartDrawer({ whatsappNumber }: { whatsappNumber: string }) {
+  const { items, removeItem, clear, isOpen, closeCart } = useCart();
   const total = items.reduce((sum, i) => sum + i.localPrice, 0);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && closeCart();
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [isOpen, closeCart]);
 
   function buildMessage(): string {
     const lines = [
@@ -31,21 +31,21 @@ export function CartDrawer({
     return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(lines.join("\n"))}`;
   }
 
-  if (!open) return null;
+  if (!isOpen) return null;
 
   return (
     <>
       {/* Stops above the mobile bottom nav (bottom-16 ≈ its height) so it
           stays visible/usable while the cart is open — full height again
           on desktop where there's no bottom nav to protect. */}
-      <div className="fixed inset-x-0 top-0 bottom-16 z-50 bg-ink/40 md:bottom-0" onClick={onClose} />
+      <div className="fixed inset-x-0 top-0 bottom-16 z-50 bg-ink/40 md:bottom-0" onClick={closeCart} />
       <div
         className="fixed right-0 top-0 bottom-16 z-50 flex w-full max-w-sm flex-col bg-cream shadow-xl md:bottom-0"
         style={{ paddingTop: "env(safe-area-inset-top, 0px)", paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
       >
         <div className="flex items-center justify-between border-b border-line p-4">
           <h2 className="font-display text-lg font-bold text-ink">Keranjang</h2>
-          <button onClick={onClose} aria-label="Tutup" className="text-ink-soft">
+          <button onClick={closeCart} aria-label="Tutup" className="text-ink-soft">
             <X size={20} />
           </button>
         </div>
@@ -71,7 +71,7 @@ export function CartDrawer({
                     )}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <Link href={`/product/${item.slug}`} onClick={onClose} className="line-clamp-2 text-sm font-medium text-ink hover:text-accent">
+                    <Link href={`/product/${item.slug}`} onClick={closeCart} className="line-clamp-2 text-sm font-medium text-ink hover:text-accent">
                       {item.name}
                     </Link>
                     <div className="text-sm font-bold text-accent">{formatIDR(item.localPrice)}</div>
@@ -101,7 +101,7 @@ export function CartDrawer({
               rel="noreferrer"
               onClick={() => {
                 clear();
-                onClose();
+                closeCart();
               }}
               className="flex w-full items-center justify-center gap-2 rounded-full bg-flame px-4 py-3 text-sm font-semibold text-on-brand hover:bg-flame-light"
             >
