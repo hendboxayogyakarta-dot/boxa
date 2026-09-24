@@ -61,16 +61,16 @@ export function ProductForm({
             <span>
               <span className="font-semibold text-ink">Rekomendasi — Affiliate saja</span>
               <span className="block text-xs text-muted">
-                BOXA tidak simpan fisiknya (link affiliate Shopee/marketplace lain). Harga boleh
-                dikosongkan — otomatis diganti narasi &ldquo;Rekomendasi BOXA&rdquo; + skor BOXA
-                (isi di bagian Kondisi &amp; Kurasi). Tombol beli langsung ke link marketplace,
-                tanpa opsi COD/WhatsApp.
+                BOXA tidak simpan fisiknya (link affiliate Shopee/marketplace lain). Harga tetap
+                tampil kalau diisi; kalau dikosongkan, otomatis muncul &ldquo;Rp ???&rdquo; yang
+                mengundang klik, plus label &ldquo;Pilihan BOXA&rdquo; + skor (isi di bagian Kondisi
+                &amp; Kurasi). Tombol beli langsung ke link marketplace, tanpa opsi COD/WhatsApp.
               </span>
             </span>
           </label>
         </div>
-        <Field label="Teks Rekomendasi (opsional)" hint={'Ganti label default "Rekomendasi BOXA" — misalnya "Best Seller" atau "Favorit Pelanggan". Cuma dipakai kalau jenis produknya Rekomendasi.'}>
-          <input name="recommendation_note" defaultValue={product?.recommendation_note ?? ""} placeholder="Rekomendasi BOXA" className={inputClass} />
+        <Field label="Teks Rekomendasi (opsional)" hint={'Ganti label default "Pilihan BOXA" — misalnya "Best Seller" atau "Favorit Pelanggan". Cuma dipakai kalau jenis produknya Rekomendasi.'}>
+          <input name="recommendation_note" defaultValue={product?.recommendation_note ?? ""} placeholder="Pilihan BOXA" className={inputClass} />
         </Field>
       </section>
 
@@ -123,7 +123,7 @@ export function ProductForm({
       <section className="space-y-4 rounded-2xl border border-line bg-white p-5">
         <h2 className="font-display text-base font-bold text-ink">Harga & Stok</h2>
         <div className="grid gap-4 sm:grid-cols-2">
-          <Field label="Harga (Rp)" hint="Boleh dikosongkan untuk produk jenis Rekomendasi.">
+          <Field label="Harga (Rp)" hint='Boleh dikosongkan untuk produk jenis Rekomendasi — otomatis tampil "Rp ???" sampai kamu isi.'>
             <input type="number" name="price" min={0} defaultValue={product?.price} className={inputClass} />
           </Field>
           <Field label="Harga Coret (opsional)">
@@ -181,7 +181,7 @@ export function ProductForm({
               <option value="limited">Limited</option>
             </select>
           </Field>
-          <Field label="BOXA Score (0-10)" hint="Buat produk Rekomendasi, ini tampil sebagai skor di narasi 'Rekomendasi BOXA'.">
+          <Field label="BOXA Score (0-10)" hint="Buat produk Rekomendasi, ini tampil sebagai skor di narasi 'Pilihan BOXA'.">
             <input type="number" name="boxa_score" min={0} max={10} step={0.1} defaultValue={product?.boxa_score ?? ""} className={inputClass} />
           </Field>
         </div>

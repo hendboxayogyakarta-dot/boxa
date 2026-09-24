@@ -2,6 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { Flame } from "lucide-react";
 import type { Product } from "@/lib/types";
+import { formatIDR, hasPrice } from "@/lib/utils";
+import { MysteryPrice } from "./mystery-price";
 
 /**
  * Deliberately different from the compact <ProductCard> used in the
@@ -12,7 +14,7 @@ import type { Product } from "@/lib/types";
  */
 export function RecommendationProductCard({ product }: { product: Product }) {
   const primaryImage = product.images.find((i) => i.is_primary) ?? product.images[0];
-  const label = product.recommendation_note || "Rekomendasi BOXA";
+  const label = product.recommendation_note || "Pilihan BOXA";
 
   return (
     <Link
@@ -42,8 +44,15 @@ export function RecommendationProductCard({ product }: { product: Product }) {
         {product.brand && <span className="text-xs text-muted">{product.brand}</span>}
         <h3 className="line-clamp-2 font-display text-base font-bold text-ink">{product.name}</h3>
         <p className="line-clamp-2 text-xs text-muted">{product.short_description}</p>
-        <div className="mt-auto flex items-center gap-1.5 pt-2 text-sm font-bold text-flame">
-          <Flame size={15} />
+        <div className="mt-auto pt-2">
+          {hasPrice(product.price) ? (
+            <span className="font-display text-lg font-bold text-accent">{formatIDR(product.price)}</span>
+          ) : (
+            <MysteryPrice />
+          )}
+        </div>
+        <div className="flex items-center gap-1.5 text-xs font-bold text-flame">
+          <Flame size={12} />
           {label}
         </div>
       </div>

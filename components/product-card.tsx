@@ -5,12 +5,14 @@ import type { Product } from "@/lib/types";
 import { formatIDR, hasPrice, isRecommendationProduct } from "@/lib/utils";
 import { ProductBadges } from "./badges";
 import { RecommendationBadge } from "./recommendation-badge";
+import { MysteryPrice } from "./mystery-price";
 
 export function ProductCard({ product }: { product: Product }) {
   const primaryImage = product.images.find((i) => i.is_primary) ?? product.images[0];
   const soldOut = product.stock_status === "sold_out";
   const hasLocalPrice = product.local_price != null;
   const savings = hasLocalPrice ? product.price - product.local_price! : 0;
+  const isRecommendation = isRecommendationProduct(product);
 
   return (
     <Link
@@ -52,6 +54,12 @@ export function ProductCard({ product }: { product: Product }) {
         )}
         <h3 className="line-clamp-2 text-sm font-semibold text-ink">{product.name}</h3>
 
+        {isRecommendation && (
+          <div className="pt-0.5">
+            <RecommendationBadge score={product.boxa_score} note={product.recommendation_note} />
+          </div>
+        )}
+
         {hasLocalPrice ? (
           <div className="mt-auto pt-1">
             <span className="text-[10px] font-semibold uppercase tracking-wide text-flame">
@@ -64,24 +72,22 @@ export function ProductCard({ product }: { product: Product }) {
               Online <span className="line-through">{formatIDR(product.price)}</span>
             </div>
           </div>
-        ) : isRecommendationProduct(product) ? (
-          <div className="mt-auto pt-1">
-            <RecommendationBadge score={product.boxa_score} note={product.recommendation_note} />
-          </div>
-        ) : hasPrice(product.price) ? (
-          <div className="mt-auto flex items-baseline gap-2 pt-1">
-            <span className="font-display text-base font-bold text-accent">
-              {formatIDR(product.price)}
-            </span>
-            {product.compare_price && (
-              <span className="text-xs text-muted line-through">
-                {formatIDR(product.compare_price)}
-              </span>
-            )}
-          </div>
         ) : (
-          <div className="mt-auto pt-1">
-            <RecommendationBadge score={null} />
+          <div className="mt-auto flex items-baseline gap-2 pt-1">
+            {hasPrice(product.price) ? (
+              <>
+                <span className="font-display text-base font-bold text-accent">
+                  {formatIDR(product.price)}
+                </span>
+                {product.compare_price && (
+                  <span className="text-xs text-muted line-through">
+                    {formatIDR(product.compare_price)}
+                  </span>
+                )}
+              </>
+            ) : (
+              <MysteryPrice />
+            )}
           </div>
         )}
 

@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { getApprovedReviews, getProductBySlug, getRelatedProducts, getSiteSettings } from "@/lib/data";
 import { formatIDR, conditionLabel, stockLabel, hasPrice, isRecommendationProduct, getFallbackDescription } from "@/lib/utils";
 import { RecommendationBadge } from "@/components/recommendation-badge";
+import { MysteryPrice } from "@/components/mystery-price";
 import { ProductBadges } from "@/components/badges";
 import { OrderCta } from "@/components/order-cta";
 import { PriceComparison } from "@/components/price-comparison";
@@ -107,22 +108,25 @@ export default async function ProductPage({
               <div className="mt-5">
                 <PriceComparison product={product} whatsappNumber={settings.whatsapp_number} />
               </div>
-            ) : isRecommendationProduct(product) ? (
-              <div className="mt-5">
-                <RecommendationBadge score={product.boxa_score} note={product.recommendation_note} size="lg" />
-              </div>
-            ) : hasPrice(product.price) ? (
-              <div className="mt-5 font-display text-4xl font-extrabold text-accent">
-                {formatIDR(product.price)}
-                {product.compare_price && (
-                  <span className="ml-3 text-lg font-normal text-muted line-through">
-                    {formatIDR(product.compare_price)}
-                  </span>
-                )}
-              </div>
             ) : (
               <div className="mt-5">
-                <RecommendationBadge score={null} size="lg" />
+                {isRecommendationProduct(product) && (
+                  <div className="mb-2">
+                    <RecommendationBadge score={product.boxa_score} note={product.recommendation_note} size="lg" />
+                  </div>
+                )}
+                {hasPrice(product.price) ? (
+                  <div className="font-display text-4xl font-extrabold text-accent">
+                    {formatIDR(product.price)}
+                    {product.compare_price && (
+                      <span className="ml-3 text-lg font-normal text-muted line-through">
+                        {formatIDR(product.compare_price)}
+                      </span>
+                    )}
+                  </div>
+                ) : (
+                  <MysteryPrice size="lg" />
+                )}
               </div>
             )}
 
