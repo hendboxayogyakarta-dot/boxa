@@ -186,6 +186,17 @@ export interface SiteSettings {
     notes: string;
   };
   homepage_sections: HomepageSection[];
+  /** Narrative copy used in a few fixed spots around the site — kept
+   * editable here instead of hardcoded so nothing needs a code change
+   * to reword. Every field has a sensible built-in fallback if left
+   * blank (see the components that read them). */
+  copy: {
+    usp_subtitle: string;
+    curation_title: string;
+    curation_subtitle: string;
+    rekomendasi_intro: string;
+    request_toy_message: string;
+  };
   seo: {
     site_title: string;
     meta_description: string;

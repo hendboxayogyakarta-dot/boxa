@@ -188,6 +188,7 @@ create table website_settings (
   address text,
   hero jsonb not null default '{}'::jsonb,
   delivery jsonb not null default '{}'::jsonb,
+  copy jsonb not null default '{}'::jsonb,
   seo jsonb not null default '{}'::jsonb,
   updated_at timestamptz not null default now()
 );
@@ -368,13 +369,14 @@ create policy "analytics_admin_read" on analytics_events for select using (is_ad
 -- (Safe defaults so the site renders correctly immediately after setup;
 -- edit everything from /admin/cms and /admin/settings afterwards.)
 -- ---------------------------------------------------------------------
-insert into website_settings (id, brand_name, tagline, whatsapp_number, instagram_url, tiktok_url, shopee_url, address, hero, delivery, seo)
+insert into website_settings (id, brand_name, tagline, whatsapp_number, instagram_url, tiktok_url, shopee_url, address, hero, delivery, copy, seo)
 values (
   1, 'BOXA.YK', 'Original Toys, Local Prices.',
   '6281234567890', 'https://instagram.com/boxa.yk', 'https://tiktok.com/@boxa.yk', 'https://shopee.co.id/boxayk',
   'Yogyakarta, Indonesia',
   '{"enabled": true, "badge": "BOXA Featured", "title": "Original Toys, Local Prices.", "subtitle": "Mainan orisinal dengan harga lebih hemat kalau kamu ambil langsung di Yogyakarta.", "cta_text": "Pesan Sekarang", "cta_href": "/shop", "secondary_cta_text": "Kenalan dengan BOXA", "secondary_cta_href": "/tentang", "featured_product_id": null}'::jsonb,
   '{"enabled": true, "service_area": "Antar area Yogyakarta", "free_delivery_enabled": true, "free_delivery_minimum": 300000, "notes": "Gratis antar untuk pembelian di atas Rp300.000, area Kota Yogyakarta."}'::jsonb,
+  '{"usp_subtitle": "Beli online, atau dapatkan harga lebih hemat kalau ambil langsung di Yogyakarta.", "curation_title": "Kenapa BOXA memilihnya.", "curation_subtitle": "Nggak semua yang kamu mau, harus kamu punya. Setiap produk yang masuk BOXA melewati kurasi yang sama — dicek kondisinya, dilihat nilai koleksinya, dan disampaikan apa adanya sebelum ditawarkan ke kamu.", "rekomendasi_intro": "Barang-barang ini bukan stok BOXA — kami cek dan kasih skor, lalu kamu pesan langsung di marketplace lewat link yang tersedia. Tidak ada opsi COD/ambil langsung untuk yang ini.", "request_toy_message": "Halo BOXA, aku mau request mainan: "}'::jsonb,
   '{"site_title": "BOXA.YK — Mainan pilihan dari Yogyakarta", "meta_description": "Toko mainan dan collectible kurasi dari Yogyakarta."}'::jsonb
 ) on conflict (id) do nothing;
 

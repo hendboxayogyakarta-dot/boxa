@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { requireAdmin } from "./require-admin";
 
 function str(formData: FormData, key: string): string {
@@ -44,6 +45,13 @@ export async function updateSettings(formData: FormData) {
       free_delivery_minimum: Number(str(formData, "free_delivery_minimum") || "0") || null,
       notes: str(formData, "delivery_notes"),
     },
+    copy: {
+      usp_subtitle: str(formData, "copy_usp_subtitle"),
+      curation_title: str(formData, "copy_curation_title"),
+      curation_subtitle: str(formData, "copy_curation_subtitle"),
+      rekomendasi_intro: str(formData, "copy_rekomendasi_intro"),
+      request_toy_message: str(formData, "copy_request_toy_message"),
+    },
     seo: {
       site_title: str(formData, "seo_title"),
       meta_description: str(formData, "seo_description"),
@@ -55,6 +63,7 @@ export async function updateSettings(formData: FormData) {
   if (error) throw new Error(error.message);
 
   revalidatePath("/", "layout");
+  redirect("/admin/cms?saved=1");
 }
 
 /**

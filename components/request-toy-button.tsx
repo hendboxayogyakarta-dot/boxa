@@ -7,8 +7,16 @@ import { cn } from "@/lib/utils";
  * backend needed, just routes through the same WhatsApp contact already
  * used everywhere else on the site.
  */
-export function RequestToyButton({ whatsappNumber, className = "" }: { whatsappNumber: string; className?: string }) {
-  const message = encodeURIComponent("Halo BOXA, aku mau request mainan: ");
+export function RequestToyButton({
+  whatsappNumber,
+  message: messageText = "Halo BOXA, aku mau request mainan: ",
+  className = "",
+}: {
+  whatsappNumber: string;
+  message?: string;
+  className?: string;
+}) {
+  const message = encodeURIComponent(messageText);
   return (
     <a
       href={`https://wa.me/${whatsappNumber}?text=${message}`}

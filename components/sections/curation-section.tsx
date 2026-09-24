@@ -7,17 +7,13 @@ const PILLARS = [
   { icon: Truck, title: "Gampang Didapat", text: "Antar cepat area Yogyakarta, tanya-tanya juga direspons langsung." },
 ];
 
-export function CurationSection() {
+export function CurationSection({ title, subtitle }: { title: string; subtitle: string }) {
   return (
     <section className="bg-cream-warm py-14">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <span className="text-xs font-semibold uppercase tracking-widest text-flame">Filosofi BOXA</span>
-        <h2 className="mt-2 font-display text-2xl font-bold text-ink sm:text-3xl">Kenapa BOXA memilihnya.</h2>
-        <p className="mt-3 max-w-lg text-sm text-muted">
-          Nggak semua yang kamu mau, harus kamu punya. Setiap produk yang masuk BOXA melewati
-          kurasi yang sama — dicek kondisinya, dilihat nilai koleksinya, dan disampaikan apa
-          adanya sebelum ditawarkan ke kamu.
-        </p>
+        <h2 className="mt-2 font-display text-2xl font-bold text-ink sm:text-3xl">{title}</h2>
+        <p className="mt-3 max-w-lg text-sm text-muted">{subtitle}</p>
         <div className="mt-7 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {PILLARS.map(({ icon: Icon, title, text }) => (
             <div key={title} className="rounded-2xl border border-line bg-white p-5">

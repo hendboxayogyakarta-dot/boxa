@@ -36,7 +36,7 @@ export default async function HomePage() {
   return (
     <>
       <BannerCarousel banners={banners} settings={settings} />
-      <UspStrip tagline={settings.tagline} />
+      <UspStrip tagline={settings.tagline} subtitle={settings.copy.usp_subtitle} />
       <CategoryIconStrip categories={categories} />
 
       {sectionEnabled("featured") && (
@@ -54,7 +54,9 @@ export default async function HomePage() {
       {sectionEnabled("categories") && (
         <CategoryShowcase categories={categories} productsByCategory={productsByCategory} />
       )}
-      {sectionEnabled("why_boxa") && <CurationSection />}
+      {sectionEnabled("why_boxa") && (
+        <CurationSection title={settings.copy.curation_title} subtitle={settings.copy.curation_subtitle} />
+      )}
       {sectionEnabled("reviews") && <ReviewsSection reviews={reviews} />}
       {sectionEnabled("delivery") && <DeliveryBanner settings={settings} />}
     </>

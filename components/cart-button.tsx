@@ -4,6 +4,7 @@ import { useState } from "react";
 import { ShoppingCart } from "lucide-react";
 import { useCart } from "./cart-context";
 import { CartDrawer } from "./cart-drawer";
+import { cn } from "@/lib/utils";
 
 export function CartButton({ whatsappNumber, className = "" }: { whatsappNumber: string; className?: string }) {
   const { items } = useCart();
@@ -14,7 +15,10 @@ export function CartButton({ whatsappNumber, className = "" }: { whatsappNumber:
       <button
         onClick={() => setOpen(true)}
         aria-label="Buka keranjang"
-        className={`relative flex h-9 w-9 items-center justify-center rounded-full border border-line text-ink-soft transition-colors hover:border-maroon hover:text-accent ${className}`}
+        className={cn(
+          "relative flex h-9 w-9 items-center justify-center rounded-full border border-line text-ink-soft transition-colors hover:border-maroon hover:text-accent",
+          className
+        )}
       >
         <ShoppingCart size={16} />
         {items.length > 0 && (

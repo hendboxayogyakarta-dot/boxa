@@ -64,7 +64,7 @@ export function SiteHeader({ settings }: { settings: SiteSettings }) {
           </div>
         </form>
 
-        <CartButton whatsappNumber={settings.whatsapp_number} />
+        <CartButton whatsappNumber={settings.whatsapp_number} className="hidden md:flex" />
 
         <ThemeToggle className="hidden sm:flex" />
 

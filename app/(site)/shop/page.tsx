@@ -84,7 +84,7 @@ export default async function ShopPage({
             {q ? `Hasil pencarian untuk "${q}"` : "Mainan dan collectible pilihan BOXA.YK"}
           </p>
         </div>
-        <RequestToyButton whatsappNumber={settings.whatsapp_number} className="hidden sm:inline-flex" />
+        <RequestToyButton whatsappNumber={settings.whatsapp_number} message={settings.copy.request_toy_message} className="hidden sm:inline-flex" />
       </div>
 
       {/* Search now lives once, in the header (always visible on mobile) —
@@ -102,7 +102,7 @@ export default async function ShopPage({
         />
       </div>
 
-      <RequestToyButton whatsappNumber={settings.whatsapp_number} className="mt-3 flex w-full justify-center sm:hidden" />
+      <RequestToyButton whatsappNumber={settings.whatsapp_number} message={settings.copy.request_toy_message} className="mt-3 flex w-full justify-center sm:hidden" />
 
       <div className="mt-6 grid gap-8 md:grid-cols-[220px_1fr]">
         <aside className="hidden space-y-6 md:block">
@@ -191,7 +191,7 @@ export default async function ShopPage({
               <p className="font-display text-lg font-semibold text-ink">Belum ada produk di sini</p>
               <p className="mt-1 text-sm text-muted">Coba kategori lain atau kata kunci berbeda.</p>
               <div className="mt-4 hidden justify-center sm:flex">
-                <RequestToyButton whatsappNumber={settings.whatsapp_number} />
+                <RequestToyButton whatsappNumber={settings.whatsapp_number} message={settings.copy.request_toy_message} />
               </div>
             </div>
           ) : (

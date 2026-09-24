@@ -1,3 +1,4 @@
+import { cache } from "react";
 import type { Banner, Brand, Category, Marketplace, Product, Review, SiteSettings } from "./types";
 import { mockBanners, mockBrands, mockCategories, mockMarketplaces, mockProducts, mockReviews, mockSettings } from "./mock-data";
 import { createClient, createPublicClient } from "./supabase/server";
@@ -29,12 +30,21 @@ function mapSettingsRow(row: any): SiteSettings {
     address: row.address,
     hero: row.hero ?? mockSettings.hero,
     delivery: row.delivery ?? mockSettings.delivery,
+    copy: { ...mockSettings.copy, ...(row.copy ?? {}) },
     seo: row.seo ?? mockSettings.seo,
     homepage_sections: mockSettings.homepage_sections, // overwritten by getHomepageSections() below
   };
 }
 
-export async function getSiteSettings(): Promise<SiteSettings> {
+/**
+ * Wrapped in React's cache() — this is called from (site)/layout.tsx AND
+ * independently from several pages (shop, product, rekomendasi) for their
+ * own needs (whatsapp number, etc). Without this, the same Supabase query
+ * fired twice per request. cache() dedupes repeat calls with identical
+ * (here: no) arguments within a single request, so it only actually runs
+ * once no matter how many places call it.
+ */
+export const getSiteSettings = cache(async (): Promise<SiteSettings> => {
   if (!SUPABASE_CONFIGURED) return mockSettings;
 
   const supabase = createPublicClient();
@@ -45,7 +55,7 @@ export async function getSiteSettings(): Promise<SiteSettings> {
 
   if (!settingsRow) return mockSettings;
   return { ...mapSettingsRow(settingsRow), homepage_sections: sections };
-}
+});
 
 async function getHomepageSections() {
   const supabase = createPublicClient();
@@ -56,7 +66,7 @@ async function getHomepageSections() {
   return (data as SiteSettings["homepage_sections"]) ?? mockSettings.homepage_sections;
 }
 
-export async function getBanners(): Promise<Banner[]> {
+export const getBanners = cache(async (): Promise<Banner[]> => {
   if (!SUPABASE_CONFIGURED) return mockBanners.filter((b) => b.enabled);
   const supabase = createPublicClient();
   const { data } = await supabase
@@ -66,7 +76,7 @@ export async function getBanners(): Promise<Banner[]> {
     .order("sort_order");
   // Drafts saved without an image yet shouldn't reach the public carousel.
   return ((data as Banner[]) ?? []).filter((b) => Boolean(b.image_url));
-}
+});
 
 export async function getAllBannersForAdmin(): Promise<Banner[]> {
   if (!SUPABASE_CONFIGURED) return mockBanners;
@@ -75,7 +85,7 @@ export async function getAllBannersForAdmin(): Promise<Banner[]> {
   return (data as Banner[]) ?? [];
 }
 
-export async function getBrands(): Promise<Brand[]> {
+export const getBrands = cache(async (): Promise<Brand[]> => {
   if (!SUPABASE_CONFIGURED) return mockBrands.filter((b) => b.status === "active");
   const supabase = createPublicClient();
   const { data } = await supabase
@@ -84,7 +94,7 @@ export async function getBrands(): Promise<Brand[]> {
     .eq("status", "active")
     .order("sort_order");
   return (data as Brand[]) ?? [];
-}
+});
 
 export async function getAllBrandsForAdmin(): Promise<Brand[]> {
   if (!SUPABASE_CONFIGURED) return mockBrands;
@@ -93,7 +103,7 @@ export async function getAllBrandsForAdmin(): Promise<Brand[]> {
   return (data as Brand[]) ?? [];
 }
 
-export async function getMarketplaces(): Promise<Marketplace[]> {
+export const getMarketplaces = cache(async (): Promise<Marketplace[]> => {
   if (!SUPABASE_CONFIGURED) return mockMarketplaces.filter((m) => m.status === "active");
   const supabase = createPublicClient();
   const { data } = await supabase
@@ -102,7 +112,7 @@ export async function getMarketplaces(): Promise<Marketplace[]> {
     .eq("status", "active")
     .order("sort_order");
   return (data as Marketplace[]) ?? [];
-}
+});
 
 export async function getAllMarketplacesForAdmin(): Promise<Marketplace[]> {
   if (!SUPABASE_CONFIGURED) return mockMarketplaces;
@@ -120,7 +130,7 @@ export async function getAllCategoriesForAdmin(): Promise<Category[]> {
   return (data as Category[]) ?? [];
 }
 
-export async function getCategories(): Promise<Category[]> {
+export const getCategories = cache(async (): Promise<Category[]> => {
   if (!SUPABASE_CONFIGURED) return mockCategories;
 
   const supabase = createPublicClient();
@@ -130,7 +140,7 @@ export async function getCategories(): Promise<Category[]> {
     .eq("status", "active")
     .order("sort_order");
   return (data as Category[]) ?? [];
-}
+});
 
 export async function getProducts(filters?: {
   category?: string;

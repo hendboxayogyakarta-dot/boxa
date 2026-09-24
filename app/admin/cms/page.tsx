@@ -3,6 +3,7 @@ import { ArrowRight } from "lucide-react";
 import { getSiteSettings } from "@/lib/data";
 import { updateSettings, toggleSection } from "@/lib/actions/settings";
 import { LogoUploader } from "@/components/admin/logo-uploader";
+import { SubmitButton } from "@/components/admin/submit-button";
 
 const inputClass =
   "mt-1 w-full rounded-lg border border-line px-3 py-2 text-sm outline-none focus:border-maroon";
@@ -17,12 +18,22 @@ function Field({ label, children, hint }: { label: string; children: React.React
   );
 }
 
-export default async function AdminCmsPage() {
+export default async function AdminCmsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ saved?: string }>;
+}) {
   const settings = await getSiteSettings();
+  const { saved } = await searchParams;
 
   return (
     <div>
       <h1 className="font-display text-2xl font-bold text-ink">Website / CMS</h1>
+      {saved === "1" && (
+        <div className="mt-4 rounded-xl bg-flame/10 px-4 py-3 text-sm font-medium text-flame">
+          Perubahan tersimpan.
+        </div>
+      )}
       <p className="mt-1 max-w-xl text-sm text-muted">
         Semua isi di bawah ini tersimpan di tabel <code className="rounded bg-cream-warm px-1 py-0.5 text-xs">website_settings</code>{" "}
         dan langsung tampil di halaman depan setelah disimpan — tidak perlu ubah kode.
@@ -127,6 +138,26 @@ export default async function AdminCmsPage() {
         </section>
 
         <section className="space-y-4 rounded-2xl border border-line bg-white p-5">
+          <h2 className="font-display text-base font-bold text-ink">Narasi Website</h2>
+          <p className="text-xs text-muted">Teks-teks kecil yang tersebar di beberapa halaman — ubah sesuka hati, tanpa perlu ubah kode.</p>
+          <Field label="Subjudul di bawah slogan beranda">
+            <input name="copy_usp_subtitle" defaultValue={settings.copy.usp_subtitle} className={inputClass} />
+          </Field>
+          <Field label="Judul section 'Kenapa BOXA'">
+            <input name="copy_curation_title" defaultValue={settings.copy.curation_title} className={inputClass} />
+          </Field>
+          <Field label="Paragraf section 'Kenapa BOXA'">
+            <textarea name="copy_curation_subtitle" defaultValue={settings.copy.curation_subtitle} rows={3} className={inputClass} />
+          </Field>
+          <Field label="Intro halaman Boxa Rekomendasi">
+            <textarea name="copy_rekomendasi_intro" defaultValue={settings.copy.rekomendasi_intro} rows={2} className={inputClass} />
+          </Field>
+          <Field label="Template pesan WA — Request Mainan">
+            <input name="copy_request_toy_message" defaultValue={settings.copy.request_toy_message} className={inputClass} />
+          </Field>
+        </section>
+
+        <section className="space-y-4 rounded-2xl border border-line bg-white p-5">
           <h2 className="font-display text-base font-bold text-ink">SEO</h2>
           <Field label="Judul Situs">
             <input name="seo_title" defaultValue={settings.seo.site_title} className={inputClass} />
@@ -136,9 +167,7 @@ export default async function AdminCmsPage() {
           </Field>
         </section>
 
-        <button type="submit" className="rounded-full bg-maroon px-6 py-2.5 text-sm font-semibold text-cream hover:bg-maroon-deep">
-          Simpan Perubahan
-        </button>
+        <SubmitButton>Simpan Perubahan</SubmitButton>
       </form>
 
       <section className="mt-8 max-w-2xl rounded-2xl border border-line bg-white p-5">

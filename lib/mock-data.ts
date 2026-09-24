@@ -166,6 +166,15 @@ export const mockSettings: SiteSettings = {
     free_delivery_minimum: 300000,
     notes: "Gratis antar untuk pembelian di atas Rp300.000, area Kota Yogyakarta.",
   },
+  copy: {
+    usp_subtitle: "Beli online, atau dapatkan harga lebih hemat kalau ambil langsung di Yogyakarta.",
+    curation_title: "Kenapa BOXA memilihnya.",
+    curation_subtitle:
+      "Nggak semua yang kamu mau, harus kamu punya. Setiap produk yang masuk BOXA melewati kurasi yang sama — dicek kondisinya, dilihat nilai koleksinya, dan disampaikan apa adanya sebelum ditawarkan ke kamu.",
+    rekomendasi_intro:
+      "Barang-barang ini bukan stok BOXA — kami cek dan kasih skor, lalu kamu pesan langsung di marketplace lewat link yang tersedia. Tidak ada opsi COD/ambil langsung untuk yang ini.",
+    request_toy_message: "Halo BOXA, aku mau request mainan: ",
+  },
   homepage_sections: [
     { key: "featured", title: "Pilihan BOXA", subtitle: "Produk yang lagi kami rekomendasikan", enabled: true, sort_order: 1 },
     { key: "new_arrivals", title: "Baru Datang", subtitle: null, enabled: true, sort_order: 2 },

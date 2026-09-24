@@ -35,9 +35,12 @@ export function CartDrawer({
 
   return (
     <>
-      <div className="fixed inset-0 z-50 bg-ink/40" onClick={onClose} />
+      {/* Stops above the mobile bottom nav (bottom-16 ≈ its height) so it
+          stays visible/usable while the cart is open — full height again
+          on desktop where there's no bottom nav to protect. */}
+      <div className="fixed inset-x-0 top-0 bottom-16 z-50 bg-ink/40 md:bottom-0" onClick={onClose} />
       <div
-        className="fixed inset-y-0 right-0 z-50 flex w-full max-w-sm flex-col bg-cream shadow-xl"
+        className="fixed right-0 top-0 bottom-16 z-50 flex w-full max-w-sm flex-col bg-cream shadow-xl md:bottom-0"
         style={{ paddingTop: "env(safe-area-inset-top, 0px)", paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
       >
         <div className="flex items-center justify-between border-b border-line p-4">
