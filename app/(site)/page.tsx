@@ -1,4 +1,5 @@
-import { getAllApprovedReviews, getBanners, getCategories, getProducts, getSiteSettings } from "@/lib/data";
+import { getAllApprovedReviews, getBanners, getCategories, getProducts, getSiteSettings, getStores } from "@/lib/data";
+import { StoreLogoStrip } from "@/components/sections/store-logo-strip";
 import { BannerCarousel } from "@/components/sections/banner-carousel";
 import { CategoryIconStrip } from "@/components/sections/category-icon-strip";
 import { UspStrip } from "@/components/sections/usp-strip";
@@ -15,10 +16,11 @@ import type { Product } from "@/lib/types";
 export const revalidate = 60;
 
 export default async function HomePage() {
-  const [settings, banners, categories, allProducts, featured, newArrivals, rareSecret, reviews] = await Promise.all([
+  const [settings, banners, categories, stores, allProducts, featured, newArrivals, rareSecret, reviews] = await Promise.all([
     getSiteSettings(),
     getBanners(),
     getCategories(),
+    getStores(),
     getProducts(),
     getProducts({ featured: true }),
     getProducts({ isNew: true }),
@@ -66,6 +68,7 @@ export default async function HomePage() {
       {sectionEnabled("why_boxa") && (
         <CurationSection title={settings.copy.curation_title} subtitle={settings.copy.curation_subtitle} />
       )}
+      <StoreLogoStrip stores={stores} />
       {sectionEnabled("reviews") && <ReviewsSection reviews={reviews} />}
       {sectionEnabled("delivery") && <DeliveryBanner settings={settings} />}
     </>

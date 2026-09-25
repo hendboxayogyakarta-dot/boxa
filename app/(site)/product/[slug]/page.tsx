@@ -2,12 +2,12 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getApprovedReviews, getProductBySlug, getRelatedProducts, getSiteSettings } from "@/lib/data";
-import { formatIDR, conditionLabel, stockLabel, hasPrice, isRecommendationProduct, getFallbackDescription } from "@/lib/utils";
+import { formatIDR, conditionLabel, stockLabel, hasPrice, isRecommendationProduct, hasStoreOptions, getFallbackDescription } from "@/lib/utils";
 import { RecommendationBadge } from "@/components/recommendation-badge";
 import { MysteryPrice } from "@/components/mystery-price";
 import { ProductBadges } from "@/components/badges";
 import { OrderCta } from "@/components/order-cta";
-import { PriceComparison } from "@/components/price-comparison";
+import { StoreOptions } from "@/components/store-options";
 import { ProductGallery } from "@/components/product-gallery";
 import { RatingStars } from "@/components/rating-stars";
 import { ProductCard } from "@/components/product-card";
@@ -54,10 +54,7 @@ export default async function ProductPage({
   const avgRating =
     reviews.length > 0 ? reviews.reduce((s, r) => s + r.rating, 0) / reviews.length : null;
 
-  // Local pickup pricing only makes sense when there's a local price to
-  // show AND the product is actually available offline — an affiliate
-  // link with offline_available off falls back to the plain online CTA.
-  const showLocalPricing = product.local_price != null && product.offline_available;
+  const showStoreOptions = hasStoreOptions(product);
 
   return (
     <div className="relative">
@@ -99,36 +96,29 @@ export default async function ProductPage({
               {product.sold_count > 0 && <span>{product.sold_count} terjual</span>}
             </div>
 
-            {/* The 2-price choice (Online vs Lokal) sits right where the
-                price goes — before the description — so it's the very
-                first decision a shopper sees, not something they have to
-                scroll down for. Products without a local_price keep the
-                plain single price exactly as before. */}
-            {showLocalPricing ? (
-              <div className="mt-5">
-                <PriceComparison product={product} whatsappNumber={settings.whatsapp_number} />
-              </div>
-            ) : (
-              <div className="mt-5">
-                {isRecommendationProduct(product) && (
-                  <div className="mb-2">
-                    <RecommendationBadge score={product.boxa_score} note={product.recommendation_note} size="lg" />
-                  </div>
-                )}
-                {hasPrice(product.price) ? (
-                  <div className="font-display text-4xl font-extrabold text-accent">
-                    {formatIDR(product.price)}
-                    {product.compare_price && (
-                      <span className="ml-3 text-lg font-normal text-muted line-through">
-                        {formatIDR(product.compare_price)}
-                      </span>
-                    )}
-                  </div>
-                ) : (
-                  <MysteryPrice size="lg" />
-                )}
-              </div>
-            )}
+            {/* Headline price — always the plain product.price (or the
+                mystery placeholder), regardless of how many places it
+                can be bought. <StoreOptions> below elaborates on the
+                actual buy choices with their own per-option prices. */}
+            <div className="mt-5">
+              {isRecommendationProduct(product) && (
+                <div className="mb-2">
+                  <RecommendationBadge score={product.boxa_score} note={product.recommendation_note} size="lg" />
+                </div>
+              )}
+              {hasPrice(product.price) ? (
+                <div className="font-display text-4xl font-extrabold text-accent">
+                  {formatIDR(product.price)}
+                  {product.compare_price && (
+                    <span className="ml-3 text-lg font-normal text-muted line-through">
+                      {formatIDR(product.compare_price)}
+                    </span>
+                  )}
+                </div>
+              ) : (
+                <MysteryPrice size="lg" />
+              )}
+            </div>
 
             <p className="mt-4 text-sm leading-relaxed text-ink-soft">
               {product.short_description || getFallbackDescription(product)}
@@ -157,21 +147,25 @@ export default async function ProductPage({
               )}
             </dl>
 
-            {/* Local pickup pricing replaces the plain CTA below when set —
-                see PriceComparison. Keeps the single-price experience
-                completely unchanged for every product that doesn't have
-                one, and also when offline_available is off (affiliate /
-                dropship items BOXA doesn't physically stock). */}
-            {!showLocalPricing && (
-              <div className="mt-7">
-                <OrderCta product={product} whatsappNumber={settings.whatsapp_number} />
-                {product.delivery_available && !isRecommendationProduct(product) && (
-                  <p className="mt-2.5 text-center text-xs text-muted sm:text-left">
-                    {product.instant_delivery_available ? "Pengiriman instan tersedia · " : ""}Antar area Yogyakarta
-                  </p>
-                )}
-              </div>
-            )}
+            {/* "Tempat Beli" (StoreOptions) replaces the plain CTA
+                whenever there's a local price, a linked store, or the
+                legacy single online link — it shows all of those with
+                their own prices. Products with genuinely none of that
+                keep the single-price experience completely unchanged. */}
+            <div className="mt-7">
+              {showStoreOptions ? (
+                <StoreOptions product={product} whatsappNumber={settings.whatsapp_number} />
+              ) : (
+                <>
+                  <OrderCta product={product} whatsappNumber={settings.whatsapp_number} />
+                  {product.delivery_available && !isRecommendationProduct(product) && (
+                    <p className="mt-2.5 text-center text-xs text-muted sm:text-left">
+                      {product.instant_delivery_available ? "Pengiriman instan tersedia · " : ""}Antar area Yogyakarta
+                    </p>
+                  )}
+                </>
+              )}
+            </div>
           </div>
         </div>
 

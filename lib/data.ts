@@ -1,6 +1,6 @@
 import { cache } from "react";
-import type { Banner, Brand, Category, Marketplace, Product, Review, SiteSettings } from "./types";
-import { mockBanners, mockBrands, mockCategories, mockMarketplaces, mockProducts, mockReviews, mockSettings } from "./mock-data";
+import type { Banner, Brand, Category, Marketplace, Product, Review, SiteSettings, Store } from "./types";
+import { mockBanners, mockBrands, mockCategories, mockMarketplaces, mockProducts, mockReviews, mockSettings, mockStores } from "./mock-data";
 import { createClient, createPublicClient } from "./supabase/server";
 
 /**
@@ -103,6 +103,24 @@ export async function getAllBrandsForAdmin(): Promise<Brand[]> {
   return (data as Brand[]) ?? [];
 }
 
+export const getStores = cache(async (): Promise<Store[]> => {
+  if (!SUPABASE_CONFIGURED) return mockStores.filter((s) => s.status === "active");
+  const supabase = createPublicClient();
+  const { data } = await supabase
+    .from("stores")
+    .select("*")
+    .eq("status", "active")
+    .order("sort_order");
+  return (data as Store[]) ?? [];
+});
+
+export async function getAllStoresForAdmin(): Promise<Store[]> {
+  if (!SUPABASE_CONFIGURED) return mockStores;
+  const supabase = await createClient();
+  const { data } = await supabase.from("stores").select("*").order("sort_order");
+  return (data as Store[]) ?? [];
+}
+
 export const getMarketplaces = cache(async (): Promise<Marketplace[]> => {
   if (!SUPABASE_CONFIGURED) return mockMarketplaces.filter((m) => m.status === "active");
   const supabase = createPublicClient();
@@ -165,7 +183,7 @@ export async function getProducts(filters?: {
   const supabase = createPublicClient();
   let query = supabase
     .from("products")
-    .select("*, category:categories(*), images:product_images(*), brand_logo:brands(*), marketplace:marketplaces(*)")
+    .select("*, category:categories(*), images:product_images(*), brand_logo:brands(*), marketplace:marketplaces(*), store_refs:product_stores(*, store:stores(*))")
     .eq("status", "published");
 
   if (filters?.category) {
@@ -259,7 +277,7 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
   const supabase = createPublicClient();
   const { data } = await supabase
     .from("products")
-    .select("*, category:categories(*), images:product_images(*), brand_logo:brands(*), marketplace:marketplaces(*)")
+    .select("*, category:categories(*), images:product_images(*), brand_logo:brands(*), marketplace:marketplaces(*), store_refs:product_stores(*, store:stores(*))")
     .eq("slug", slug)
     .single();
   return (data as Product) ?? null;
@@ -274,7 +292,7 @@ export async function getProductByIdForAdmin(id: string): Promise<Product | null
   const supabase = await createClient();
   const { data } = await supabase
     .from("products")
-    .select("*, category:categories(*), images:product_images(*), brand_logo:brands(*), marketplace:marketplaces(*)")
+    .select("*, category:categories(*), images:product_images(*), brand_logo:brands(*), marketplace:marketplaces(*), store_refs:product_stores(*, store:stores(*))")
     .eq("id", id)
     .single();
   return (data as Product) ?? null;
@@ -286,7 +304,7 @@ export async function getAllProductsForAdmin(): Promise<Product[]> {
   const supabase = await createClient();
   const { data } = await supabase
     .from("products")
-    .select("*, category:categories(*), images:product_images(*), brand_logo:brands(*), marketplace:marketplaces(*)")
+    .select("*, category:categories(*), images:product_images(*), brand_logo:brands(*), marketplace:marketplaces(*), store_refs:product_stores(*, store:stores(*))")
     .order("created_at", { ascending: false });
   return (data as Product[]) ?? [];
 }
@@ -300,7 +318,7 @@ export async function getRelatedProducts(product: Product): Promise<Product[]> {
   const supabase = createPublicClient();
   const { data } = await supabase
     .from("products")
-    .select("*, category:categories(*), images:product_images(*), brand_logo:brands(*), marketplace:marketplaces(*)")
+    .select("*, category:categories(*), images:product_images(*), brand_logo:brands(*), marketplace:marketplaces(*), store_refs:product_stores(*, store:stores(*))")
     .eq("category_id", product.category_id)
     .eq("status", "published")
     .neq("id", product.id)

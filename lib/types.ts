@@ -55,6 +55,12 @@ export interface Product {
    * and OrderCta. Defaults to showing a generic label when unset. */
   marketplace_id: string | null;
   marketplace?: Marketplace;
+  /** All the stores this product can also be found at — powers the
+   * "Pilihan Online" section on the product page. May be empty even for
+   * a product that still has the legacy shopee_url/marketplace_id set
+   * (that pair is treated as one implicit store-reference entry when
+   * this array is empty — see product-store-options in components). */
+  store_refs?: ProductStoreRef[];
   stock_quantity: number;
   stock_status: StockStatus;
   category_id: string;
@@ -135,6 +141,40 @@ export interface Brand {
  * "which factory made this toy" and "where do I buy it" stay separate
  * concepts even though the shape is identical. */
 export type Marketplace = Brand;
+
+/**
+ * "Store Reference" — an official store, distributor, or marketplace
+ * customers can be pointed to for a product BOXA doesn't sell locally
+ * (or as an extra online option alongside BOXA's own local price).
+ * `relationship_type` is dashboard-internal bookkeeping only — never
+ * rendered in any customer-facing component. Customer copy always says
+ * "Pilihan Online" / "Tempat Beli", never "Affiliate".
+ */
+export interface Store {
+  id: string;
+  name: string;
+  slug: string;
+  logo_url: string | null;
+  description: string | null;
+  platform: string | null;
+  link: string | null;
+  location: string | null;
+  status: "active" | "hidden";
+  relationship_type: "reference" | "affiliate" | "partner";
+  sort_order: number;
+}
+
+/** One product's link at one store — the many-to-many join, with its own
+ * per-product URL and (optional) price, since these vary by platform. */
+export interface ProductStoreRef {
+  id: string;
+  product_id: string;
+  store_id: string;
+  product_url: string | null;
+  price: number | null;
+  sort_order: number;
+  store?: Store;
+}
 
 export interface HeroSettings {
   enabled: boolean;

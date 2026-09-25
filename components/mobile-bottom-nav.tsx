@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, MessageCircle, LayoutGrid, Flame, ShoppingCart } from "lucide-react";
+import { Home, MessageCircle, LayoutGrid, Compass, ShoppingCart } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { SiteSettings } from "@/lib/types";
 import { useCart } from "./cart-context";
@@ -14,7 +14,7 @@ export function MobileBottomNav({ settings }: { settings: SiteSettings }) {
   const items = [
     { label: "Home", href: "/", icon: Home, match: (p: string) => p === "/" },
     { label: "Shop", href: "/shop", icon: LayoutGrid, match: (p: string) => p === "/shop" },
-    { label: "Rekomendasi", href: "/rekomendasi", icon: Flame, match: (p: string) => p === "/rekomendasi" },
+    { label: "Temukan", href: "/temukan-online", icon: Compass, match: (p: string) => p === "/temukan-online" },
   ];
 
   return (

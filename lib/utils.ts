@@ -67,6 +67,20 @@ export function isRecommendationProduct(product: { offline_available: boolean })
   return !product.offline_available;
 }
 
+/** Whether the product page should show the "Tempat Beli" (StoreOptions)
+ * section — local pickup, linked stores, or the legacy single online
+ * link — instead of falling back to the plain <OrderCta>. */
+export function hasStoreOptions(product: {
+  local_price: number | null;
+  offline_available: boolean;
+  store_refs?: { id: string }[];
+  shopee_url: string | null;
+}): boolean {
+  const showLocal = product.local_price != null && product.offline_available;
+  const hasStores = (product.store_refs?.length ?? 0) > 0 || Boolean(product.shopee_url);
+  return showLocal || hasStores;
+}
+
 /**
  * Builds a generic-but-relevant description from whatever fields ARE
  * filled in (category, brand, condition), for products where the admin

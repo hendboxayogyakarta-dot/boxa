@@ -1,4 +1,4 @@
-import type { Banner, Brand, Category, Marketplace, Product, Review, SiteSettings } from "./types";
+import type { Banner, Brand, Category, Marketplace, Product, ProductStoreRef, Review, SiteSettings, Store } from "./types";
 
 export const mockBrands: Brand[] = [
   { id: "br1", name: "Blokees", slug: "blokees", logo_url: "https://picsum.photos/seed/logo-blokees/200/200", status: "active", sort_order: 1 },
@@ -11,6 +11,24 @@ export const mockBrands: Brand[] = [
 export const mockMarketplaces: Marketplace[] = [
   { id: "mp1", name: "Shopee", slug: "shopee", logo_url: "https://picsum.photos/seed/logo-shopee/200/200", status: "active", sort_order: 1 },
   { id: "mp2", name: "Tokopedia", slug: "tokopedia", logo_url: "https://picsum.photos/seed/logo-tokopedia/200/200", status: "active", sort_order: 2 },
+];
+
+export const mockStores: Store[] = [
+  {
+    id: "st1", name: "Blokees Official Store", slug: "blokees-official", logo_url: "https://picsum.photos/seed/store-blokees/200/200",
+    description: "Toko resmi Blokees di Shopee.", platform: "Shopee", link: "https://shopee.co.id/blokeesofficial",
+    location: null, status: "active", relationship_type: "reference", sort_order: 1,
+  },
+  {
+    id: "st2", name: "Hobi Mainan Jogja", slug: "hobi-mainan-jogja", logo_url: "https://picsum.photos/seed/store-hobi/200/200",
+    description: "Toko hobi & koleksi di Yogyakarta.", platform: "Tokopedia", link: "https://tokopedia.com/hobimainanjogja",
+    location: "Yogyakarta", status: "active", relationship_type: "affiliate", sort_order: 2,
+  },
+];
+
+export const mockProductStoreRefs: ProductStoreRef[] = [
+  { id: "ps1", product_id: "p2", store_id: "st1", product_url: "https://shopee.co.id/blokeesofficial/gundam-rx78", price: 195000, sort_order: 1, store: mockStores[0] },
+  { id: "ps2", product_id: "p2", store_id: "st2", product_url: "https://tokopedia.com/hobimainanjogja/gundam-rx78", price: 189000, sort_order: 2, store: mockStores[1] },
 ];
 
 export const mockCategories: Category[] = [
@@ -56,7 +74,7 @@ export const mockProducts: Product[] = [
     pros: ["Gampang dirakit", "Harga ramah untuk pemula"],
     cons: ["Detail lebih simpel dibanding Master Grade"],
     what_is_included: ["Runner model kit", "Stiker", "Instruksi"], what_is_not_included: ["Cat", "Nozzle tambahan"],
-    sold_count: 61, view_count: 890, local_price: null, offline_available: true, recommendation_note: null, brand_id: null, marketplace_id: null, status: "published", images: [img("i2", "boxa-gundam-1")],
+    sold_count: 61, view_count: 890, local_price: null, offline_available: true, recommendation_note: null, brand_id: null, marketplace_id: null, store_refs: mockProductStoreRefs.filter((r) => r.product_id === "p2"), status: "published", images: [img("i2", "boxa-gundam-1")],
     created_at: "2026-07-15", updated_at: "2026-08-20",
   },
   {
@@ -120,6 +138,26 @@ export const mockProducts: Product[] = [
     sold_count: 19, view_count: 740, local_price: null, offline_available: true, recommendation_note: null, brand_id: null, marketplace_id: null, status: "published", images: [img("i6", "boxa-luffy-1")],
     created_at: "2026-08-25", updated_at: "2026-09-15",
   },
+  {
+    id: "p7", name: "Hot Toys Iron Man Mark 85", slug: "hot-toys-iron-man-mark-85", sku: "LIC-HT-07",
+    short_description: "Belum tersedia untuk pembelian lokal di BOXA — bisa ditemukan lewat toko online berikut.",
+    description: "Figure premium skala 1:6 dari Hot Toys. BOXA belum menyetok item ini secara lokal, tapi kamu bisa menemukannya lewat pilihan toko online di bawah.",
+    price: 0, compare_price: null, stock_quantity: 0, stock_status: "in_stock",
+    category_id: "c4", brand: "Hot Toys", series: "Movie Masterpiece", condition: "new_sealed", sealed_or_built: "sealed",
+    rarity: "limited", is_featured: false, is_new: false, is_rare: true, is_secret: false, is_boxa_approved: false, boxa_score: null,
+    location: null, delivery_available: false, instant_delivery_available: false,
+    cta_type: "EXTERNAL_URL", shopee_url: null, whatsapp_url: null, external_order_url: null,
+    warranty_type: null, warranty_description: null,
+    pros: [], cons: [],
+    what_is_included: [], what_is_not_included: [],
+    sold_count: 0, view_count: 0, local_price: null, offline_available: false, recommendation_note: null, brand_id: null, marketplace_id: null,
+    store_refs: [
+      { id: "ps3", product_id: "p7", store_id: "st1", product_url: "https://shopee.co.id/blokeesofficial/iron-man-mk85", price: 2850000, sort_order: 1, store: mockStores[0] },
+      { id: "ps4", product_id: "p7", store_id: "st2", product_url: "https://tokopedia.com/hobimainanjogja/iron-man-mk85", price: 2790000, sort_order: 2, store: mockStores[1] },
+    ],
+    status: "published", images: [img("i7", "boxa-ironman-1")],
+    created_at: "2026-09-18", updated_at: "2026-09-18",
+  },
 ];
 
 export const mockBanners: Banner[] = [
@@ -172,7 +210,7 @@ export const mockSettings: SiteSettings = {
     curation_subtitle:
       "Nggak semua yang kamu mau, harus kamu punya. Setiap produk yang masuk BOXA melewati kurasi yang sama — dicek kondisinya, dilihat nilai koleksinya, dan disampaikan apa adanya sebelum ditawarkan ke kamu.",
     rekomendasi_intro:
-      "Barang-barang ini bukan stok BOXA — kami cek dan kasih skor, lalu kamu pesan langsung di marketplace lewat link yang tersedia. Tidak ada opsi COD/ambil langsung untuk yang ini.",
+      "Belum tersedia untuk pembelian lokal? Temukan produk yang kamu cari melalui pilihan toko online yang tersedia.",
     request_toy_message: "Halo BOXA, aku mau request mainan: ",
   },
   homepage_sections: [

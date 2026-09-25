@@ -129,7 +129,7 @@ export function QuickAddProducts({
 
     if (res.errors.length === 0) {
       localStorage.removeItem(storageKey);
-      setTimeout(() => router.push(mode === "affiliate" ? "/rekomendasi" : "/admin/products"), 1200);
+      setTimeout(() => router.push(mode === "affiliate" ? "/temukan-online" : "/admin/products"), 1200);
     }
   }
 
@@ -155,7 +155,7 @@ export function QuickAddProducts({
             mode === "affiliate" ? "bg-flame text-cream" : "text-ink-soft"
           }`}
         >
-          Rekomendasi / Affiliate
+          Temukan Online / Affiliate
         </button>
       </div>
 

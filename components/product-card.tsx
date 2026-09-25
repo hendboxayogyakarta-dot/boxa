@@ -63,7 +63,7 @@ export function ProductCard({ product }: { product: Product }) {
         {hasLocalPrice ? (
           <div className="mt-auto pt-1">
             <span className="text-[10px] font-semibold uppercase tracking-wide text-flame">
-              Harga Lokal — Yogyakarta
+              BOXA Local Price
             </span>
             <div className="font-display text-base font-bold text-accent">
               {formatIDR(product.local_price!)}

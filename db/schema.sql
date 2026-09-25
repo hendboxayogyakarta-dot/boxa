@@ -79,6 +79,50 @@ create index idx_marketplaces_slug on marketplaces(slug);
 create index idx_marketplaces_status on marketplaces(status);
 
 -- ---------------------------------------------------------------------
+-- STORES  ("Store Reference" — official stores, distributors, or
+-- marketplaces customers can be pointed to. relationship_type is
+-- internal-only (dashboard use), never shown to customers — the
+-- customer-facing UI always says "Pilihan Online" / "Tempat Beli",
+-- never "Affiliate".
+-- ---------------------------------------------------------------------
+create type store_relationship as enum ('reference', 'affiliate', 'partner');
+
+create table stores (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  slug text not null unique,
+  logo_url text,
+  description text,
+  platform text,
+  link text,
+  location text,
+  status text not null default 'active' check (status in ('active', 'hidden')),
+  relationship_type store_relationship not null default 'reference',
+  sort_order int not null default 0,
+  created_at timestamptz not null default now()
+);
+create index idx_stores_slug on stores(slug);
+create index idx_stores_status on stores(status);
+
+-- ---------------------------------------------------------------------
+-- PRODUCT_STORES  (many-to-many: a product can list several stores it
+-- can be found at, each with its own product-specific link and price —
+-- this is what powers the "Pilihan Online" section on the product page.)
+-- ---------------------------------------------------------------------
+create table product_stores (
+  id uuid primary key default gen_random_uuid(),
+  product_id uuid not null references products(id) on delete cascade,
+  store_id uuid not null references stores(id) on delete cascade,
+  product_url text,
+  price numeric(12,2),
+  sort_order int not null default 0,
+  created_at timestamptz not null default now(),
+  unique (product_id, store_id)
+);
+create index idx_product_stores_product on product_stores(product_id);
+create index idx_product_stores_store on product_stores(store_id);
+
+-- ---------------------------------------------------------------------
 -- PRODUCTS
 -- ---------------------------------------------------------------------
 create table products (
@@ -289,6 +333,8 @@ alter table profiles enable row level security;
 alter table categories enable row level security;
 alter table brands enable row level security;
 alter table marketplaces enable row level security;
+alter table stores enable row level security;
+alter table product_stores enable row level security;
 alter table products enable row level security;
 alter table product_images enable row level security;
 alter table reviews enable row level security;
@@ -320,6 +366,24 @@ create policy "marketplaces_public_read" on marketplaces for select using (statu
 create policy "marketplaces_admin_write" on marketplaces for insert with check (is_admin());
 create policy "marketplaces_admin_update" on marketplaces for update using (is_admin()) with check (is_admin());
 create policy "marketplaces_admin_delete" on marketplaces for delete using (is_admin());
+
+-- stores: public can read active; admins full CRUD.
+-- relationship_type is returned in the row like any other column (RLS
+-- controls table access, not per-column visibility) — it's the
+-- customer-facing COMPONENTS that never render it, not the query. Keep
+-- that in mind if this table is ever queried from a new surface.
+create policy "stores_public_read" on stores for select using (status = 'active' or is_admin());
+create policy "stores_admin_write" on stores for insert with check (is_admin());
+create policy "stores_admin_update" on stores for update using (is_admin()) with check (is_admin());
+create policy "stores_admin_delete" on stores for delete using (is_admin());
+
+-- product_stores: public can read rows for published products; admins full CRUD
+create policy "product_stores_public_read" on product_stores for select using (
+  exists (select 1 from products p where p.id = product_id and (p.status = 'published' or is_admin()))
+);
+create policy "product_stores_admin_write" on product_stores for insert with check (is_admin());
+create policy "product_stores_admin_update" on product_stores for update using (is_admin()) with check (is_admin());
+create policy "product_stores_admin_delete" on product_stores for delete using (is_admin());
 
 -- products: public can read published; admins full CRUD
 create policy "products_public_read" on products for select using (status = 'published' or is_admin());
@@ -376,7 +440,7 @@ values (
   'Yogyakarta, Indonesia',
   '{"enabled": true, "badge": "BOXA Featured", "title": "Original Toys, Local Prices.", "subtitle": "Temukan mainan, pahami produknya, bandingkan harganya, dan pilih cara beli yang paling sesuai untukmu.", "cta_text": "Jelajahi Mainan", "cta_href": "/shop", "secondary_cta_text": "Cari Local Price", "secondary_cta_href": "/shop?local=1", "featured_product_id": null}'::jsonb,
   '{"enabled": true, "service_area": "Antar area Yogyakarta", "free_delivery_enabled": true, "free_delivery_minimum": 300000, "notes": "Gratis antar untuk pembelian di atas Rp300.000, area Kota Yogyakarta."}'::jsonb,
-  '{"usp_subtitle": "Temukan mainan, pahami produknya, bandingkan harganya, dan pilih cara beli yang paling sesuai untukmu.", "curation_title": "Kenapa BOXA memilihnya.", "curation_subtitle": "Nggak semua yang kamu mau, harus kamu punya. Setiap produk yang masuk BOXA melewati kurasi yang sama — dicek kondisinya, dilihat nilai koleksinya, dan disampaikan apa adanya sebelum ditawarkan ke kamu.", "rekomendasi_intro": "Barang-barang ini bukan stok BOXA — kami cek dan kasih skor, lalu kamu pesan langsung di marketplace lewat link yang tersedia. Tidak ada opsi COD/ambil langsung untuk yang ini.", "request_toy_message": "Halo BOXA, aku mau request mainan: "}'::jsonb,
+  '{"usp_subtitle": "Temukan mainan, pahami produknya, bandingkan harganya, dan pilih cara beli yang paling sesuai untukmu.", "curation_title": "Kenapa BOXA memilihnya.", "curation_subtitle": "Nggak semua yang kamu mau, harus kamu punya. Setiap produk yang masuk BOXA melewati kurasi yang sama — dicek kondisinya, dilihat nilai koleksinya, dan disampaikan apa adanya sebelum ditawarkan ke kamu.", "rekomendasi_intro": "Belum tersedia untuk pembelian lokal? Temukan produk yang kamu cari melalui pilihan toko online yang tersedia.", "request_toy_message": "Halo BOXA, aku mau request mainan: "}'::jsonb,
   '{"site_title": "BOXA.YK — Mainan pilihan dari Yogyakarta", "meta_description": "Toko mainan dan collectible kurasi dari Yogyakarta."}'::jsonb
 ) on conflict (id) do nothing;
 
@@ -397,6 +461,15 @@ insert into marketplaces (name, slug, status, sort_order) values
   ('Lazada', 'lazada', 'active', 3)
 on conflict (slug) do nothing;
 -- Logos aren't set here — upload each one from /admin/marketplaces.
+
+insert into stores (name, slug, platform, status, relationship_type, sort_order) values
+  ('Shopee', 'shopee-store', 'Shopee', 'active', 'affiliate', 1),
+  ('Blokees Official Store', 'blokees-official', 'Shopee', 'active', 'reference', 2),
+  ('Tokopedia', 'tokopedia-store', 'Tokopedia', 'active', 'affiliate', 3)
+on conflict (slug) do nothing;
+-- Logos, description, link, dan lokasi belum diisi — lengkapi dari
+-- /admin/stores. relationship_type di sini cuma catatan internal
+-- dashboard, tidak pernah ditampilkan ke customer.
 
 insert into categories (name, slug, description, status, sort_order) values
   ('Blokees', 'blokees', 'Building toys ala LEGO, seri lokal & impor.', 'active', 1),
