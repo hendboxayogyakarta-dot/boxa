@@ -22,7 +22,11 @@ function resolveHref(
       return { href: product.shopee_url ?? "#", icon, label: `Pesan via ${name}` };
     }
     case "EXTERNAL_URL":
-      return { href: product.external_order_url ?? "#", icon: <ExternalLink size={18} />, label: "Pesan Sekarang" };
+      // Typically used to point at an official store or a trusted
+      // retailer when BOXA itself doesn't carry the item — "Lihat
+      // Official Store" reads more honestly here than a generic
+      // "order now" would.
+      return { href: product.external_order_url ?? "#", icon: <ExternalLink size={18} />, label: "Lihat Official Store" };
     case "WHATSAPP":
     default:
       return { href: whatsappLink, icon: <MessageCircle size={18} />, label: "Pesan Sekarang" };

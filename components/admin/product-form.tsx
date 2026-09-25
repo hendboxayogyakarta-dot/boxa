@@ -217,7 +217,7 @@ export function ProductForm({
             <select name="cta_type" defaultValue={product?.cta_type ?? "WHATSAPP"} className={inputClass}>
               <option value="WHATSAPP">WhatsApp</option>
               <option value="SHOPEE">Marketplace (link affiliate)</option>
-              <option value="EXTERNAL_URL">Link Lain</option>
+              <option value="EXTERNAL_URL">Link Lain / Official Store</option>
             </select>
           </Field>
           <Field label="Link WhatsApp">
@@ -237,7 +237,7 @@ export function ProductForm({
               ))}
             </select>
           </Field>
-          <Field label="Link Eksternal Lain">
+          <Field label="Link Eksternal Lain" hint='Cocok buat "belum ada di BOXA, lihat official store" — tombolnya otomatis jadi "Lihat Official Store".'>
             <input name="external_order_url" defaultValue={product?.external_order_url ?? ""} className={inputClass} />
           </Field>
         </div>

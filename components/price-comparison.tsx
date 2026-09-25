@@ -40,7 +40,7 @@ export function PriceComparison({ product, whatsappNumber }: { product: Product;
       <div className="mt-4 grid gap-3 sm:grid-cols-2">
         {/* Online */}
         <div className="flex flex-col rounded-2xl border border-line bg-white p-4">
-          <span className="text-xs font-semibold uppercase tracking-widest text-muted">Online</span>
+          <span className="text-xs font-semibold uppercase tracking-widest text-muted">Online Price</span>
           <span className="mt-1 font-display text-2xl font-extrabold text-ink">{formatIDR(product.price)}</span>
           <span className="mt-0.5 text-xs text-muted">Beli online / diantar</span>
           <a
@@ -73,7 +73,7 @@ export function PriceComparison({ product, whatsappNumber }: { product: Product;
             </span>
           )}
           <span className="flex items-center gap-1 text-xs font-semibold uppercase tracking-widest text-flame">
-            <MapPin size={12} /> Lokal — Yogyakarta
+            <MapPin size={12} /> BOXA Local Price
           </span>
           <span className="mt-1 font-display text-2xl font-extrabold text-accent">{formatIDR(product.local_price)}</span>
           <span className="mt-0.5 text-xs text-muted">Ambil langsung / COD lokal</span>
@@ -89,7 +89,7 @@ export function PriceComparison({ product, whatsappNumber }: { product: Product;
             }`}
           >
             <MessageCircle size={16} />
-            {soldOut ? "Stok Habis" : "Ambil di Yogyakarta"}
+            {soldOut ? "Stok Habis" : "Beli Lokal — Yogyakarta"}
           </a>
           {!soldOut && (
             <AddToCartButton

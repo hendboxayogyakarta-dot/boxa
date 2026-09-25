@@ -2,6 +2,7 @@ import { getAllApprovedReviews, getBanners, getCategories, getProducts, getSiteS
 import { BannerCarousel } from "@/components/sections/banner-carousel";
 import { CategoryIconStrip } from "@/components/sections/category-icon-strip";
 import { UspStrip } from "@/components/sections/usp-strip";
+import { JourneyStrip } from "@/components/sections/journey-strip";
 import { ProductRail } from "@/components/sections/product-rail";
 import { CategoryShowcase } from "@/components/sections/category-showcase";
 import { CurationSection } from "@/components/sections/curation-section";
@@ -36,7 +37,15 @@ export default async function HomePage() {
   return (
     <>
       <BannerCarousel banners={banners} settings={settings} />
-      <UspStrip tagline={settings.tagline} subtitle={settings.copy.usp_subtitle} />
+      <UspStrip
+        tagline={settings.tagline}
+        subtitle={settings.copy.usp_subtitle}
+        primaryCtaText={settings.hero.cta_text}
+        primaryCtaHref={settings.hero.cta_href}
+        secondaryCtaText={settings.hero.secondary_cta_text ?? "Cari Local Price"}
+        secondaryCtaHref={settings.hero.secondary_cta_href ?? "/shop?local=1"}
+      />
+      <JourneyStrip />
       <CategoryIconStrip categories={categories} />
 
       {sectionEnabled("featured") && (

@@ -29,7 +29,7 @@ export const mockProducts: Product[] = [
   {
     id: "p1", name: "Blokees Fantasy Castle 1580pcs", slug: "blokees-fantasy-castle-1580pcs", sku: "BLK-CST-01",
     short_description: "Set kastil fantasi, 1580 keping, minifigure 6 karakter.",
-    description: "Set building block bertema kastil fantasi dengan 1580 keping dan 6 minifigure. Cocok buat koleksi maupun dipajang setelah dirakit.\n\nSemua part original, box masih segel dari distributor resmi.",
+    description: "Set building block bertema kastil fantasi dengan 1580 keping dan 6 minifigure. Cocok buat koleksi maupun dipajang setelah dirakit.\n\nSemua part original, box masih segel.",
     price: 425000, compare_price: 499000, local_price: 380000, stock_quantity: 6, stock_status: "in_stock",
     category_id: "c1", brand: "Blokees", series: "Fantasy Series", condition: "new_sealed", sealed_or_built: "sealed",
     rarity: "common", is_featured: true, is_new: true, is_rare: false, is_secret: false, is_boxa_approved: true, boxa_score: 8.6,
@@ -101,7 +101,7 @@ export const mockProducts: Product[] = [
     cta_type: "WHATSAPP", shopee_url: null, whatsapp_url: "https://wa.me/6281234567890", external_order_url: null,
     warranty_type: null, warranty_description: null, pros: [], cons: [],
     what_is_included: ["240 keping building block"], what_is_not_included: [],
-    sold_count: 45, view_count: 300, local_price: null, offline_available: false, recommendation_note: null, brand_id: null, marketplace_id: null, status: "published", images: [img("i5", "boxa-racer-1")],
+    sold_count: 45, view_count: 300, local_price: null, offline_available: true, recommendation_note: null, brand_id: null, marketplace_id: null, status: "published", images: [img("i5", "boxa-racer-1")],
     created_at: "2026-04-11", updated_at: "2026-08-01",
   },
   {
@@ -151,12 +151,12 @@ export const mockSettings: SiteSettings = {
     enabled: true,
     badge: "BOXA Featured",
     title: "Original Toys, Local Prices.",
-    subtitle: "Mainan orisinal dengan harga lebih hemat kalau kamu ambil langsung di Yogyakarta.",
+    subtitle: "Temukan mainan, pahami produknya, bandingkan harganya, dan pilih cara beli yang paling sesuai untukmu.",
     image_url: null,
-    cta_text: "Pesan Sekarang",
+    cta_text: "Jelajahi Mainan",
     cta_href: "/shop",
-    secondary_cta_text: "Kenalan dengan BOXA",
-    secondary_cta_href: "/tentang",
+    secondary_cta_text: "Cari Local Price",
+    secondary_cta_href: "/shop?local=1",
     featured_product_id: null,
   },
   delivery: {
@@ -167,7 +167,7 @@ export const mockSettings: SiteSettings = {
     notes: "Gratis antar untuk pembelian di atas Rp300.000, area Kota Yogyakarta.",
   },
   copy: {
-    usp_subtitle: "Beli online, atau dapatkan harga lebih hemat kalau ambil langsung di Yogyakarta.",
+    usp_subtitle: "Temukan mainan, pahami produknya, bandingkan harganya, dan pilih cara beli yang paling sesuai untukmu.",
     curation_title: "Kenapa BOXA memilihnya.",
     curation_subtitle:
       "Nggak semua yang kamu mau, harus kamu punya. Setiap produk yang masuk BOXA melewati kurasi yang sama — dicek kondisinya, dilihat nilai koleksinya, dan disampaikan apa adanya sebelum ditawarkan ke kamu.",

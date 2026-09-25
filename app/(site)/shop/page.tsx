@@ -33,6 +33,7 @@ export default async function ShopPage({
   const rare = params.rare === "1";
   const isNew = params.new === "1";
   const featured = params.featured === "1";
+  const localOnly = params.local === "1";
 
   const [categories, brands, settings, products] = await Promise.all([
     getCategories(),
@@ -46,6 +47,7 @@ export default async function ShopPage({
       rareOrSecret: rare || undefined,
       isNew: isNew || undefined,
       featured: featured || undefined,
+      localPriceOnly: localOnly || undefined,
     }),
   ]);
 
@@ -71,6 +73,7 @@ export default async function ShopPage({
     { label: "Rare / Secret", href: "/shop?rare=1", active: rare },
     { label: "Baru Datang", href: "/shop?new=1", active: isNew },
     { label: "Pilihan BOXA", href: "/shop?featured=1", active: featured },
+    { label: "Ada Local Price", href: "/shop?local=1", active: localOnly },
   ];
   const sortLinks = SORTS.map((s) => ({ label: s.label, href: hrefFor({ sort: s.value }), active: sort === s.value }));
   const activeSortLabel = SORTS.find((s) => s.value === sort)?.label ?? "Urutkan";

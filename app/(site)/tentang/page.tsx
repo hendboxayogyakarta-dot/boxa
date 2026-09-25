@@ -21,6 +21,13 @@ export default function AboutPage() {
         area Yogyakarta yang cepat. Dari Blokees, licensed toys, blind box, sampai koleksi
         preloved yang sudah kami cek — semuanya melewati proses kurasi yang sama.
       </p>
+      <p className="mt-4 text-base leading-relaxed text-ink-soft">
+        Anggap BOXA kayak temen yang paham mainan — bukan marketplace yang cuma mau jualan.
+        Kamu bisa temukan barangnya di sini, pahami dulu kondisi dan isi box-nya, bandingkan
+        harga online dan lokal, baru putusin mau beli lewat mana. Kalau kebetulan barangnya
+        belum ada di BOXA, kami tetap kasih tahu ke mana kamu bisa cek — biasanya ke official
+        store atau toko yang bisa dipercaya.
+      </p>
 
       <div className="mt-10 grid gap-4 sm:grid-cols-3">
         <div className="rounded-2xl border border-line bg-white p-5">

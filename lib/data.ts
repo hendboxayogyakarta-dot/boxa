@@ -152,6 +152,9 @@ export async function getProducts(filters?: {
    * CTA goes straight to the marketplace link. Backs the "Boxa
    * Rekomendasi" nav section. */
   recommendationOnly?: boolean;
+  /** Products that have a local_price set — backs the "Cari Local Price"
+   * CTA and the ?local=1 shop filter. */
+  localPriceOnly?: boolean;
   search?: string;
   sort?: "newest" | "price_asc" | "price_desc" | "popularity" | "featured";
 }): Promise<Product[]> {
@@ -172,6 +175,7 @@ export async function getProducts(filters?: {
     query = query.eq("brand_logo.slug", filters.brand);
   }
   if (filters?.recommendationOnly) query = query.eq("offline_available", false);
+  if (filters?.localPriceOnly) query = query.not("local_price", "is", null);
   if (filters?.featured) query = query.eq("is_featured", true);
   if (filters?.isNew) query = query.eq("is_new", true);
   if (filters?.rareOrSecret) query = query.or("is_rare.eq.true,is_secret.eq.true");
@@ -216,6 +220,7 @@ function filterAndSortMock(filters?: Parameters<typeof getProducts>[0]): Product
     });
   }
   if (filters?.recommendationOnly) items = items.filter((p) => !p.offline_available);
+  if (filters?.localPriceOnly) items = items.filter((p) => p.local_price != null);
   if (filters?.featured) items = items.filter((p) => p.is_featured);
   if (filters?.isNew) items = items.filter((p) => p.is_new);
   if (filters?.rareOrSecret) items = items.filter((p) => p.is_rare || p.is_secret);
