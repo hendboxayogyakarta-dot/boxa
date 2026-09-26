@@ -105,7 +105,7 @@ export function StoreOptions({ product, whatsappNumber }: { product: Product; wh
                 rel="noreferrer"
                 className="flex items-center gap-3 rounded-xl border border-line bg-white p-3 transition-colors hover:border-maroon"
               >
-                <span className="relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-cream-warm">
+                <span className="relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-photo-frame">
                   {s.logoUrl ? (
                     <Image src={s.logoUrl} alt={s.name} fill sizes="36px" className="object-contain p-1" />
                   ) : (

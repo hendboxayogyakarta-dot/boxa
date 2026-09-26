@@ -210,7 +210,7 @@ export const mockSettings: SiteSettings = {
     curation_subtitle:
       "Nggak semua yang kamu mau, harus kamu punya. Setiap produk yang masuk BOXA melewati kurasi yang sama — dicek kondisinya, dilihat nilai koleksinya, dan disampaikan apa adanya sebelum ditawarkan ke kamu.",
     rekomendasi_intro:
-      "Belum tersedia untuk pembelian lokal? Temukan produk yang kamu cari melalui pilihan toko online yang tersedia.",
+      "Barang-barang ini sudah kami cek dan memang bagus — cuma BOXA belum menyetok fisiknya. Klik buat lihat langsung di toko online yang tersedia.",
     request_toy_message: "Halo BOXA, aku mau request mainan: ",
   },
   homepage_sections: [

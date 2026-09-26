@@ -48,7 +48,7 @@ export function StoreReferenceCard({ product }: { product: Product }) {
 
         {storeCount > 0 && (
           <div className="flex items-center gap-1.5 text-xs text-muted">
-            <span className="relative flex h-4 w-4 shrink-0 items-center justify-center overflow-hidden rounded-full bg-cream-warm">
+            <span className="relative flex h-4 w-4 shrink-0 items-center justify-center overflow-hidden rounded-full bg-photo-frame">
               {firstStore?.logo_url ? (
                 <Image src={firstStore.logo_url} alt="" fill sizes="16px" className="object-contain p-0.5" />
               ) : (

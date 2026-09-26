@@ -13,7 +13,7 @@ import { CartButton } from "@/components/cart-button";
 const NAV = [
   { label: "Beranda", href: "/" },
   { label: "Semua Produk", href: "/shop" },
-  { label: "Temukan Online", href: "/temukan-online" },
+  { label: "Pilihan Online", href: "/pilihan-online" },
   { label: "Tentang BOXA", href: "/tentang" },
 ];
 

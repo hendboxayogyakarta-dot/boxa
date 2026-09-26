@@ -21,11 +21,11 @@ export function StoreLogoStrip({ stores }: { stores: Store[] }) {
             title={s.name}
             className="flex items-center gap-2 rounded-full border border-line bg-white px-3 py-2"
           >
-            <span className="relative flex h-7 w-7 shrink-0 items-center justify-center overflow-hidden rounded-full bg-cream-warm">
+            <span className="relative flex h-7 w-7 shrink-0 items-center justify-center overflow-hidden rounded-full bg-photo-frame">
               {s.logo_url ? (
                 <Image src={s.logo_url} alt={s.name} fill sizes="28px" className="object-contain p-1" />
               ) : (
-                <span className="font-display text-xs font-bold text-maroon">{s.name.charAt(0)}</span>
+                <span className="font-display text-xs font-bold text-accent">{s.name.charAt(0)}</span>
               )}
             </span>
             <span className="text-xs font-medium text-ink-soft">{s.name}</span>

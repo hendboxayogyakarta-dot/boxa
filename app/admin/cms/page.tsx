@@ -149,7 +149,7 @@ export default async function AdminCmsPage({
           <Field label="Paragraf section 'Kenapa BOXA'">
             <textarea name="copy_curation_subtitle" defaultValue={settings.copy.curation_subtitle} rows={3} className={inputClass} />
           </Field>
-          <Field label="Intro halaman Temukan Online">
+          <Field label="Intro halaman Pilihan Online">
             <textarea name="copy_rekomendasi_intro" defaultValue={settings.copy.rekomendasi_intro} rows={2} className={inputClass} />
           </Field>
           <Field label="Template pesan WA — Request Mainan">

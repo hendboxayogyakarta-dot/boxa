@@ -1,4 +1,5 @@
 import { ShieldCheck, MessageCircle, Gem } from "lucide-react";
+import { JourneyStrip } from "@/components/sections/journey-strip";
 
 export default function AboutPage() {
   return (
@@ -29,7 +30,11 @@ export default function AboutPage() {
         store atau toko yang bisa dipercaya.
       </p>
 
-      <div className="mt-10 grid gap-4 sm:grid-cols-3">
+      <div className="mt-8 -mx-4 sm:-mx-6">
+        <JourneyStrip />
+      </div>
+
+      <div className="mt-2 grid gap-4 sm:grid-cols-3">
         <div className="rounded-2xl border border-line bg-white p-5">
           <ShieldCheck className="text-flame" size={22} />
           <h3 className="mt-3 font-display text-base font-bold text-ink">Dicek Dulu</h3>

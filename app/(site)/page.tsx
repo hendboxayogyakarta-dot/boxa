@@ -3,7 +3,6 @@ import { StoreLogoStrip } from "@/components/sections/store-logo-strip";
 import { BannerCarousel } from "@/components/sections/banner-carousel";
 import { CategoryIconStrip } from "@/components/sections/category-icon-strip";
 import { UspStrip } from "@/components/sections/usp-strip";
-import { JourneyStrip } from "@/components/sections/journey-strip";
 import { ProductRail } from "@/components/sections/product-rail";
 import { CategoryShowcase } from "@/components/sections/category-showcase";
 import { CurationSection } from "@/components/sections/curation-section";
@@ -47,11 +46,10 @@ export default async function HomePage() {
         secondaryCtaText={settings.hero.secondary_cta_text ?? "Cari Local Price"}
         secondaryCtaHref={settings.hero.secondary_cta_href ?? "/shop?local=1"}
       />
-      <JourneyStrip />
       <CategoryIconStrip categories={categories} />
 
       {sectionEnabled("featured") && (
-        <ProductRail title="Pilihan BOXA" subtitle="Produk yang lagi kami rekomendasikan" products={featured} viewAllHref="/shop?featured=1" />
+        <ProductRail title="Pilihan BOXA" subtitle="Produk yang lagi kami rekomendasikan" products={featured} viewAllHref="/shop?featured=1" shuffle />
       )}
 
       {sectionEnabled("new_arrivals") && (
