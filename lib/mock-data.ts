@@ -58,7 +58,7 @@ export const mockProducts: Product[] = [
     cons: ["Box agak besar, perhatikan penyimpanan"],
     what_is_included: ["1580 keping building block", "6 minifigure", "Buku instruksi"],
     what_is_not_included: ["Lem", "Display case"],
-    sold_count: 34, view_count: 512, offline_available: true, recommendation_note: null, brand_id: "br1", brand_logo: mockBrands[0], marketplace_id: "mp1", marketplace: mockMarketplaces[0], status: "published", images: [img("i1", "boxa-castle-1"), img("i1b", "boxa-castle-2")],
+    sold_count: 34, view_count: 512, offline_available: true, recommendation_note: null, is_bib: true, is_ofc: false, brand_id: "br1", brand_logo: mockBrands[0], marketplace_id: "mp1", marketplace: mockMarketplaces[0], status: "published", images: [img("i1", "boxa-castle-1"), img("i1b", "boxa-castle-2")],
     created_at: "2026-08-01", updated_at: "2026-09-01",
   },
   {
@@ -74,7 +74,7 @@ export const mockProducts: Product[] = [
     pros: ["Gampang dirakit", "Harga ramah untuk pemula"],
     cons: ["Detail lebih simpel dibanding Master Grade"],
     what_is_included: ["Runner model kit", "Stiker", "Instruksi"], what_is_not_included: ["Cat", "Nozzle tambahan"],
-    sold_count: 61, view_count: 890, local_price: null, offline_available: true, recommendation_note: null, brand_id: null, marketplace_id: null, store_refs: mockProductStoreRefs.filter((r) => r.product_id === "p2"), status: "published", images: [img("i2", "boxa-gundam-1")],
+    sold_count: 61, view_count: 890, local_price: null, offline_available: true, recommendation_note: null, is_bib: false, is_ofc: false, brand_id: null, marketplace_id: null, store_refs: mockProductStoreRefs.filter((r) => r.product_id === "p2"), status: "published", images: [img("i2", "boxa-gundam-1")],
     created_at: "2026-07-15", updated_at: "2026-08-20",
   },
   {
@@ -89,7 +89,7 @@ export const mockProducts: Product[] = [
     warranty_type: null, warranty_description: "Sifatnya random/blind box, jadi isi tidak bisa dipilih — ini kami info di depan.",
     pros: ["Ada peluang dapat secret", "Segel pabrik"], cons: ["Karakter di dalam random, bukan pilihan sendiri"],
     what_is_included: ["1 figure random dalam box tersegel"], what_is_not_included: [],
-    sold_count: 102, view_count: 1340, offline_available: true, recommendation_note: null, brand_id: null, marketplace_id: "mp1", marketplace: mockMarketplaces[0], status: "published", images: [img("i3", "boxa-blindbox-1")],
+    sold_count: 102, view_count: 1340, offline_available: true, recommendation_note: null, is_bib: false, is_ofc: false, brand_id: null, marketplace_id: "mp1", marketplace: mockMarketplaces[0], status: "published", images: [img("i3", "boxa-blindbox-1")],
     created_at: "2026-06-10", updated_at: "2026-09-10",
   },
   {
@@ -105,7 +105,7 @@ export const mockProducts: Product[] = [
     pros: ["Sendi masih kencang", "Warna orisinil, tidak pudar", "Lengkap dengan aksesoris"],
     cons: ["Box ada lecet minor di sudut", "Stok cuma 1, tidak restock"],
     what_is_included: ["Figure Optimus Prime", "Aksesoris senjata", "Box original"], what_is_not_included: ["Stand display"],
-    sold_count: 8, view_count: 260, local_price: null, offline_available: true, recommendation_note: null, brand_id: "br4", brand_logo: mockBrands[3], marketplace_id: null, status: "published", images: [img("i4", "boxa-optimus-1")],
+    sold_count: 8, view_count: 260, local_price: null, offline_available: true, recommendation_note: null, is_bib: false, is_ofc: false, brand_id: "br4", brand_logo: mockBrands[3], marketplace_id: null, status: "published", images: [img("i4", "boxa-optimus-1")],
     created_at: "2026-05-20", updated_at: "2026-09-05",
   },
   {
@@ -119,7 +119,7 @@ export const mockProducts: Product[] = [
     cta_type: "WHATSAPP", shopee_url: null, whatsapp_url: "https://wa.me/6281234567890", external_order_url: null,
     warranty_type: null, warranty_description: null, pros: [], cons: [],
     what_is_included: ["240 keping building block"], what_is_not_included: [],
-    sold_count: 45, view_count: 300, local_price: null, offline_available: true, recommendation_note: null, brand_id: null, marketplace_id: null, status: "published", images: [img("i5", "boxa-racer-1")],
+    sold_count: 45, view_count: 300, local_price: null, offline_available: true, recommendation_note: null, is_bib: false, is_ofc: false, brand_id: null, marketplace_id: null, status: "published", images: [img("i5", "boxa-racer-1")],
     created_at: "2026-04-11", updated_at: "2026-08-01",
   },
   {
@@ -135,7 +135,7 @@ export const mockProducts: Product[] = [
     pros: ["Detail cat rapi", "Ada hologram resmi", "Box collector edition"],
     cons: ["Harga lebih tinggi dari figure reguler"],
     what_is_included: ["Figure", "Base display", "Sertifikat keaslian"], what_is_not_included: [],
-    sold_count: 19, view_count: 740, local_price: null, offline_available: true, recommendation_note: null, brand_id: null, marketplace_id: null, status: "published", images: [img("i6", "boxa-luffy-1")],
+    sold_count: 19, view_count: 740, local_price: null, offline_available: true, recommendation_note: null, is_bib: true, is_ofc: true, brand_id: null, marketplace_id: null, status: "published", images: [img("i6", "boxa-luffy-1")],
     created_at: "2026-08-25", updated_at: "2026-09-15",
   },
   {
@@ -150,7 +150,7 @@ export const mockProducts: Product[] = [
     warranty_type: null, warranty_description: null,
     pros: [], cons: [],
     what_is_included: [], what_is_not_included: [],
-    sold_count: 0, view_count: 0, local_price: null, offline_available: false, recommendation_note: null, brand_id: null, marketplace_id: null,
+    sold_count: 0, view_count: 0, local_price: null, offline_available: false, recommendation_note: null, is_bib: false, is_ofc: false, brand_id: null, marketplace_id: null,
     store_refs: [
       { id: "ps3", product_id: "p7", store_id: "st1", product_url: "https://shopee.co.id/blokeesofficial/iron-man-mk85", price: 2850000, sort_order: 1, store: mockStores[0] },
       { id: "ps4", product_id: "p7", store_id: "st2", product_url: "https://tokopedia.com/hobimainanjogja/iron-man-mk85", price: 2790000, sort_order: 2, store: mockStores[1] },
@@ -212,6 +212,21 @@ export const mockSettings: SiteSettings = {
     rekomendasi_intro:
       "Barang-barang ini sudah kami cek dan memang bagus — cuma BOXA belum menyetok fisiknya. Klik buat lihat langsung di toko online yang tersedia.",
     request_toy_message: "Halo BOXA, aku mau request mainan: ",
+  },
+  about: {
+    headline: "Nggak semua yang kamu mau, harus kamu punya.",
+    paragraph1:
+      "BOXA.YK bukan sekadar toko mainan online. Kami memilih produk, mengecek kondisinya, dan menyampaikan informasinya apa adanya — termasuk kalau ada kekurangannya. Prinsip kami sederhana: kalau sebuah barang tidak punya alasan kuat untuk dijual, ya tidak kami jual.",
+    paragraph2:
+      "Kami berbasis di Yogyakarta dan fokus melayani pembeli lokal dulu, dengan pengiriman area Yogyakarta yang cepat. Dari Blokees, licensed toys, blind box, sampai koleksi preloved yang sudah kami cek — semuanya melewati proses kurasi yang sama.",
+    paragraph3:
+      "Anggap BOXA kayak temen yang paham mainan — bukan marketplace yang cuma mau jualan. Kamu bisa temukan barangnya di sini, pahami dulu kondisi dan isi box-nya, bandingkan harga online dan lokal, baru putusin mau beli lewat mana. Kalau kebetulan barangnya belum ada di BOXA, kami tetap kasih tahu ke mana kamu bisa cek — biasanya ke official store atau toko yang bisa dipercaya.",
+    pillar1_title: "Dicek Dulu",
+    pillar1_text: "Kondisi produk kami periksa sebelum ditawarkan.",
+    pillar2_title: "Dikurasi",
+    pillar2_text: "Setiap produk punya alasan untuk masuk BOXA.",
+    pillar3_title: "Gampang Ditanya",
+    pillar3_text: "Belum yakin? Nggak apa-apa, tanya dulu.",
   },
   homepage_sections: [
     { key: "featured", title: "Pilihan BOXA", subtitle: "Produk yang lagi kami rekomendasikan", enabled: true, sort_order: 1 },

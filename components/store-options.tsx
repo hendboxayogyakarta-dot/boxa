@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { MessageCircle, MapPin, ShoppingBag, ArrowRight } from "lucide-react";
 import type { Product } from "@/lib/types";
-import { formatIDR, buildWhatsAppOrderLink } from "@/lib/utils";
+import { formatIDR, buildWhatsAppOrderLink, savingsPercent } from "@/lib/utils";
 import { AddToCartButton } from "@/components/add-to-cart-button";
 import { MysteryPrice } from "@/components/mystery-price";
 
@@ -48,6 +48,9 @@ export function StoreOptions({ product, whatsappNumber }: { product: Product; wh
 
   if (!showLocal && storeCards.length === 0) return null;
 
+  const localSavingsPct =
+    showLocal && product.price > 0 ? savingsPercent(product.price, product.local_price!) : 0;
+
   const localWhatsAppLink = showLocal
     ? buildWhatsAppOrderLink(whatsappNumber, product, "Harga Lokal", product.local_price!)
     : null;
@@ -57,7 +60,12 @@ export function StoreOptions({ product, whatsappNumber }: { product: Product; wh
       <h2 className="font-display text-sm font-bold uppercase tracking-wide text-ink">Tempat Beli</h2>
 
       {showLocal && (
-        <div className="rounded-2xl border-2 border-flame bg-white p-4">
+        <div className="relative rounded-2xl border-2 border-flame bg-white p-4">
+          {localSavingsPct > 0 && (
+            <span className="absolute -top-3 right-4 rounded-full bg-flame px-2.5 py-0.5 text-[11px] font-bold text-on-brand shadow-sm">
+              {localSavingsPct}% lebih murah
+            </span>
+          )}
           <span className="flex items-center gap-1 text-xs font-semibold uppercase tracking-widest text-flame">
             <MapPin size={12} /> BOXA Local Price
           </span>

@@ -158,6 +158,38 @@ export default async function AdminCmsPage({
         </section>
 
         <section className="space-y-4 rounded-2xl border border-line bg-white p-5">
+          <h2 className="font-display text-base font-bold text-ink">Halaman Tentang BOXA</h2>
+          <p className="text-xs text-muted">Semua teks di halaman /tentang — ubah bebas, tidak ada lagi yang hardcode di kode.</p>
+          <Field label="Judul Utama">
+            <input name="about_headline" defaultValue={settings.about.headline} className={inputClass} />
+          </Field>
+          <Field label="Paragraf 1">
+            <textarea name="about_paragraph1" defaultValue={settings.about.paragraph1} rows={3} className={inputClass} />
+          </Field>
+          <Field label="Paragraf 2">
+            <textarea name="about_paragraph2" defaultValue={settings.about.paragraph2} rows={3} className={inputClass} />
+          </Field>
+          <Field label="Paragraf 3">
+            <textarea name="about_paragraph3" defaultValue={settings.about.paragraph3} rows={3} className={inputClass} />
+          </Field>
+          <div className="border-t border-line pt-4">
+            <p className="text-xs font-semibold uppercase tracking-wide text-muted">3 Kartu Alasan</p>
+            <div className="mt-3 grid gap-3 sm:grid-cols-3">
+              {[
+                { titleName: "about_pillar1_title", textName: "about_pillar1_text", title: settings.about.pillar1_title, text: settings.about.pillar1_text },
+                { titleName: "about_pillar2_title", textName: "about_pillar2_text", title: settings.about.pillar2_title, text: settings.about.pillar2_text },
+                { titleName: "about_pillar3_title", textName: "about_pillar3_text", title: settings.about.pillar3_title, text: settings.about.pillar3_text },
+              ].map((p) => (
+                <div key={p.titleName} className="space-y-2 rounded-xl border border-line p-3">
+                  <input name={p.titleName} defaultValue={p.title} placeholder="Judul" className={inputClass} />
+                  <textarea name={p.textName} defaultValue={p.text} placeholder="Deskripsi singkat" rows={2} className={inputClass} />
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="space-y-4 rounded-2xl border border-line bg-white p-5">
           <h2 className="font-display text-base font-bold text-ink">SEO</h2>
           <Field label="Judul Situs">
             <input name="seo_title" defaultValue={settings.seo.site_title} className={inputClass} />

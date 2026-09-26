@@ -52,6 +52,18 @@ export async function updateSettings(formData: FormData) {
       rekomendasi_intro: str(formData, "copy_rekomendasi_intro"),
       request_toy_message: str(formData, "copy_request_toy_message"),
     },
+    about: {
+      headline: str(formData, "about_headline"),
+      paragraph1: str(formData, "about_paragraph1"),
+      paragraph2: str(formData, "about_paragraph2"),
+      paragraph3: str(formData, "about_paragraph3"),
+      pillar1_title: str(formData, "about_pillar1_title"),
+      pillar1_text: str(formData, "about_pillar1_text"),
+      pillar2_title: str(formData, "about_pillar2_title"),
+      pillar2_text: str(formData, "about_pillar2_text"),
+      pillar3_title: str(formData, "about_pillar3_title"),
+      pillar3_text: str(formData, "about_pillar3_text"),
+    },
     seo: {
       site_title: str(formData, "seo_title"),
       meta_description: str(formData, "seo_description"),

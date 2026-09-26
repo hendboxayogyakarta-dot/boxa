@@ -31,6 +31,7 @@ function mapSettingsRow(row: any): SiteSettings {
     hero: row.hero ?? mockSettings.hero,
     delivery: row.delivery ?? mockSettings.delivery,
     copy: { ...mockSettings.copy, ...(row.copy ?? {}) },
+    about: { ...mockSettings.about, ...(row.about ?? {}) },
     seo: row.seo ?? mockSettings.seo,
     homepage_sections: mockSettings.homepage_sections, // overwritten by getHomepageSections() below
   };

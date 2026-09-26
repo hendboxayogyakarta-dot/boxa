@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Tag } from "lucide-react";
 import type { Product } from "@/lib/types";
-import { formatIDR, hasPrice, isRecommendationProduct } from "@/lib/utils";
+import { formatIDR, hasPrice, isRecommendationProduct, savingsPercent } from "@/lib/utils";
 import { ProductBadges } from "./badges";
 import { RecommendationBadge } from "./recommendation-badge";
 import { MysteryPrice } from "./mystery-price";
@@ -11,13 +11,13 @@ export function ProductCard({ product }: { product: Product }) {
   const primaryImage = product.images.find((i) => i.is_primary) ?? product.images[0];
   const soldOut = product.stock_status === "sold_out";
   const hasLocalPrice = product.local_price != null;
-  const savings = hasLocalPrice ? product.price - product.local_price! : 0;
+  const savingsPct = hasLocalPrice ? savingsPercent(product.price, product.local_price!) : 0;
   const isRecommendation = isRecommendationProduct(product);
 
   return (
     <Link
       href={`/product/${product.slug}`}
-      className="hover-lift group flex flex-col overflow-hidden rounded-2xl border border-line bg-white"
+      className="hover-lift group flex flex-col overflow-hidden rounded-2xl border border-line bg-white shadow-sm"
     >
       <div className="relative aspect-square overflow-hidden bg-photo-frame">
         {primaryImage ? (
@@ -41,10 +41,10 @@ export function ProductCard({ product }: { product: Product }) {
             <Image src={product.brand_logo.logo_url} alt={product.brand_logo.name} fill sizes="28px" className="object-contain p-0.5" />
           </span>
         )}
-        {hasLocalPrice && savings > 0 && (
+        {hasLocalPrice && savingsPct > 0 && (
           <div className="absolute bottom-2 right-2 flex items-center gap-1 rounded-full bg-flame px-2 py-1 text-[10px] font-bold text-on-brand shadow-sm">
             <Tag size={10} />
-            Hemat {formatIDR(savings)}
+            {savingsPct}% lebih murah
           </div>
         )}
       </div>
@@ -92,7 +92,9 @@ export function ProductCard({ product }: { product: Product }) {
         )}
 
         {product.sold_count > 0 && (
-          <span className="text-xs text-muted">{product.sold_count} terjual</span>
+          <span className="text-xs text-muted">
+            <span className="font-semibold text-ink-soft">{product.sold_count}</span> terjual
+          </span>
         )}
       </div>
     </Link>

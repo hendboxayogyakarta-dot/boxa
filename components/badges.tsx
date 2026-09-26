@@ -6,13 +6,16 @@ function Badge({
   children,
   className,
   icon,
+  title,
 }: {
   children: React.ReactNode;
   className?: string;
   icon?: React.ReactNode;
+  title?: string;
 }) {
   return (
     <span
+      title={title}
       className={cn(
         "inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold leading-none",
         className
@@ -48,6 +51,22 @@ export function ProductBadges({ product }: { product: Product }) {
       {product.is_boxa_approved && (
         <Badge className="bg-ember text-ink" icon={<Flame size={12} />}>
           BOXA Approved
+        </Badge>
+      )}
+      {product.is_bib && (
+        <Badge
+          className="bg-white text-ink-soft border border-line"
+          title="Box in Box — dus asli disimpan dalam dus pelindung tambahan."
+        >
+          BIB
+        </Badge>
+      )}
+      {product.is_ofc && (
+        <Badge
+          className="bg-white text-ink-soft border border-line"
+          title="Original Factory Condition — belum pernah dibuka sejak pabrik."
+        >
+          OFC
         </Badge>
       )}
     </div>

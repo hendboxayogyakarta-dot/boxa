@@ -139,6 +139,12 @@ create table products (
   local_price numeric(12,2) check (local_price is null or local_price >= 0),
   offline_available boolean not null default true,
   recommendation_note text,
+  -- BIB (Box in Box — dus asli disimpan dalam dus pelindung tambahan) and
+  -- OFC (Original Factory Condition — belum pernah dibuka sejak pabrik).
+  -- Collector-condition flags shown as small badges with an explanatory
+  -- tooltip on hover, since not every shopper knows the shorthand.
+  is_bib boolean not null default false,
+  is_ofc boolean not null default false,
   brand_id uuid references brands(id) on delete set null,
   marketplace_id uuid references marketplaces(id) on delete set null,
   stock_quantity int not null default 0,
@@ -233,6 +239,7 @@ create table website_settings (
   hero jsonb not null default '{}'::jsonb,
   delivery jsonb not null default '{}'::jsonb,
   copy jsonb not null default '{}'::jsonb,
+  about jsonb not null default '{}'::jsonb,
   seo jsonb not null default '{}'::jsonb,
   updated_at timestamptz not null default now()
 );
@@ -433,7 +440,7 @@ create policy "analytics_admin_read" on analytics_events for select using (is_ad
 -- (Safe defaults so the site renders correctly immediately after setup;
 -- edit everything from /admin/cms and /admin/settings afterwards.)
 -- ---------------------------------------------------------------------
-insert into website_settings (id, brand_name, tagline, whatsapp_number, instagram_url, tiktok_url, shopee_url, address, hero, delivery, copy, seo)
+insert into website_settings (id, brand_name, tagline, whatsapp_number, instagram_url, tiktok_url, shopee_url, address, hero, delivery, copy, about, seo)
 values (
   1, 'BOXA.YK', 'Original Toys, Local Prices.',
   '6281234567890', 'https://instagram.com/boxa.yk', 'https://tiktok.com/@boxa.yk', 'https://shopee.co.id/boxayk',
@@ -441,6 +448,7 @@ values (
   '{"enabled": true, "badge": "BOXA Featured", "title": "Original Toys, Local Prices.", "subtitle": "Temukan mainan, pahami produknya, bandingkan harganya, dan pilih cara beli yang paling sesuai untukmu.", "cta_text": "Jelajahi Mainan", "cta_href": "/shop", "secondary_cta_text": "Cari Local Price", "secondary_cta_href": "/shop?local=1", "featured_product_id": null}'::jsonb,
   '{"enabled": true, "service_area": "Antar area Yogyakarta", "free_delivery_enabled": true, "free_delivery_minimum": 300000, "notes": "Gratis antar untuk pembelian di atas Rp300.000, area Kota Yogyakarta."}'::jsonb,
   '{"usp_subtitle": "Temukan mainan, pahami produknya, bandingkan harganya, dan pilih cara beli yang paling sesuai untukmu.", "curation_title": "Kenapa BOXA memilihnya.", "curation_subtitle": "Nggak semua yang kamu mau, harus kamu punya. Setiap produk yang masuk BOXA melewati kurasi yang sama — dicek kondisinya, dilihat nilai koleksinya, dan disampaikan apa adanya sebelum ditawarkan ke kamu.", "rekomendasi_intro": "Barang-barang ini sudah kami cek dan memang bagus — cuma BOXA belum menyetok fisiknya. Klik buat lihat langsung di toko online yang tersedia.", "request_toy_message": "Halo BOXA, aku mau request mainan: "}'::jsonb,
+  '{"headline": "Nggak semua yang kamu mau, harus kamu punya.", "paragraph1": "BOXA.YK bukan sekadar toko mainan online. Kami memilih produk, mengecek kondisinya, dan menyampaikan informasinya apa adanya — termasuk kalau ada kekurangannya. Prinsip kami sederhana: kalau sebuah barang tidak punya alasan kuat untuk dijual, ya tidak kami jual.", "paragraph2": "Kami berbasis di Yogyakarta dan fokus melayani pembeli lokal dulu, dengan pengiriman area Yogyakarta yang cepat. Dari Blokees, licensed toys, blind box, sampai koleksi preloved yang sudah kami cek — semuanya melewati proses kurasi yang sama.", "paragraph3": "Anggap BOXA kayak temen yang paham mainan — bukan marketplace yang cuma mau jualan. Kamu bisa temukan barangnya di sini, pahami dulu kondisi dan isi box-nya, bandingkan harga online dan lokal, baru putusin mau beli lewat mana. Kalau kebetulan barangnya belum ada di BOXA, kami tetap kasih tahu ke mana kamu bisa cek — biasanya ke official store atau toko yang bisa dipercaya.", "pillar1_title": "Dicek Dulu", "pillar1_text": "Kondisi produk kami periksa sebelum ditawarkan.", "pillar2_title": "Dikurasi", "pillar2_text": "Setiap produk punya alasan untuk masuk BOXA.", "pillar3_title": "Gampang Ditanya", "pillar3_text": "Belum yakin? Nggak apa-apa, tanya dulu."}'::jsonb,
   '{"site_title": "BOXA.YK — Mainan pilihan dari Yogyakarta", "meta_description": "Toko mainan dan collectible kurasi dari Yogyakarta."}'::jsonb
 ) on conflict (id) do nothing;
 

@@ -198,7 +198,19 @@ export function ProductForm({
               {label as string}
             </label>
           ))}
+          <label className="flex items-center gap-2 text-sm text-ink-soft" title="Box in Box — dus asli disimpan dalam dus pelindung tambahan, kondisi packaging terjaga maksimal.">
+            <input type="checkbox" name="is_bib" defaultChecked={product?.is_bib} className="rounded border-line" />
+            BIB (Box in Box)
+          </label>
+          <label className="flex items-center gap-2 text-sm text-ink-soft" title="Original Factory Condition — kondisi masih persis seperti saat keluar pabrik, segel belum pernah dibuka.">
+            <input type="checkbox" name="is_ofc" defaultChecked={product?.is_ofc} className="rounded border-line" />
+            OFC (Original Factory Condition)
+          </label>
         </div>
+        <p className="text-xs text-muted">
+          Arahkan kursor ke &ldquo;BIB&rdquo; atau &ldquo;OFC&rdquo; di atas buat lihat artinya. Badge yang sama
+          juga muncul di halaman produk dengan penjelasan singkat.
+        </p>
       </section>
 
       <section className="space-y-4 rounded-2xl border border-line bg-white p-5">

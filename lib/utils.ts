@@ -70,6 +70,13 @@ export function isRecommendationProduct(product: { offline_available: boolean })
 /** Whether the product page should show the "Tempat Beli" (StoreOptions)
  * section — local pickup, linked stores, or the legacy single online
  * link — instead of falling back to the plain <OrderCta>. */
+/** "25% lebih murah" instead of "Hemat RpXX" — percentage reads better
+ * across very different price points than a raw rupiah figure does. */
+export function savingsPercent(onlinePrice: number, localPrice: number): number {
+  if (onlinePrice <= 0) return 0;
+  return Math.round(((onlinePrice - localPrice) / onlinePrice) * 100);
+}
+
 export function hasStoreOptions(product: {
   local_price: number | null;
   offline_available: boolean;

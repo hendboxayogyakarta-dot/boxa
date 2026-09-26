@@ -51,6 +51,8 @@ export async function saveProduct(formData: FormData) {
     brand_id: str(formData, "brand_id"),
     marketplace_id: str(formData, "marketplace_id"),
     recommendation_note: str(formData, "recommendation_note"),
+    is_bib: formData.get("is_bib") === "on",
+    is_ofc: formData.get("is_ofc") === "on",
     stock_quantity: num(formData, "stock_quantity") ?? 0,
     stock_status: str(formData, "stock_status") ?? "in_stock",
     sold_count: num(formData, "sold_count") ?? 0,

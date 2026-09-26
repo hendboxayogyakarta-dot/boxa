@@ -45,6 +45,11 @@ export interface Product {
    * "Favorit Pelanggan"). Only used when offline_available is false —
    * falls back to the default "Pilihan BOXA" when empty. */
   recommendation_note: string | null;
+  /** BIB = Box in Box (dus asli disimpan dalam dus pelindung tambahan).
+   * OFC = Original Factory Condition (belum pernah dibuka sejak pabrik).
+   * Shown as small badges with a hover tooltip explaining the term. */
+  is_bib: boolean;
+  is_ofc: boolean;
   /** Optional reusable brand/license logo (see Brand) — distinct from the
    * free-text `brand` field above so existing products keep working
    * unchanged; this is additive. */
@@ -236,6 +241,20 @@ export interface SiteSettings {
     curation_subtitle: string;
     rekomendasi_intro: string;
     request_toy_message: string;
+  };
+  /** Every editable string on the About page — nothing there is
+   * hardcoded once these exist, all pulled from here instead. */
+  about: {
+    headline: string;
+    paragraph1: string;
+    paragraph2: string;
+    paragraph3: string;
+    pillar1_title: string;
+    pillar1_text: string;
+    pillar2_title: string;
+    pillar2_text: string;
+    pillar3_title: string;
+    pillar3_text: string;
   };
   seo: {
     site_title: string;
