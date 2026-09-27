@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { ImagePlus, Loader2, Plus, Trash2, CheckCircle2, AlertCircle } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { saveProductsBatch, type QuickProductInput } from "@/lib/actions/products";
-import type { Brand, Category, Marketplace } from "@/lib/types";
+import type { Brand, Category, Store } from "@/lib/types";
 
 const STORAGE_KEY = "boxa-quick-add-draft";
 const SUPABASE_CONFIGURED = Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL);
@@ -40,11 +40,11 @@ const inputClass = "w-full rounded-lg border border-line px-2.5 py-2 text-sm out
 export function QuickAddProducts({
   categories,
   brands,
-  marketplaces,
+  stores,
 }: {
   categories: Category[];
   brands: Brand[];
-  marketplaces: Marketplace[];
+  stores: Store[];
 }) {
   const router = useRouter();
   const [mode, setMode] = useState<Mode>("regular");
@@ -254,7 +254,7 @@ export function QuickAddProducts({
                     className={inputClass}
                   >
                     <option value="">Marketplace</option>
-                    {marketplaces.map((m) => (
+                    {stores.map((m) => (
                       <option key={m.id} value={m.id}>{m.name}</option>
                     ))}
                   </select>

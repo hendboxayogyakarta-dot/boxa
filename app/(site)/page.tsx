@@ -64,10 +64,8 @@ export default async function HomePage() {
         h1={settings.hero.title}
         brandLine={settings.tagline}
         subtitle={settings.copy.usp_subtitle}
-        primaryCtaText={settings.hero.cta_text}
-        primaryCtaHref={settings.hero.cta_href}
-        secondaryCtaText={settings.hero.secondary_cta_text ?? "COD Yogyakarta"}
-        secondaryCtaHref={settings.hero.secondary_cta_href ?? "/shop?local=1"}
+        primaryCtaText="Lihat Produk"
+        primaryCtaHref="/shop"
       />
       <CategoryIconStrip categories={categories} />
 

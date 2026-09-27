@@ -17,6 +17,23 @@ const NAV = [
   { label: "Tentang BOXA", href: "/tentang" },
 ];
 
+/**
+ * Two-tone treatment ("BOXA" bold, ".YK" lighter) reads a good deal more
+ * refined than one flat heavy block of caps — falls back to the whole
+ * name in the bold weight if it doesn't contain a "." to split on, so
+ * this never breaks for a differently-formatted brand_name.
+ */
+function BrandWordmark({ name }: { name: string }) {
+  const dotIndex = name.indexOf(".");
+  if (dotIndex === -1) return <span className="font-bold">{name}</span>;
+  return (
+    <span>
+      <span className="font-bold">{name.slice(0, dotIndex)}</span>
+      <span className="font-medium text-ink-soft">{name.slice(dotIndex)}</span>
+    </span>
+  );
+}
+
 export function SiteHeader({ settings }: { settings: SiteSettings }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
@@ -24,7 +41,7 @@ export function SiteHeader({ settings }: { settings: SiteSettings }) {
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-cream/85 backdrop-blur-md">
       <div className="mx-auto flex max-w-7xl items-center gap-4 px-4 py-3.5 sm:px-6">
-        <Link href="/" className="flex items-center gap-1.5 font-display text-xl font-extrabold tracking-tight text-accent">
+        <Link href="/" className="flex items-center gap-2 font-display text-xl tracking-wide text-accent">
           <span className="relative block h-8 w-8 shrink-0">
             <Image
               src={settings.logo_url || "/brand/boxa-flame-icon.png"}
@@ -34,7 +51,7 @@ export function SiteHeader({ settings }: { settings: SiteSettings }) {
               className="object-contain"
             />
           </span>
-          {settings.brand_name}
+          <BrandWordmark name={settings.brand_name} />
         </Link>
 
         <nav className="hidden flex-1 items-center gap-7 md:flex">

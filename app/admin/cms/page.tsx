@@ -94,17 +94,11 @@ export default async function AdminCmsPage({
             <input name="hero_title" defaultValue={settings.hero.title} className={inputClass} />
           </Field>
           <div className="grid gap-4 sm:grid-cols-2">
-            <Field label="Teks Tombol Utama">
+            <Field label="Teks Tombol">
               <input name="hero_cta_text" defaultValue={settings.hero.cta_text} className={inputClass} />
             </Field>
-            <Field label="Link Tombol Utama">
+            <Field label="Link Tombol">
               <input name="hero_cta_href" defaultValue={settings.hero.cta_href} className={inputClass} />
-            </Field>
-            <Field label="Teks Tombol Kedua">
-              <input name="hero_secondary_cta_text" defaultValue={settings.hero.secondary_cta_text ?? ""} className={inputClass} />
-            </Field>
-            <Field label="Link Tombol Kedua">
-              <input name="hero_secondary_cta_href" defaultValue={settings.hero.secondary_cta_href ?? ""} className={inputClass} />
             </Field>
           </div>
           <p className="text-xs text-muted">

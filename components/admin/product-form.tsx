@@ -1,7 +1,7 @@
 import { saveProduct } from "@/lib/actions/products";
 import { ProductImagesField } from "@/components/admin/product-images-field";
 import { SubmitButton } from "@/components/admin/submit-button";
-import type { Brand, Category, Marketplace, Product } from "@/lib/types";
+import type { Brand, Category, Product, Store } from "@/lib/types";
 
 function Field({ label, children, hint }: { label: string; children: React.ReactNode; hint?: string }) {
   return (
@@ -20,12 +20,12 @@ export function ProductForm({
   product,
   categories,
   brands,
-  marketplaces,
+  stores,
 }: {
   product?: Product;
   categories: Category[];
   brands: Brand[];
-  marketplaces: Marketplace[];
+  stores: Store[];
 }) {
   return (
     <form action={saveProduct} className="max-w-3xl space-y-8">
@@ -239,13 +239,13 @@ export function ProductForm({
             <input name="shopee_url" defaultValue={product?.shopee_url ?? ""} className={inputClass} />
           </Field>
           <Field
-            label="Marketplace (logo tombol)"
-            hint="Menentukan logo & nama yang tampil di tombol beli online. Tambah pilihan baru di menu Marketplace."
+            label="Toko (logo tombol)"
+            hint="Menentukan logo & nama yang tampil di tombol beli online. Tambah pilihan baru di menu Store Reference."
           >
             <select name="marketplace_id" defaultValue={product?.marketplace_id ?? ""} className={inputClass}>
               <option value="">Tanpa logo</option>
-              {marketplaces.map((m) => (
-                <option key={m.id} value={m.id}>{m.name}</option>
+              {stores.map((s) => (
+                <option key={s.id} value={s.id}>{s.name}</option>
               ))}
             </select>
           </Field>

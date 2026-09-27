@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
 
 /**
  * The homepage's persistent positioning block — shows regardless of
@@ -18,16 +17,12 @@ export function UspStrip({
   subtitle,
   primaryCtaText,
   primaryCtaHref,
-  secondaryCtaText,
-  secondaryCtaHref,
 }: {
   h1: string;
   brandLine: string;
   subtitle: string;
   primaryCtaText: string;
   primaryCtaHref: string;
-  secondaryCtaText: string;
-  secondaryCtaHref: string;
 }) {
   return (
     <section className="mx-auto max-w-7xl px-4 pb-2 pt-6 sm:px-6 sm:pt-8">
@@ -35,19 +30,12 @@ export function UspStrip({
         <h1 className="font-display text-2xl font-extrabold text-ink sm:text-3xl">{h1}</h1>
         <p className="mt-1 font-display text-sm font-bold text-flame sm:text-base">{brandLine}</p>
         <p className="mt-2 max-w-xl text-sm text-muted sm:text-base">{subtitle}</p>
-        <div className="mt-4 flex flex-wrap gap-2">
+        <div className="mt-4">
           <Link
             href={primaryCtaHref}
-            className="rounded-full bg-flame px-5 py-2.5 text-sm font-semibold text-on-brand hover:bg-flame-light"
+            className="inline-block rounded-full bg-flame px-5 py-2.5 text-sm font-semibold text-on-brand hover:bg-flame-light"
           >
             {primaryCtaText}
-          </Link>
-          <Link
-            href={secondaryCtaHref}
-            className="flex items-center gap-1 rounded-full border border-line px-5 py-2.5 text-sm font-semibold text-ink-soft hover:border-maroon hover:text-accent"
-          >
-            {secondaryCtaText}
-            <ArrowRight size={14} />
           </Link>
         </div>
       </div>

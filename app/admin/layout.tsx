@@ -10,7 +10,6 @@ import {
   Image as ImageIcon,
   GalleryHorizontal,
   Award,
-  Store,
   Building2,
   LogOut,
 } from "lucide-react";
@@ -22,7 +21,6 @@ const NAV = [
   { label: "Produk", href: "/admin/products", icon: Package },
   { label: "Kategori", href: "/admin/categories", icon: Tags },
   { label: "Brand & Lisensi", href: "/admin/brands", icon: Award },
-  { label: "Marketplace", href: "/admin/marketplaces", icon: Store },
   { label: "Store Reference", href: "/admin/stores", icon: Building2 },
   { label: "Banner", href: "/admin/banners", icon: GalleryHorizontal },
   { label: "Ulasan", href: "/admin/reviews", icon: Star },

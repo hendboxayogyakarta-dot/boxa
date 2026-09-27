@@ -58,14 +58,22 @@ export interface Product {
   /** Which marketplace the online purchase link (shopee_url) actually
    * goes to — drives the online button's label/logo in PriceComparison
    * and OrderCta. Defaults to showing a generic label when unset. */
+  /** References a Store (see below) — the product's single "quick pick"
+   * online destination, used by the simple product form / OrderCta. The
+   * richer multi-store list lives in store_refs instead; both draw their
+   * logos from the same `stores` table so they never disagree. */
   marketplace_id: string | null;
-  marketplace?: Marketplace;
+  marketplace?: Store;
   /** All the stores this product can also be found at — powers the
    * "Pilihan Online" section on the product page. May be empty even for
    * a product that still has the legacy shopee_url/marketplace_id set
    * (that pair is treated as one implicit store-reference entry when
    * this array is empty — see product-store-options in components). */
   store_refs?: ProductStoreRef[];
+  /** All license logos to display on the product page — separate from
+   * brand_id/brand_logo above, which still drives the shop's brand
+   * filter and the small corner badge on cards. */
+  licenses?: ProductLicense[];
   stock_quantity: number;
   stock_status: StockStatus;
   category_id: string;
@@ -145,8 +153,6 @@ export interface Brand {
  * put the link. Kept as its own table/type (not reused as Brand) so
  * "which factory made this toy" and "where do I buy it" stay separate
  * concepts even though the shape is identical. */
-export type Marketplace = Brand;
-
 /**
  * "Store Reference" — an official store, distributor, or marketplace
  * customers can be pointed to for a product BOXA doesn't sell locally
@@ -179,6 +185,17 @@ export interface ProductStoreRef {
   price: number | null;
   sort_order: number;
   store?: Store;
+}
+
+/** One license logo attached to a product — many-to-many, since a single
+ * item (a crossover figure, say) can carry more than one license. Reuses
+ * Brand (name + logo) rather than a separate concept. */
+export interface ProductLicense {
+  id: string;
+  product_id: string;
+  brand_id: string;
+  sort_order: number;
+  brand?: Brand;
 }
 
 export interface HeroSettings {

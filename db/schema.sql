@@ -105,24 +105,6 @@ create index idx_stores_slug on stores(slug);
 create index idx_stores_status on stores(status);
 
 -- ---------------------------------------------------------------------
--- PRODUCT_STORES  (many-to-many: a product can list several stores it
--- can be found at, each with its own product-specific link and price —
--- this is what powers the "Pilihan Online" section on the product page.)
--- ---------------------------------------------------------------------
-create table product_stores (
-  id uuid primary key default gen_random_uuid(),
-  product_id uuid not null references products(id) on delete cascade,
-  store_id uuid not null references stores(id) on delete cascade,
-  product_url text,
-  price numeric(12,2),
-  sort_order int not null default 0,
-  created_at timestamptz not null default now(),
-  unique (product_id, store_id)
-);
-create index idx_product_stores_product on product_stores(product_id);
-create index idx_product_stores_store on product_stores(store_id);
-
--- ---------------------------------------------------------------------
 -- PRODUCTS
 -- ---------------------------------------------------------------------
 create table products (
@@ -146,7 +128,13 @@ create table products (
   is_bib boolean not null default false,
   is_ofc boolean not null default false,
   brand_id uuid references brands(id) on delete set null,
-  marketplace_id uuid references marketplaces(id) on delete set null,
+  -- References stores(id), not marketplaces(id) — the two logo systems
+  -- used to be separate tables (an admin could set a product's online
+  -- link via this single-pick field, pointing at `marketplaces`, while
+  -- the richer multi-store "Pilihan Online" section pointed at `stores`
+  -- — same real-world thing, two disconnected logo libraries). Both now
+  -- point at `stores`, so a logo only has to be uploaded once.
+  marketplace_id uuid references stores(id) on delete set null,
   stock_quantity int not null default 0,
   stock_status stock_status not null default 'in_stock',
   category_id uuid references categories(id) on delete set null,
@@ -187,6 +175,45 @@ create index idx_products_category on products(category_id);
 create index idx_products_status on products(status);
 create index idx_products_created_at on products(created_at desc);
 create index idx_products_brand on products(brand_id);
+
+-- ---------------------------------------------------------------------
+-- PRODUCT_STORES  (many-to-many: a product can list several stores it
+-- can be found at, each with its own product-specific link and price —
+-- this is what powers the "Pilihan Online" section on the product page.)
+-- ---------------------------------------------------------------------
+create table product_stores (
+  id uuid primary key default gen_random_uuid(),
+  product_id uuid not null references products(id) on delete cascade,
+  store_id uuid not null references stores(id) on delete cascade,
+  product_url text,
+  price numeric(12,2),
+  sort_order int not null default 0,
+  created_at timestamptz not null default now(),
+  unique (product_id, store_id)
+);
+create index idx_product_stores_product on product_stores(product_id);
+create index idx_product_stores_store on product_stores(store_id);
+
+-- ---------------------------------------------------------------------
+-- PRODUCT_LICENSES  (many-to-many: a product can carry more than one
+-- license/brand — e.g. a crossover figure licensed by both Transformers
+-- and Marvel. Reuses the existing `brands` table rather than a new one,
+-- since a "license" and a "brand" are the same kind of thing here (name
+-- + logo). Purely for display — the single brand_id column on products
+-- still drives the shop's brand filter and the small corner badge on
+-- product cards; this powers a row of license logos on the product page.)
+-- ---------------------------------------------------------------------
+create table product_licenses (
+  id uuid primary key default gen_random_uuid(),
+  product_id uuid not null references products(id) on delete cascade,
+  brand_id uuid not null references brands(id) on delete cascade,
+  sort_order int not null default 0,
+  created_at timestamptz not null default now(),
+  unique (product_id, brand_id)
+);
+create index idx_product_licenses_product on product_licenses(product_id);
+create index idx_product_licenses_brand on product_licenses(brand_id);
+
 create index idx_products_marketplace on products(marketplace_id);
 
 -- ---------------------------------------------------------------------
@@ -342,6 +369,7 @@ alter table brands enable row level security;
 alter table marketplaces enable row level security;
 alter table stores enable row level security;
 alter table product_stores enable row level security;
+alter table product_licenses enable row level security;
 alter table products enable row level security;
 alter table product_images enable row level security;
 alter table reviews enable row level security;
@@ -391,6 +419,14 @@ create policy "product_stores_public_read" on product_stores for select using (
 create policy "product_stores_admin_write" on product_stores for insert with check (is_admin());
 create policy "product_stores_admin_update" on product_stores for update using (is_admin()) with check (is_admin());
 create policy "product_stores_admin_delete" on product_stores for delete using (is_admin());
+
+-- product_licenses: public can read rows for published products; admins full CRUD
+create policy "product_licenses_public_read" on product_licenses for select using (
+  exists (select 1 from products p where p.id = product_id and (p.status = 'published' or is_admin()))
+);
+create policy "product_licenses_admin_write" on product_licenses for insert with check (is_admin());
+create policy "product_licenses_admin_update" on product_licenses for update using (is_admin()) with check (is_admin());
+create policy "product_licenses_admin_delete" on product_licenses for delete using (is_admin());
 
 -- products: public can read published; admins full CRUD
 create policy "products_public_read" on products for select using (status = 'published' or is_admin());
@@ -449,7 +485,7 @@ values (
   '{"enabled": true, "service_area": "Antar area Yogyakarta", "free_delivery_enabled": true, "free_delivery_minimum": 300000, "notes": "Gratis antar untuk pembelian di atas Rp300.000, area Kota Yogyakarta."}'::jsonb,
   '{"usp_subtitle": "Temukan mainan, pahami produknya, bandingkan harganya, dan pilih cara beli yang paling sesuai untukmu.", "curation_title": "Kenapa BOXA memilihnya.", "curation_subtitle": "Nggak semua yang kamu mau, harus kamu punya. Setiap produk yang masuk BOXA melewati kurasi yang sama — dicek kondisinya, dilihat nilai koleksinya, dan disampaikan apa adanya sebelum ditawarkan ke kamu.", "rekomendasi_intro": "Barang-barang ini sudah kami cek dan memang bagus — cuma BOXA belum menyetok fisiknya. Klik buat lihat langsung di toko online yang tersedia.", "request_toy_message": "Halo BOXA, aku mau request mainan: "}'::jsonb,
   '{"headline": "Nggak semua yang kamu mau, harus kamu punya.", "paragraph1": "BOXA.YK bukan sekadar toko mainan online. Kami memilih produk, mengecek kondisinya, dan menyampaikan informasinya apa adanya — termasuk kalau ada kekurangannya. Prinsip kami sederhana: kalau sebuah barang tidak punya alasan kuat untuk dijual, ya tidak kami jual.", "paragraph2": "Kami berbasis di Yogyakarta dan fokus melayani pembeli lokal dulu, dengan pengiriman area Yogyakarta yang cepat. Dari Blokees, licensed toys, blind box, sampai koleksi preloved yang sudah kami cek — semuanya melewati proses kurasi yang sama.", "paragraph3": "Anggap BOXA kayak temen yang paham mainan — bukan marketplace yang cuma mau jualan. Kamu bisa temukan barangnya di sini, pahami dulu kondisi dan isi box-nya, bandingkan harga online dan lokal, baru putusin mau beli lewat mana. Kalau kebetulan barangnya belum ada di BOXA, kami tetap kasih tahu ke mana kamu bisa cek — biasanya ke official store atau toko yang bisa dipercaya.", "pillar1_title": "Dicek Dulu", "pillar1_text": "Kondisi produk kami periksa sebelum ditawarkan.", "pillar2_title": "Dikurasi", "pillar2_text": "Setiap produk punya alasan untuk masuk BOXA.", "pillar3_title": "Gampang Ditanya", "pillar3_text": "Belum yakin? Nggak apa-apa, tanya dulu."}'::jsonb,
-  '{"site_title": "BOXA.YK — Mainan pilihan dari Yogyakarta", "meta_description": "Toko mainan dan collectible kurasi dari Yogyakarta."}'::jsonb
+  '{"site_title": "BOXA.YK — Toko Mainan & Collectibles Yogyakarta", "meta_description": "BOXA.YK adalah toko mainan dan collectibles di Yogyakarta. Temukan toys, action figure, model kit, blind box, dan collectibles pilihan. Tersedia COD Jogja dan pengiriman."}'::jsonb
 ) on conflict (id) do nothing;
 
 insert into brands (name, slug, status, sort_order) values

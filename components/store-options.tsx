@@ -104,32 +104,40 @@ export function StoreOptions({ product, whatsappNumber }: { product: Product; wh
       {storeCards.length > 0 && (
         <div>
           <span className="text-xs font-semibold uppercase tracking-widest text-muted">Pilihan Online</span>
-          <div className="mt-2 grid gap-2 sm:grid-cols-2">
+          {/* Same card shape as BOXA Local Price above (border, padding,
+              price size, full-width button) — COD local can still be the
+              suggested default, but every option here is still a real
+              choice and should look like one, not an afterthought. */}
+          <div className="mt-2 space-y-2">
             {storeCards.map((s) => (
-              <a
-                key={s.key}
-                href={s.url}
-                target="_blank"
-                rel="noreferrer"
-                className="flex items-center gap-3 rounded-xl border border-line bg-white p-3 transition-colors hover:border-maroon"
-              >
-                <span className="relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-photo-frame">
-                  {s.logoUrl ? (
-                    <Image src={s.logoUrl} alt={s.name} fill sizes="36px" className="object-contain p-1" />
-                  ) : (
-                    <ShoppingBag size={15} className="text-muted" />
-                  )}
-                </span>
-                <span className="min-w-0 flex-1">
-                  <span className="block truncate text-sm font-medium text-ink">{s.name}</span>
-                  {s.price != null ? (
-                    <span className="text-sm font-bold text-accent">{formatIDR(s.price)}</span>
-                  ) : (
-                    <MysteryPrice />
-                  )}
-                </span>
-                <ArrowRight size={15} className="shrink-0 text-muted" />
-              </a>
+              <div key={s.key} className="rounded-2xl border border-line bg-white p-4">
+                <div className="flex items-center gap-3">
+                  <span className="relative flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full bg-photo-frame">
+                    {s.logoUrl ? (
+                      <Image src={s.logoUrl} alt={s.name} fill sizes="44px" className="object-contain p-1.5" />
+                    ) : (
+                      <ShoppingBag size={18} className="text-muted" />
+                    )}
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <span className="block truncate text-sm font-semibold text-ink">{s.name}</span>
+                    {s.price != null ? (
+                      <span className="font-display text-xl font-extrabold text-accent">{formatIDR(s.price)}</span>
+                    ) : (
+                      <MysteryPrice />
+                    )}
+                  </div>
+                </div>
+                <a
+                  href={s.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-3 flex items-center justify-center gap-2 rounded-full border border-line px-4 py-2.5 text-sm font-semibold text-ink-soft transition-colors hover:border-maroon hover:text-accent"
+                >
+                  Lihat Produk
+                  <ArrowRight size={15} />
+                </a>
+              </div>
             ))}
           </div>
           <p className="mt-2 text-[11px] text-muted">

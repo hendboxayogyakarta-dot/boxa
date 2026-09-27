@@ -147,6 +147,25 @@ export default async function ProductPage({
               <ProductBadges product={product} />
             </div>
 
+            {product.licenses && product.licenses.length > 0 && (
+              <div className="mt-3 flex flex-wrap items-center gap-3">
+                <span className="text-xs font-semibold uppercase tracking-widest text-muted">Lisensi Resmi</span>
+                {product.licenses.map((l) => (
+                  <span
+                    key={l.id}
+                    title={l.brand?.name}
+                    className="relative flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full border border-line bg-photo-frame"
+                  >
+                    {l.brand?.logo_url ? (
+                      <Image src={l.brand.logo_url} alt={`Lisensi ${l.brand.name}`} fill sizes="32px" className="object-contain p-1" />
+                    ) : (
+                      <span className="text-[10px] font-bold text-accent">{l.brand?.name?.charAt(0)}</span>
+                    )}
+                  </span>
+                ))}
+              </div>
+            )}
+
             <div className="mt-3 flex flex-wrap items-center gap-3 text-sm text-muted">
               {product.brand && <span>{product.brand}</span>}
               {product.series && <span>· {product.series}</span>}

@@ -1,13 +1,13 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { getAllBrandsForAdmin, getAllCategoriesForAdmin, getAllMarketplacesForAdmin } from "@/lib/data";
+import { getAllBrandsForAdmin, getAllCategoriesForAdmin, getAllStoresForAdmin } from "@/lib/data";
 import { QuickAddProducts } from "@/components/admin/quick-add-products";
 
 export default async function QuickAddProductsPage() {
-  const [categories, brands, marketplaces] = await Promise.all([
+  const [categories, brands, stores] = await Promise.all([
     getAllCategoriesForAdmin(),
     getAllBrandsForAdmin(),
-    getAllMarketplacesForAdmin(),
+    getAllStoresForAdmin(),
   ]);
 
   return (
@@ -25,7 +25,7 @@ export default async function QuickAddProductsPage() {
       </p>
 
       <div className="mt-6">
-        <QuickAddProducts categories={categories} brands={brands} marketplaces={marketplaces} />
+        <QuickAddProducts categories={categories} brands={brands} stores={stores} />
       </div>
     </div>
   );
