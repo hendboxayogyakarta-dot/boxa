@@ -6,6 +6,7 @@ import { Home, MessageCircle, LayoutGrid, Link2, ShoppingCart } from "lucide-rea
 import { cn } from "@/lib/utils";
 import type { SiteSettings } from "@/lib/types";
 import { useCart } from "./cart-context";
+import { ChatBubbleHint } from "./chat-bubble-hint";
 
 export function MobileBottomNav({ settings }: { settings: SiteSettings }) {
   const pathname = usePathname();
@@ -53,15 +54,18 @@ export function MobileBottomNav({ settings }: { settings: SiteSettings }) {
           </span>
           Keranjang
         </button>
-        <a
-          href={`https://wa.me/${settings.whatsapp_number}`}
-          target="_blank"
-          rel="noreferrer"
-          className="flex flex-col items-center gap-0.5 py-2.5 text-[10px] font-medium text-flame"
-        >
-          <MessageCircle size={20} />
-          Chat
-        </a>
+        <div className="relative">
+          <ChatBubbleHint align="right" />
+          <a
+            href={`https://wa.me/${settings.whatsapp_number}`}
+            target="_blank"
+            rel="noreferrer"
+            className="flex flex-col items-center gap-0.5 py-2.5 text-[10px] font-medium text-flame"
+          >
+            <MessageCircle size={20} />
+            Chat
+          </a>
+        </div>
       </div>
     </nav>
   );

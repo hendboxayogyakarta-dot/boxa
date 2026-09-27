@@ -8,6 +8,7 @@ import { Menu, Search, X, MessageCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { SiteSettings } from "@/lib/types";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { ChatBubbleHint } from "@/components/chat-bubble-hint";
 import { CartButton } from "@/components/cart-button";
 
 const NAV = [
@@ -87,15 +88,18 @@ export function SiteHeader({ settings }: { settings: SiteSettings }) {
 
         <ThemeToggle className="hidden sm:flex" />
 
-        <a
-          href={`https://wa.me/${settings.whatsapp_number}?text=${encodeURIComponent("Halo BOXA, saya mau tanya-tanya soal produk (bukan request atau soal pesanan tertentu).")}`}
-          target="_blank"
-          rel="noreferrer"
-          className="hidden items-center gap-1.5 rounded-full bg-flame px-4 py-2 text-sm font-semibold text-on-brand transition-colors hover:bg-flame-light sm:inline-flex"
-        >
-          <MessageCircle size={15} />
-          Chat BOXA
-        </a>
+        <div className="relative hidden sm:block">
+          <ChatBubbleHint />
+          <a
+            href={`https://wa.me/${settings.whatsapp_number}?text=${encodeURIComponent("Halo BOXA, saya mau tanya-tanya soal produk (bukan request atau soal pesanan tertentu).")}`}
+            target="_blank"
+            rel="noreferrer"
+            className="flex items-center gap-1.5 rounded-full bg-flame px-4 py-2 text-sm font-semibold text-on-brand transition-colors hover:bg-flame-light"
+          >
+            <MessageCircle size={15} />
+            Chat BOXA
+          </a>
+        </div>
 
         <button
           className="ml-auto rounded-lg p-2 text-ink md:hidden"
