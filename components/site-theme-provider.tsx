@@ -30,11 +30,14 @@ export function SiteThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>("light");
 
   useEffect(() => {
+    // Light is the default regardless of the visitor's system preference —
+    // only an explicit toggle (saved below) switches it to dark. Previously
+    // this also auto-switched based on prefers-color-scheme, which meant
+    // anyone with a dark OS theme saw dark mode on their very first visit
+    // without asking for it.
     const stored = localStorage.getItem(STORAGE_KEY) as Theme | null;
     if (stored === "light" || stored === "dark") {
       setTheme(stored);
-    } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-      setTheme("dark");
     }
   }, []);
 

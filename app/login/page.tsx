@@ -75,11 +75,6 @@ function LoginForm() {
           {loading ? "Memproses..." : "Masuk"}
         </button>
 
-        <p className="mt-4 text-xs text-muted">
-          Belum ada akun admin? Buat lewat Supabase Authentication, lalu tambahkan baris di
-          tabel <code className="rounded bg-cream-warm px-1">profiles</code> dengan{" "}
-          <code className="rounded bg-cream-warm px-1">role = &apos;admin&apos;</code>.
-        </p>
       </form>
     </div>
   );
