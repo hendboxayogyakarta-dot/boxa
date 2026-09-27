@@ -5,7 +5,6 @@ import { CategoryIconStrip } from "@/components/sections/category-icon-strip";
 import { UspStrip } from "@/components/sections/usp-strip";
 import { ProductRail } from "@/components/sections/product-rail";
 import { CategoryShowcase } from "@/components/sections/category-showcase";
-import { CurationSection } from "@/components/sections/curation-section";
 import { ReviewsSection, DeliveryBanner } from "@/components/sections/misc-sections";
 import type { Product } from "@/lib/types";
 
@@ -62,9 +61,6 @@ export default async function HomePage() {
 
       {sectionEnabled("categories") && (
         <CategoryShowcase categories={categories} productsByCategory={productsByCategory} />
-      )}
-      {sectionEnabled("why_boxa") && (
-        <CurationSection title={settings.copy.curation_title} subtitle={settings.copy.curation_subtitle} />
       )}
       <StoreLogoStrip stores={stores} />
       {sectionEnabled("reviews") && <ReviewsSection reviews={reviews} />}

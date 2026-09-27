@@ -143,12 +143,6 @@ export default async function AdminCmsPage({
           <Field label="Subjudul di bawah slogan beranda">
             <input name="copy_usp_subtitle" defaultValue={settings.copy.usp_subtitle} className={inputClass} />
           </Field>
-          <Field label="Judul section 'Kenapa BOXA'">
-            <input name="copy_curation_title" defaultValue={settings.copy.curation_title} className={inputClass} />
-          </Field>
-          <Field label="Paragraf section 'Kenapa BOXA'">
-            <textarea name="copy_curation_subtitle" defaultValue={settings.copy.curation_subtitle} rows={3} className={inputClass} />
-          </Field>
           <Field label="Intro halaman Pilihan Online">
             <textarea name="copy_rekomendasi_intro" defaultValue={settings.copy.rekomendasi_intro} rows={2} className={inputClass} />
           </Field>
@@ -172,21 +166,6 @@ export default async function AdminCmsPage({
           <Field label="Paragraf 3">
             <textarea name="about_paragraph3" defaultValue={settings.about.paragraph3} rows={3} className={inputClass} />
           </Field>
-          <div className="border-t border-line pt-4">
-            <p className="text-xs font-semibold uppercase tracking-wide text-muted">3 Kartu Alasan</p>
-            <div className="mt-3 grid gap-3 sm:grid-cols-3">
-              {[
-                { titleName: "about_pillar1_title", textName: "about_pillar1_text", title: settings.about.pillar1_title, text: settings.about.pillar1_text },
-                { titleName: "about_pillar2_title", textName: "about_pillar2_text", title: settings.about.pillar2_title, text: settings.about.pillar2_text },
-                { titleName: "about_pillar3_title", textName: "about_pillar3_text", title: settings.about.pillar3_title, text: settings.about.pillar3_text },
-              ].map((p) => (
-                <div key={p.titleName} className="space-y-2 rounded-xl border border-line p-3">
-                  <input name={p.titleName} defaultValue={p.title} placeholder="Judul" className={inputClass} />
-                  <textarea name={p.textName} defaultValue={p.text} placeholder="Deskripsi singkat" rows={2} className={inputClass} />
-                </div>
-              ))}
-            </div>
-          </div>
         </section>
 
         <section className="space-y-4 rounded-2xl border border-line bg-white p-5">
