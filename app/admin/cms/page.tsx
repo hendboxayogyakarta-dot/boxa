@@ -77,20 +77,40 @@ export default async function AdminCmsPage({
           <p className="text-sm text-muted">
             Gambar yang bergeser di paling atas halaman depan diatur dari halaman{" "}
             <Link href="/admin/banners" className="font-semibold text-maroon">Banner</Link> — tinggal
-            unggah gambar, tidak perlu isi teks manual.
+            unggah gambar, tidak perlu isi teks manual. Kalau belum ada banner sama sekali, area itu
+            tampil polos (cuma nama brand) — bukan lagi teks besar, karena judul utamanya sekarang
+            selalu ada di bawah ini terlepas dari banner.
           </p>
-          <div className="border-t border-line pt-4">
-            <p className="text-xs font-semibold uppercase tracking-wide text-muted">Teks Cadangan</p>
-            <p className="mt-1 text-xs text-muted">Dipakai kalau belum ada banner yang diunggah sama sekali.</p>
-            <div className="mt-3 grid gap-4 sm:grid-cols-2">
-              <Field label="Judul">
-                <input name="hero_title" defaultValue={settings.hero.title} className={inputClass} />
-              </Field>
-              <Field label="Subjudul">
-                <input name="hero_subtitle" defaultValue={settings.hero.subtitle} className={inputClass} />
-              </Field>
-            </div>
+        </section>
+
+        <section className="space-y-4 rounded-2xl border border-line bg-white p-5">
+          <h2 className="font-display text-base font-bold text-ink">Judul Utama Beranda (H1)</h2>
+          <p className="text-xs text-muted">
+            Ini judul utama yang selalu tampil di beranda (dan yang Google baca sebagai H1) — beda
+            dari gambar banner di atas. Penting buat SEO: usahakan jelas menyebut &ldquo;toko mainan
+            &amp; collectibles Yogyakarta&rdquo; atau semacamnya.
+          </p>
+          <Field label="Judul (H1)">
+            <input name="hero_title" defaultValue={settings.hero.title} className={inputClass} />
+          </Field>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <Field label="Teks Tombol Utama">
+              <input name="hero_cta_text" defaultValue={settings.hero.cta_text} className={inputClass} />
+            </Field>
+            <Field label="Link Tombol Utama">
+              <input name="hero_cta_href" defaultValue={settings.hero.cta_href} className={inputClass} />
+            </Field>
+            <Field label="Teks Tombol Kedua">
+              <input name="hero_secondary_cta_text" defaultValue={settings.hero.secondary_cta_text ?? ""} className={inputClass} />
+            </Field>
+            <Field label="Link Tombol Kedua">
+              <input name="hero_secondary_cta_href" defaultValue={settings.hero.secondary_cta_href ?? ""} className={inputClass} />
+            </Field>
           </div>
+          <p className="text-xs text-muted">
+            Subjudul di bawah judul ini diatur lewat &ldquo;Subjudul di bawah slogan beranda&rdquo;
+            pada section Narasi Website di bawah.
+          </p>
         </section>
 
         <section className="space-y-4 rounded-2xl border border-line bg-white p-5">

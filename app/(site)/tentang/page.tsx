@@ -1,6 +1,16 @@
+import type { Metadata } from "next";
 import { getSiteSettings } from "@/lib/data";
 
 export const revalidate = 60;
+
+export const metadata: Metadata = {
+  // `absolute`: this title already spells out "BOXA.YK" itself, so the
+  // root layout's "%s | BOXA.YK" template would otherwise double it up.
+  title: { absolute: "Tentang BOXA.YK — Toko Mainan & Collectibles Yogyakarta" },
+  description:
+    "BOXA.YK adalah toko mainan dan collectibles berbasis di Yogyakarta — mainan original, harga lokal, dan informasi produk yang jujur.",
+  alternates: { canonical: "/tentang" },
+};
 
 export default async function AboutPage() {
   const settings = await getSiteSettings();

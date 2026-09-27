@@ -7,6 +7,7 @@ export const revalidate = 60;
 export const metadata = {
   title: "Pilihan Online",
   description: "Mainan bagus yang belum ada stok fisiknya di BOXA — cek langsung di toko online yang tersedia.",
+  alternates: { canonical: "/pilihan-online" },
 };
 
 /**

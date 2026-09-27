@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import Image from "next/image";
-import { Menu, Search, X, MessageCircle, Flame } from "lucide-react";
+import { Menu, Search, X, MessageCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { SiteSettings } from "@/lib/types";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -25,13 +25,15 @@ export function SiteHeader({ settings }: { settings: SiteSettings }) {
     <header className="sticky top-0 z-40 border-b border-line bg-cream/85 backdrop-blur-md">
       <div className="mx-auto flex max-w-7xl items-center gap-4 px-4 py-3.5 sm:px-6">
         <Link href="/" className="flex items-center gap-1.5 font-display text-xl font-extrabold tracking-tight text-accent">
-          {settings.logo_url ? (
-            <span className="relative block h-8 w-8 shrink-0">
-              <Image src={settings.logo_url} alt={settings.brand_name} fill sizes="32px" className="object-contain" />
-            </span>
-          ) : (
-            <Flame size={19} className="text-flame" />
-          )}
+          <span className="relative block h-8 w-8 shrink-0">
+            <Image
+              src={settings.logo_url || "/brand/boxa-flame-icon.png"}
+              alt={settings.brand_name}
+              fill
+              sizes="32px"
+              className="object-contain"
+            />
+          </span>
           {settings.brand_name}
         </Link>
 

@@ -2,6 +2,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getApprovedReviews, getProductBySlug, getRelatedProducts, getSiteSettings } from "@/lib/data";
+import { SITE_URL } from "@/lib/site-config";
 import { formatIDR, conditionLabel, stockLabel, hasPrice, isRecommendationProduct, hasStoreOptions, getFallbackDescription } from "@/lib/utils";
 import { RecommendationBadge } from "@/components/recommendation-badge";
 import { MysteryPrice } from "@/components/mystery-price";
@@ -25,12 +26,23 @@ export async function generateMetadata({
   const { slug } = await params;
   const product = await getProductBySlug(slug);
   if (!product) return {};
+
+  const title = `${product.name} — BOXA.YK | Toko Mainan & Collectibles Yogyakarta`;
+  const description =
+    product.short_description ||
+    `${product.name} tersedia di BOXA.YK, toko mainan dan collectibles di Yogyakarta.`;
+
   return {
-    title: product.name,
-    description: product.short_description,
+    // `absolute` bypasses the root layout's title template — this
+    // string already spells out "BOXA.YK" itself (matching the brand's
+    // requested product-title pattern), so applying the template on top
+    // would double the brand name at the end.
+    title: { absolute: title },
+    description,
+    alternates: { canonical: `${SITE_URL}/product/${product.slug}` },
     openGraph: {
-      title: product.name,
-      description: product.short_description,
+      title,
+      description,
       images: product.images[0] ? [product.images[0].url] : [],
     },
   };
@@ -56,8 +68,58 @@ export default async function ProductPage({
 
   const showStoreOptions = hasStoreOptions(product);
 
+  // Real data only — no invented ratings, no invented stock/price. Fields
+  // that don't apply (no price set, no brand) are simply left out rather
+  // than filled with a placeholder.
+  const availability =
+    product.stock_status === "sold_out"
+      ? "https://schema.org/OutOfStock"
+      : product.stock_status === "preorder"
+        ? "https://schema.org/PreOrder"
+        : product.stock_status === "low_stock"
+          ? "https://schema.org/LimitedAvailability"
+          : "https://schema.org/InStock";
+  const itemCondition =
+    product.condition === "pre_owned_like_new" || product.condition === "pre_owned_good"
+      ? "https://schema.org/UsedCondition"
+      : "https://schema.org/NewCondition";
+
+  const productJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.name,
+    image: product.images.map((i) => i.url),
+    description: product.short_description || undefined,
+    sku: product.sku || undefined,
+    brand: product.brand ? { "@type": "Brand", name: product.brand } : undefined,
+    ...(hasPrice(product.price) && {
+      offers: {
+        "@type": "Offer",
+        url: `${SITE_URL}/product/${product.slug}`,
+        priceCurrency: "IDR",
+        price: product.price,
+        availability,
+        itemCondition,
+      },
+    }),
+    // Only when real approved reviews exist — never a fabricated rating.
+    ...(reviews.length > 0 &&
+      avgRating != null && {
+        aggregateRating: {
+          "@type": "AggregateRating",
+          ratingValue: Number(avgRating.toFixed(1)),
+          reviewCount: reviews.length,
+        },
+      }),
+  };
+
   return (
     <div className="relative">
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
+      />
       <div aria-hidden className="site-glow pointer-events-none absolute inset-x-0 top-0 h-[500px] opacity-40" />
 
       <div className="relative mx-auto max-w-7xl px-4 py-8 sm:px-6">

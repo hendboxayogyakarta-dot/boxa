@@ -22,15 +22,15 @@ export function CategoryShowcase({
           return (
             <Link
               key={c.id}
-              href={`/shop?category=${c.slug}`}
-              className={`hover-lift group relative flex min-h-[180px] items-end overflow-hidden rounded-3xl border border-line bg-cream-warm ${
+              href={`/kategori/${c.slug}`}
+              className={`hover-lift group relative flex min-h-[180px] items-end overflow-hidden rounded-3xl border border-line bg-photo-frame ${
                 big ? "md:col-span-2 md:row-span-2 md:min-h-[400px]" : "md:min-h-[190px]"
               }`}
             >
               {sample?.images[0] && (
                 <Image
                   src={sample.images[0].url}
-                  alt={c.name}
+                  alt={`${c.name} — BOXA.YK Yogyakarta`}
                   fill
                   sizes={big ? "60vw" : "30vw"}
                   className="object-cover opacity-90 transition-transform duration-500 group-hover:scale-105"

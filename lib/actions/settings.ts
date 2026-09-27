@@ -36,7 +36,10 @@ export async function updateSettings(formData: FormData) {
     hero: {
       ...currentHero,
       title: str(formData, "hero_title"),
-      subtitle: str(formData, "hero_subtitle"),
+      cta_text: str(formData, "hero_cta_text"),
+      cta_href: str(formData, "hero_cta_href"),
+      secondary_cta_text: str(formData, "hero_secondary_cta_text"),
+      secondary_cta_href: str(formData, "hero_secondary_cta_href"),
     },
     delivery: {
       enabled: bool(formData, "delivery_enabled"),

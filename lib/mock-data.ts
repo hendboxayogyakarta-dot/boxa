@@ -188,12 +188,12 @@ export const mockSettings: SiteSettings = {
   hero: {
     enabled: true,
     badge: "BOXA Featured",
-    title: "Original Toys, Local Prices.",
+    title: "Toko Mainan & Collectibles Yogyakarta",
     subtitle: "Temukan mainan, pahami produknya, bandingkan harganya, dan pilih cara beli yang paling sesuai untukmu.",
     image_url: null,
-    cta_text: "Jelajahi Mainan",
+    cta_text: "Lihat Produk",
     cta_href: "/shop",
-    secondary_cta_text: "Cari Local Price",
+    secondary_cta_text: "COD Yogyakarta",
     secondary_cta_href: "/shop?local=1",
     featured_product_id: null,
   },
@@ -205,7 +205,7 @@ export const mockSettings: SiteSettings = {
     notes: "Gratis antar untuk pembelian di atas Rp300.000, area Kota Yogyakarta.",
   },
   copy: {
-    usp_subtitle: "Temukan mainan, pahami produknya, bandingkan harganya, dan pilih cara beli yang paling sesuai untukmu.",
+    usp_subtitle: "Temukan toys & collectibles pilihan dari BOXA. Tersedia COD di Yogyakarta, pengiriman, dan Build Service untuk model kit tertentu.",
     curation_title: "Kenapa BOXA memilihnya.",
     curation_subtitle:
       "Nggak semua yang kamu mau, harus kamu punya. Setiap produk yang masuk BOXA melewati kurasi yang sama — dicek kondisinya, dilihat nilai koleksinya, dan disampaikan apa adanya sebelum ditawarkan ke kamu.",
@@ -238,8 +238,8 @@ export const mockSettings: SiteSettings = {
     { key: "delivery", title: "Antar Area Yogyakarta", subtitle: null, enabled: true, sort_order: 7 },
   ],
   seo: {
-    site_title: "BOXA.YK — Mainan pilihan dari Yogyakarta",
-    meta_description: "Toko mainan dan collectible kurasi dari Yogyakarta. Barang dicek dulu, informasinya jujur, belinya gampang.",
+    site_title: "BOXA.YK — Toko Mainan & Collectibles Yogyakarta",
+    meta_description: "BOXA.YK adalah toko mainan dan collectibles di Yogyakarta. Temukan toys, action figure, model kit, blind box, dan collectibles pilihan. Tersedia COD Jogja dan pengiriman.",
     og_image: null,
   },
 };

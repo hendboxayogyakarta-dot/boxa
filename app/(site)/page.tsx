@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { getAllApprovedReviews, getBanners, getCategories, getProducts, getSiteSettings, getStores } from "@/lib/data";
 import { StoreLogoStrip } from "@/components/sections/store-logo-strip";
 import { BannerCarousel } from "@/components/sections/banner-carousel";
@@ -12,6 +13,28 @@ import type { Product } from "@/lib/types";
 // every single visit — a product catalog doesn't need to be live to the
 // second, and this cuts homepage load time dramatically under traffic.
 export const revalidate = 60;
+
+// Pulls from settings.seo (editable at /admin/cms → SEO) so that form
+// actually controls what Google and browser tabs show — it previously
+// fed into JSON-LD only, silently doing nothing for the page's own
+// <title>/<meta description>, which is presumably what "Judul Situs" /
+// "Meta Description" in the CMS led an admin to expect it does.
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getSiteSettings();
+  return {
+    // `absolute` bypasses the root layout's "%s | BOXA.YK" title
+    // template — settings.seo.site_title is the WHOLE title as the CMS
+    // form describes it ("Judul Situs"), so appending the template on
+    // top would double up the brand name at the end.
+    title: { absolute: settings.seo.site_title },
+    description: settings.seo.meta_description,
+    alternates: { canonical: "/" },
+    openGraph: {
+      title: settings.seo.site_title,
+      description: settings.seo.meta_description,
+    },
+  };
+}
 
 export default async function HomePage() {
   const [settings, banners, categories, stores, allProducts, featured, newArrivals, rareSecret, reviews] = await Promise.all([
@@ -38,11 +61,12 @@ export default async function HomePage() {
     <>
       <BannerCarousel banners={banners} settings={settings} />
       <UspStrip
-        tagline={settings.tagline}
+        h1={settings.hero.title}
+        brandLine={settings.tagline}
         subtitle={settings.copy.usp_subtitle}
         primaryCtaText={settings.hero.cta_text}
         primaryCtaHref={settings.hero.cta_href}
-        secondaryCtaText={settings.hero.secondary_cta_text ?? "Cari Local Price"}
+        secondaryCtaText={settings.hero.secondary_cta_text ?? "COD Yogyakarta"}
         secondaryCtaHref={settings.hero.secondary_cta_href ?? "/shop?local=1"}
       />
       <CategoryIconStrip categories={categories} />

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { Share2, MessageCircle, Camera, Music2, ShoppingBag } from "lucide-react";
 import type { SiteSettings } from "@/lib/types";
@@ -7,7 +8,18 @@ export function SiteFooter({ settings }: { settings: SiteSettings }) {
     <footer className="mt-20 bg-maroon-deep text-on-brand">
       <div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 sm:px-6 md:grid-cols-4">
         <div>
-          <div className="font-display text-xl font-extrabold">{settings.brand_name}</div>
+          <div className="flex items-center gap-2 font-display text-xl font-extrabold">
+            <span className="relative block h-7 w-7 shrink-0">
+              <Image
+                src={settings.logo_url || "/brand/boxa-flame-icon.png"}
+                alt={settings.brand_name}
+                fill
+                sizes="28px"
+                className="object-contain"
+              />
+            </span>
+            {settings.brand_name}
+          </div>
           <p className="mt-2 max-w-xs text-sm text-on-brand/70">{settings.tagline}</p>
           <div className="mt-4 flex items-center gap-4">
             <a href={settings.instagram_url} target="_blank" rel="noreferrer" aria-label="Instagram" className="text-on-brand/60 hover:text-on-brand"><Camera size={16} /></a>

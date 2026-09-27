@@ -15,21 +15,16 @@ export function BannerCarousel({ banners, settings }: { banners: Banner[]; setti
     return () => clearInterval(t);
   }, [banners.length]);
 
-  // Fallback so the homepage never looks broken before any banner is uploaded.
+  // Purely visual — never carries a heading. The homepage's actual <h1>
+  // lives in <UspStrip> instead, unconditionally, so it's still present
+  // whether or not a banner has been uploaded yet (a real banner replaced
+  // this whole section before, which meant the homepage had no h1 at all
+  // whenever one was live — see the note there).
   if (banners.length === 0) {
     return (
-      <section className="bg-maroon">
-        <div className="mx-auto max-w-7xl px-4 py-14 text-center sm:px-6">
-          <h1 className="font-display text-3xl font-extrabold text-on-brand sm:text-4xl">
-            {settings.hero.title}
-          </h1>
-          <p className="mx-auto mt-3 max-w-md text-sm text-on-brand/80">{settings.hero.subtitle}</p>
-          <Link
-            href="/shop"
-            className="mt-6 inline-block rounded-full bg-flame px-6 py-3 text-sm font-semibold text-on-brand hover:bg-flame-light"
-          >
-            Lihat Koleksi
-          </Link>
+      <section className="mx-auto max-w-7xl px-4 pt-5 sm:px-6">
+        <div className="flex aspect-[16/6] w-full items-center justify-center rounded-2xl bg-maroon sm:aspect-[16/5]">
+          <span className="font-display text-lg font-bold text-on-brand/70">{settings.brand_name}</span>
         </div>
       </section>
     );

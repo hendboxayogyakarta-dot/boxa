@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { getBrands, getCategories, getProducts, getSiteSettings } from "@/lib/data";
 import { ProductCard } from "@/components/product-card";
 import { RequestToyButton } from "@/components/request-toy-button";
@@ -8,6 +9,13 @@ import { cn } from "@/lib/utils";
 // Helps the common no-filter case (/shop with no query) get cached;
 // pages hit with search/filter query strings are still rendered fresh.
 export const revalidate = 60;
+
+export const metadata: Metadata = {
+  title: "Semua Produk — Toko Mainan & Collectibles Yogyakarta",
+  description:
+    "Jelajahi semua toys, action figure, model kit, blind box, dan collectibles yang tersedia di BOXA.YK, toko mainan Yogyakarta.",
+  alternates: { canonical: "/shop" },
+};
 
 const SORTS: { value: string; label: string }[] = [
   { value: "newest", label: "Terbaru" },

@@ -11,10 +11,10 @@ export function CategoryIconStrip({ categories }: { categories: Category[] }) {
         {categories.map((c) => (
           <Link
             key={c.id}
-            href={`/shop?category=${c.slug}`}
+            href={`/kategori/${c.slug}`}
             className="flex shrink-0 flex-col items-center gap-1.5 text-center sm:shrink"
           >
-            <div className="relative flex h-14 w-14 items-center justify-center overflow-hidden rounded-full border border-line bg-cream-warm">
+            <div className="relative flex h-14 w-14 items-center justify-center overflow-hidden rounded-full border border-line bg-photo-frame">
               {c.image_url ? (
                 <Image src={c.image_url} alt={c.name} fill sizes="56px" className="object-cover" />
               ) : (
