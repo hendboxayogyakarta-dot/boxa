@@ -116,9 +116,8 @@ export function SiteHeader({ settings }: { settings: SiteSettings }) {
               </Link>
             ))}
           </nav>
-          <div className="mt-3 flex items-center gap-2 border-t border-line pt-3">
+          <div className="mt-3 flex items-center border-t border-line pt-3">
             <ThemeToggle />
-            <span className="text-sm text-ink-soft">Mode gelap</span>
           </div>
         </div>
       )}

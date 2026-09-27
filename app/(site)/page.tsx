@@ -76,19 +76,19 @@ export default async function HomePage() {
       )}
 
       {sectionEnabled("new_arrivals") && (
-        <ProductRail title="Baru Datang" products={newArrivals} viewAllHref="/shop?new=1" />
+        <ProductRail title="Baru Datang" products={newArrivals} viewAllHref="/shop?new=1" shuffle />
       )}
 
       {sectionEnabled("rare_secret") && (
-        <ProductRail title="Rare & Secret Finds" subtitle="Stok terbatas, kadang gak akan ada lagi" products={rareSecret} viewAllHref="/shop?rare=1" />
+        <ProductRail title="Rare & Secret Finds" subtitle="Stok terbatas, kadang gak akan ada lagi" products={rareSecret} viewAllHref="/shop?rare=1" shuffle />
       )}
 
       {sectionEnabled("categories") && (
         <CategoryShowcase categories={categories} productsByCategory={productsByCategory} />
       )}
+      {sectionEnabled("delivery") && <DeliveryBanner settings={settings} />}
       <StoreLogoStrip stores={stores} />
       {sectionEnabled("reviews") && <ReviewsSection reviews={reviews} />}
-      {sectionEnabled("delivery") && <DeliveryBanner settings={settings} />}
     </>
   );
 }
