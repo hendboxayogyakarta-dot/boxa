@@ -54,15 +54,24 @@ export function ProductCard({ product }: { product: Product }) {
             <Image src={product.brand_logo.logo_url} alt={product.brand_logo.name} fill sizes="28px" className="object-contain p-0.5" />
           </span>
         )}
-        {hasLocalPrice && savingsPct > 0 && (
-          <div className="absolute bottom-2 right-2 flex flex-col items-center rounded-xl bg-flame px-3 py-1.5 leading-none text-on-brand shadow-lg">
-            <span className="font-display text-2xl font-extrabold">{savingsPct}%</span>
-            <span className="mt-0.5 text-[10px] font-bold uppercase tracking-wide">lebih murah</span>
-          </div>
-        )}
+        {/* Bottom strip on the photo. From md up: COD Local mark on the
+            left, big percent stamp on the right (original layout). Below
+            md the card is only ~158px wide and a product can already carry
+            3 badges up top (Baru / BOXA Approved / BIB), so the COD Local
+            mark moves down next to the price instead (see below) and the
+            photo only carries the compact percent pill — nothing left to
+            collide with. */}
         {hasLocalPrice && (
-          <div className="absolute bottom-2 left-2">
-            <CodLocalBadge />
+          <div className="absolute inset-x-2 bottom-2 flex items-end justify-end md:justify-between">
+            <span className="hidden md:inline-flex">
+              <CodLocalBadge />
+            </span>
+            {savingsPct > 0 && (
+              <div className="flex items-baseline gap-1 rounded-xl bg-flame px-2.5 py-1 leading-none text-on-brand shadow-lg md:flex-col md:items-center md:gap-0 md:px-3 md:py-1.5">
+                <span className="font-display text-lg font-extrabold md:text-2xl">{savingsPct}%</span>
+                <span className="whitespace-nowrap text-[9px] font-bold uppercase tracking-wide md:mt-0.5 md:text-[10px]">lebih murah</span>
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -74,6 +83,9 @@ export function ProductCard({ product }: { product: Product }) {
 
         {hasLocalPrice ? (
           <div className="mt-auto pt-1">
+            <div className="mb-1 md:hidden">
+              <CodLocalBadge />
+            </div>
             <span className="text-[10px] font-semibold uppercase tracking-wide text-flame">
               BOXA Local Price
             </span>
