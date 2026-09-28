@@ -1,15 +1,15 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Tag } from "lucide-react";
 import type { Product } from "@/lib/types";
-import { formatIDR, hasPrice, isRecommendationProduct, savingsPercent } from "@/lib/utils";
+import { cn, formatIDR, hasPrice, isRecommendationProduct, savingsPercent } from "@/lib/utils";
 import { ProductBadges } from "./badges";
 import { MysteryPrice } from "./mystery-price";
 import { StoreReferenceCard } from "./store-reference-card";
+import { CodLocalBadge } from "./cod-local-badge";
 
 export function ProductCard({ product }: { product: Product }) {
   // Affiliate/no-local-stock products get their own card treatment
-  // (Shopee logo, "Belum tersedia Local Price", wiggling buy button)
+  // (store logo + a wiggling "Beli melalui ..." button)
   // wherever they show up — homepage rails, shop grid, related products,
   // not just the dedicated Pilihan Online page — so there's one single
   // place that defines what an affiliate card looks like.
@@ -25,7 +25,12 @@ export function ProductCard({ product }: { product: Product }) {
   return (
     <Link
       href={`/product/${product.slug}`}
-      className="hover-lift group flex flex-col overflow-hidden rounded-2xl border border-line bg-white shadow-sm"
+      className={cn(
+        "hover-lift group flex flex-col overflow-hidden rounded-2xl bg-white shadow-sm",
+        // Local/COD products get a flame border + slow pulsing halo so
+        // they stand out in a grid of otherwise plain cards.
+        hasLocalPrice ? "animate-glow border-2 border-flame" : "border border-line"
+      )}
     >
       <div className="relative aspect-square overflow-hidden bg-photo-frame">
         {primaryImage ? (
@@ -50,9 +55,14 @@ export function ProductCard({ product }: { product: Product }) {
           </span>
         )}
         {hasLocalPrice && savingsPct > 0 && (
-          <div className="absolute bottom-2 right-2 flex items-center gap-1 rounded-full bg-flame px-2 py-1 text-[10px] font-bold text-on-brand shadow-sm">
-            <Tag size={10} />
-            {savingsPct}% lebih murah
+          <div className="absolute bottom-2 right-2 flex flex-col items-center rounded-xl bg-flame px-3 py-1.5 leading-none text-on-brand shadow-lg">
+            <span className="font-display text-2xl font-extrabold">{savingsPct}%</span>
+            <span className="mt-0.5 text-[10px] font-bold uppercase tracking-wide">lebih murah</span>
+          </div>
+        )}
+        {hasLocalPrice && (
+          <div className="absolute bottom-2 left-2">
+            <CodLocalBadge />
           </div>
         )}
       </div>

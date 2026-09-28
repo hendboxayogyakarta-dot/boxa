@@ -46,10 +46,6 @@ export function StoreReferenceCard({ product }: { product: Product }) {
               <MysteryPrice />
             )}
           </div>
-
-          <span className="mt-1 inline-block w-fit rounded-full bg-cream-warm px-2 py-0.5 text-[10px] font-semibold text-muted">
-            Belum tersedia Local Price
-          </span>
         </div>
       </Link>
 

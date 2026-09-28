@@ -30,7 +30,7 @@ export async function generateMetadata({
     title,
     description,
     alternates: { canonical: `${SITE_URL}/kategori/${category.slug}` },
-    openGraph: { title: `${title} | BOXA.YK`, description },
+    openGraph: { type: "website", siteName: "BOXA.YK", locale: "id_ID", title: `${title} | BOXA.YK`, description },
   };
 }
 

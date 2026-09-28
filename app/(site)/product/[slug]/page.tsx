@@ -41,6 +41,9 @@ export async function generateMetadata({
     description,
     alternates: { canonical: `${SITE_URL}/product/${product.slug}` },
     openGraph: {
+      type: "website",
+      siteName: "BOXA.YK",
+      locale: "id_ID",
       title,
       description,
       images: product.images[0] ? [product.images[0].url] : [],

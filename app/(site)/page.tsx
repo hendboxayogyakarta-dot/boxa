@@ -29,7 +29,12 @@ export async function generateMetadata(): Promise<Metadata> {
     title: { absolute: settings.seo.site_title },
     description: settings.seo.meta_description,
     alternates: { canonical: "/" },
+    // A page-level openGraph REPLACES the root one wholesale rather than
+    // merging with it, so type/siteName/locale have to be repeated here.
     openGraph: {
+      type: "website",
+      siteName: "BOXA.YK",
+      locale: "id_ID",
       title: settings.seo.site_title,
       description: settings.seo.meta_description,
     },

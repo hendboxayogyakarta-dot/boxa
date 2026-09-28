@@ -4,6 +4,7 @@ import type { Product } from "@/lib/types";
 import { formatIDR, buildWhatsAppOrderLink, savingsPercent } from "@/lib/utils";
 import { AddToCartButton } from "@/components/add-to-cart-button";
 import { MysteryPrice } from "@/components/mystery-price";
+import { CodLocalBadge } from "@/components/cod-local-badge";
 
 /**
  * "Tempat Beli" — where a customer can actually get this product. Two
@@ -60,15 +61,19 @@ export function StoreOptions({ product, whatsappNumber }: { product: Product; wh
       <h2 className="font-display text-sm font-bold uppercase tracking-wide text-ink">Tempat Beli</h2>
 
       {showLocal && (
-        <div className="relative rounded-2xl border-2 border-flame bg-white p-4">
+        <div className="animate-glow relative rounded-2xl border-2 border-flame bg-white p-4">
           {localSavingsPct > 0 && (
-            <span className="absolute -top-3 right-4 rounded-full bg-flame px-2.5 py-0.5 text-[11px] font-bold text-on-brand shadow-sm">
-              {localSavingsPct}% lebih murah
+            <span className="absolute -top-5 right-4 flex items-baseline gap-1.5 rounded-xl bg-flame px-4 py-1.5 leading-none text-on-brand shadow-lg">
+              <span className="font-display text-3xl font-extrabold">{localSavingsPct}%</span>
+              <span className="text-xs font-bold uppercase tracking-wide">lebih murah</span>
             </span>
           )}
-          <span className="flex items-center gap-1 text-xs font-semibold uppercase tracking-widest text-flame">
-            <MapPin size={12} /> BOXA Local Price
-          </span>
+          <div className="flex flex-wrap items-center gap-2">
+            <CodLocalBadge size="md" />
+            <span className="flex items-center gap-1 text-xs font-semibold uppercase tracking-widest text-flame">
+              <MapPin size={12} /> BOXA Local Price
+            </span>
+          </div>
           <span className="mt-1 block font-display text-2xl font-extrabold text-accent">
             {formatIDR(product.local_price!)}
           </span>
@@ -104,6 +109,13 @@ export function StoreOptions({ product, whatsappNumber }: { product: Product; wh
       {storeCards.length > 0 && (
         <div>
           <span className="text-xs font-semibold uppercase tracking-widest text-muted">Pilihan Online</span>
+          {/* Shown here on the product page only — the listing cards
+              deliberately don't repeat it, they just carry the buy button. */}
+          {!product.offline_available && (
+            <p className="mt-1 text-xs text-muted">
+              Barang ini belum tersedia untuk pembelian lokal (COD / BOXA Local Price).
+            </p>
+          )}
           {/* Same card shape as BOXA Local Price above (border, padding,
               price size, full-width button) — COD local can still be the
               suggested default, but every option here is still a real
