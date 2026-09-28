@@ -4,15 +4,23 @@ import { Tag } from "lucide-react";
 import type { Product } from "@/lib/types";
 import { formatIDR, hasPrice, isRecommendationProduct, savingsPercent } from "@/lib/utils";
 import { ProductBadges } from "./badges";
-import { RecommendationBadge } from "./recommendation-badge";
 import { MysteryPrice } from "./mystery-price";
+import { StoreReferenceCard } from "./store-reference-card";
 
 export function ProductCard({ product }: { product: Product }) {
+  // Affiliate/no-local-stock products get their own card treatment
+  // (Shopee logo, "Belum tersedia Local Price", wiggling buy button)
+  // wherever they show up — homepage rails, shop grid, related products,
+  // not just the dedicated Pilihan Online page — so there's one single
+  // place that defines what an affiliate card looks like.
+  if (isRecommendationProduct(product)) {
+    return <StoreReferenceCard product={product} />;
+  }
+
   const primaryImage = product.images.find((i) => i.is_primary) ?? product.images[0];
   const soldOut = product.stock_status === "sold_out";
   const hasLocalPrice = product.local_price != null;
   const savingsPct = hasLocalPrice ? savingsPercent(product.price, product.local_price!) : 0;
-  const isRecommendation = isRecommendationProduct(product);
 
   return (
     <Link
@@ -53,12 +61,6 @@ export function ProductCard({ product }: { product: Product }) {
           <span className="text-xs text-muted">{product.brand}</span>
         )}
         <h3 className="line-clamp-2 text-sm font-semibold text-ink">{product.name}</h3>
-
-        {isRecommendation && (
-          <div className="pt-0.5">
-            <RecommendationBadge score={product.boxa_score} note={product.recommendation_note} />
-          </div>
-        )}
 
         {hasLocalPrice ? (
           <div className="mt-auto pt-1">
