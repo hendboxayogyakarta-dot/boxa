@@ -20,8 +20,9 @@ export function ProductCard({ product }: { product: Product }) {
   const primaryImage = product.images.find((i) => i.is_primary) ?? product.images[0];
   const soldOut = product.stock_status === "sold_out";
   const localSoldOut = isLocalSoldOut(product);
-  // A product that is sold out locally no longer gets the COD/percent treatment.
-  const hasLocalPrice = product.local_price != null && !soldOut;
+  // Local price + percent stay visible even when local stock is out, so
+  // shoppers still see how much cheaper BOXA's local price is.
+  const hasLocalPrice = product.local_price != null;
   const savingsPct = hasLocalPrice ? savingsPercent(product.price, product.local_price!) : 0;
 
   return (
