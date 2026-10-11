@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getApprovedReviews, getProductBySlug, getRelatedProducts, getSiteSettings } from "@/lib/data";
 import { SITE_URL } from "@/lib/site-config";
-import { formatIDR, conditionLabel, stockLabel, hasPrice, isRecommendationProduct, hasStoreOptions, getFallbackDescription } from "@/lib/utils";
+import { formatIDR, conditionLabel, stockLabel, hasPrice, isRecommendationProduct, hasStoreOptions, isLocalSoldOut, getFallbackDescription } from "@/lib/utils";
 import { RecommendationBadge } from "@/components/recommendation-badge";
 import { MysteryPrice } from "@/components/mystery-price";
 import { ProductBadges } from "@/components/badges";
@@ -215,7 +215,7 @@ export default async function ProductPage({
               </div>
               <div className="rounded-xl border border-line bg-white p-3">
                 <dt className="text-xs text-muted">Ketersediaan</dt>
-                <dd className="mt-0.5 font-semibold text-ink">{stockLabel(product.stock_status)}</dd>
+                <dd className="mt-0.5 font-semibold text-ink">{isLocalSoldOut(product) ? "Habis Lokal · tersedia online" : stockLabel(product.stock_status)}</dd>
               </div>
               {product.location && (
                 <div className="rounded-xl border border-line bg-white p-3">

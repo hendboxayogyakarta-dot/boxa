@@ -144,7 +144,7 @@ export function ProductForm({
             <select name="stock_status" defaultValue={product?.stock_status ?? "in_stock"} className={inputClass}>
               <option value="in_stock">Tersedia</option>
               <option value="low_stock">Stok Terbatas</option>
-              <option value="sold_out">Habis</option>
+              <option value="sold_out">Habis di BOXA (Habis Lokal kalau masih ada link online)</option>
               <option value="preorder">Pre-Order</option>
             </select>
           </Field>

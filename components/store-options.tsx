@@ -61,7 +61,7 @@ export function StoreOptions({ product, whatsappNumber }: { product: Product; wh
       <h2 className="font-display text-sm font-bold uppercase tracking-wide text-ink">Tempat Beli</h2>
 
       {showLocal && (
-        <div className={`animate-glow relative rounded-2xl border-2 border-flame bg-white p-4 ${localSavingsPct > 0 ? "pt-8 sm:pt-4" : ""}`}>
+        <div className={`${soldOut ? "" : "animate-glow "}relative rounded-2xl border-2 ${soldOut ? "border-line" : "border-flame"} bg-white p-4 ${localSavingsPct > 0 ? "pt-8 sm:pt-4" : ""}`}>
           {localSavingsPct > 0 && (
             <span className="absolute -top-5 right-4 flex items-baseline gap-1.5 rounded-xl bg-flame px-3 py-1.5 leading-none text-on-brand shadow-lg sm:px-4">
               <span className="font-display text-2xl font-extrabold sm:text-3xl">{localSavingsPct}%</span>
@@ -89,9 +89,14 @@ export function StoreOptions({ product, whatsappNumber }: { product: Product; wh
               }`}
             >
               <MessageCircle size={16} />
-              {soldOut ? "Stok Habis" : "Beli di BOXA"}
+              {soldOut ? "Stok Lokal Habis" : "Beli di BOXA"}
             </a>
           </div>
+          {soldOut && storeCards.length > 0 && (
+            <p className="mt-2 text-xs font-semibold text-ink-soft">
+              Stok lokal BOXA sedang habis, tapi produk ini masih bisa dibeli lewat Pilihan Online di bawah.
+            </p>
+          )}
           {!soldOut && (
             <AddToCartButton
               item={{

@@ -77,6 +77,27 @@ export function savingsPercent(onlinePrice: number, localPrice: number): number 
   return Math.round(((onlinePrice - localPrice) / onlinePrice) * 100);
 }
 
+/** True when the product can still be bought from an online store (Pilihan Online). */
+export function hasOnlineOption(product: {
+  store_refs?: { id: string }[];
+  shopee_url: string | null;
+}): boolean {
+  return (product.store_refs?.length ?? 0) > 0 || Boolean(product.shopee_url);
+}
+
+/**
+ * A product sold out at BOXA but still purchasable online is "Habis Lokal",
+ * not simply "Habis" — customers can still buy it via Pilihan Online.
+ */
+export function isLocalSoldOut(product: {
+  stock_status: string;
+  offline_available: boolean;
+  store_refs?: { id: string }[];
+  shopee_url: string | null;
+}): boolean {
+  return product.stock_status === "sold_out" && product.offline_available && hasOnlineOption(product);
+}
+
 export function hasStoreOptions(product: {
   local_price: number | null;
   offline_available: boolean;

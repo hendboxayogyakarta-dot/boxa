@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { Product } from "@/lib/types";
-import { cn, formatIDR, hasPrice, isRecommendationProduct, savingsPercent } from "@/lib/utils";
+import { cn, formatIDR, hasPrice, isLocalSoldOut, isRecommendationProduct, savingsPercent } from "@/lib/utils";
 import { ProductBadges } from "./badges";
 import { MysteryPrice } from "./mystery-price";
 import { StoreReferenceCard } from "./store-reference-card";
@@ -19,7 +19,9 @@ export function ProductCard({ product }: { product: Product }) {
 
   const primaryImage = product.images.find((i) => i.is_primary) ?? product.images[0];
   const soldOut = product.stock_status === "sold_out";
-  const hasLocalPrice = product.local_price != null;
+  const localSoldOut = isLocalSoldOut(product);
+  // A product that is sold out locally no longer gets the COD/percent treatment.
+  const hasLocalPrice = product.local_price != null && !soldOut;
   const savingsPct = hasLocalPrice ? savingsPercent(product.price, product.local_price!) : 0;
 
   return (
@@ -40,7 +42,7 @@ export function ProductCard({ product }: { product: Product }) {
             fill
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
             className={`object-cover transition-transform duration-500 group-hover:scale-105 ${
-              soldOut ? "grayscale-[40%] opacity-70" : ""
+              soldOut ? (localSoldOut ? "grayscale-[25%] opacity-85" : "grayscale-[40%] opacity-70") : ""
             }`}
           />
         ) : (

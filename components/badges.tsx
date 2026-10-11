@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
 import { Flame, Gem, Lock, PackageCheck } from "lucide-react";
 import type { Product } from "@/lib/types";
+import { isLocalSoldOut } from "@/lib/utils";
 
 function Badge({
   children,
@@ -31,7 +32,16 @@ export function ProductBadges({ product }: { product: Product }) {
   return (
     <div className="flex flex-wrap gap-1.5">
       {product.stock_status === "sold_out" && (
-        <Badge className="bg-maroon-deep text-on-brand">Habis</Badge>
+        isLocalSoldOut(product) ? (
+          <Badge
+            className="bg-maroon-deep text-on-brand"
+            title="Stok lokal BOXA habis — masih bisa dibeli lewat Pilihan Online."
+          >
+            Habis Lokal
+          </Badge>
+        ) : (
+          <Badge className="bg-maroon-deep text-on-brand">Habis</Badge>
+        )
       )}
       {product.is_secret && (
         <Badge className="bg-maroon text-on-brand" icon={<Lock size={12} />}>
