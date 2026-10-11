@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { ImagePlus, Loader2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { prepareImage, IMAGE_ACCEPT } from "@/lib/image-compress";
 
 const SUPABASE_CONFIGURED = Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL);
 
@@ -29,10 +30,20 @@ export function ImageUploadField({
   const [error, setError] = useState<string | null>(null);
 
   async function handleUpload(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (!file || !SUPABASE_CONFIGURED) return;
+    const raw = e.target.files?.[0];
+    if (!raw || !SUPABASE_CONFIGURED) return;
     setUploading(true);
     setError(null);
+
+    let file: File;
+    try {
+      file = await prepareImage(raw);
+    } catch {
+      setUploading(false);
+      e.target.value = "";
+      setError("Foto tidak bisa dibaca. Coba foto lain.");
+      return;
+    }
 
     const supabase = createClient();
     const path = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.\-]/g, "-")}`;
@@ -62,7 +73,7 @@ export function ImageUploadField({
       <label className="inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-line px-4 py-2 text-xs font-semibold text-ink-soft hover:border-maroon">
         {uploading ? <Loader2 size={14} className="animate-spin" /> : <ImagePlus size={14} />}
         {url ? "Ganti Gambar" : "Unggah Gambar"}
-        <input type="file" accept="image/*" onChange={handleUpload} className="hidden" disabled={uploading || !SUPABASE_CONFIGURED} />
+        <input type="file" accept={IMAGE_ACCEPT} onChange={handleUpload} className="hidden" disabled={uploading || !SUPABASE_CONFIGURED} />
       </label>
       {error && <p className="mt-2 text-xs text-coral">{error}</p>}
       {!SUPABASE_CONFIGURED && <p className="mt-1 text-xs text-muted">Sambungkan Supabase dulu untuk upload.</p>}

@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { LogoutButton } from "./logout-button";
+import { AdminMobileNav } from "@/components/admin/admin-mobile-nav";
 
 const NAV = [
   { label: "Ringkasan", href: "/admin", icon: LayoutDashboard },
@@ -92,17 +93,15 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           </div>
         )}
       </aside>
-      <div className="flex-1">
-        <header className="flex items-center justify-between border-b border-line bg-white px-6 py-3 md:hidden">
-          <span className="font-display text-lg font-extrabold text-maroon">BOXA.YK Admin</span>
-        </header>
+      <div className="min-w-0 flex-1">
+        <AdminMobileNav email={SUPABASE_CONFIGURED ? email : null} logout={<LogoutButton />} />
         {!SUPABASE_CONFIGURED && (
           <div className="border-b border-line bg-ember/20 px-6 py-2 text-xs text-ink-soft">
             Supabase belum disambungkan — admin ini berjalan tanpa login, menampilkan data
             contoh (mock). Lihat README.md.
           </div>
         )}
-        <main className="p-6">{children}</main>
+        <main className="p-4 pb-28 md:p-6 md:pb-6">{children}</main>
       </div>
     </div>
   );

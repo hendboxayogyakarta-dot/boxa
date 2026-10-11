@@ -13,7 +13,7 @@ export function CategoryShowcase({
   if (top.length === 0) return null;
 
   return (
-    <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
+    <section className="reveal mx-auto max-w-7xl px-4 py-10 sm:px-6">
       <h2 className="font-display text-2xl font-bold text-ink">Jelajahi Kategori</h2>
       <div className="mt-5 grid gap-3 md:grid-cols-3 md:grid-rows-2">
         {top.map((c, i) => {

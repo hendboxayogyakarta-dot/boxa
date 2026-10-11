@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { ImagePlus, Loader2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { prepareImage, IMAGE_ACCEPT } from "@/lib/image-compress";
 import { updateLogoUrl } from "@/lib/actions/settings";
 
 const BUCKET = "media-library";
@@ -14,10 +15,20 @@ export function LogoUploader({ currentUrl }: { currentUrl: string | null }) {
   const [error, setError] = useState<string | null>(null);
 
   async function handleUpload(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (!file || !SUPABASE_CONFIGURED) return;
+    const raw = e.target.files?.[0];
+    if (!raw || !SUPABASE_CONFIGURED) return;
     setUploading(true);
     setError(null);
+
+    let file: File;
+    try {
+      file = await prepareImage(raw);
+    } catch {
+      setUploading(false);
+      e.target.value = "";
+      setError("Foto tidak bisa dibaca. Coba foto lain.");
+      return;
+    }
 
     const supabase = createClient();
     const path = `logo-${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.\-]/g, "-")}`;
@@ -52,7 +63,7 @@ export function LogoUploader({ currentUrl }: { currentUrl: string | null }) {
       </div>
       <label className="cursor-pointer rounded-full border border-line px-4 py-2 text-xs font-semibold text-ink-soft hover:border-maroon">
         {uploading ? <Loader2 size={14} className="inline animate-spin" /> : "Ganti Logo"}
-        <input type="file" accept="image/*" onChange={handleUpload} className="hidden" disabled={uploading || !SUPABASE_CONFIGURED} />
+        <input type="file" accept={IMAGE_ACCEPT} onChange={handleUpload} className="hidden" disabled={uploading || !SUPABASE_CONFIGURED} />
       </label>
       {error && <span className="text-xs text-coral">{error}</span>}
       {!SUPABASE_CONFIGURED && <span className="text-xs text-muted">Sambungkan Supabase dulu</span>}

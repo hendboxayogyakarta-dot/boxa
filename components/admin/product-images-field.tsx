@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { ImagePlus, Loader2, X, ArrowLeft, ArrowRight } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { prepareImage, IMAGE_ACCEPT } from "@/lib/image-compress";
 
 const BUCKET = "product-images";
 const SUPABASE_CONFIGURED = Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL);
@@ -28,7 +29,14 @@ export function ProductImagesField({ initialUrls }: { initialUrls: string[] }) {
 
     const supabase = createClient();
     const uploaded: string[] = [];
-    for (const file of files) {
+    for (const raw of files) {
+      let file: File;
+      try {
+        file = await prepareImage(raw);
+      } catch {
+        setError(`${raw.name}: foto tidak bisa dibaca.`);
+        continue;
+      }
       const path = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}-${file.name.replace(/[^a-zA-Z0-9.\-]/g, "-")}`;
       const { error: uploadError } = await supabase.storage.from(BUCKET).upload(path, file, { upsert: false });
       if (uploadError) {
@@ -100,10 +108,10 @@ export function ProductImagesField({ initialUrls }: { initialUrls: string[] }) {
 
       <label className="flex h-24 cursor-pointer flex-col items-center justify-center gap-1.5 rounded-xl border-2 border-dashed border-line text-muted transition-colors hover:border-maroon">
         {uploading ? <Loader2 size={20} className="animate-spin" /> : <ImagePlus size={20} />}
-        <span className="text-xs">{uploading ? "Mengunggah..." : "Klik untuk tambah foto (bisa pilih beberapa sekaligus)"}</span>
+        <span className="text-xs">{uploading ? "Memproses & mengunggah..." : "Ketuk untuk tambah foto (foto iPhone otomatis diperkecil)"}</span>
         <input
           type="file"
-          accept="image/*"
+          accept={IMAGE_ACCEPT}
           multiple
           onChange={handleUpload}
           className="hidden"

@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { ImagePlus, Copy, Trash2, Loader2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { prepareImage, IMAGE_ACCEPT } from "@/lib/image-compress";
 
 const BUCKET = "media-library";
 const SUPABASE_CONFIGURED = Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL);
@@ -50,10 +51,20 @@ export function MediaLibrary() {
   }, [refresh]);
 
   async function handleUpload(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (!file || !SUPABASE_CONFIGURED) return;
+    const raw = e.target.files?.[0];
+    if (!raw || !SUPABASE_CONFIGURED) return;
     setUploading(true);
     setError(null);
+
+    let file: File;
+    try {
+      file = await prepareImage(raw);
+    } catch {
+      setUploading(false);
+      e.target.value = "";
+      setError("Foto tidak bisa dibaca. Coba foto lain.");
+      return;
+    }
 
     const supabase = createClient();
     const path = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.\-]/g, "-")}`;
@@ -98,7 +109,7 @@ export function MediaLibrary() {
       <label className="flex h-40 cursor-pointer flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-line bg-white text-muted transition-colors hover:border-maroon">
         {uploading ? <Loader2 size={24} className="animate-spin" /> : <ImagePlus size={24} />}
         <span className="text-sm">{uploading ? "Mengunggah..." : "Klik untuk unggah gambar"}</span>
-        <input type="file" accept="image/*" onChange={handleUpload} className="hidden" disabled={uploading} />
+        <input type="file" accept={IMAGE_ACCEPT} onChange={handleUpload} className="hidden" disabled={uploading} />
       </label>
 
       {error && (

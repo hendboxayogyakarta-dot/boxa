@@ -39,16 +39,19 @@ export function ProductRail({
   if (items.length === 0) return null;
 
   return (
-    <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
+    <section className="reveal mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10">
       <div className="mb-5 flex items-end justify-between">
         <div>
-          <h2 className="font-display text-2xl font-bold text-ink">{title}</h2>
+          <h2 className="flex items-center gap-2.5 font-display text-2xl font-bold text-ink">
+            <span aria-hidden className="h-6 w-1.5 rounded-full bg-flame" />
+            {title}
+          </h2>
           {subtitle && <p className="mt-1 text-sm text-muted">{subtitle}</p>}
         </div>
         {viewAllHref && (
           <Link
             href={viewAllHref}
-            className="hidden items-center gap-1 text-sm font-semibold text-accent hover:text-flame sm:inline-flex"
+            className="inline-flex items-center gap-1 text-sm font-semibold text-accent hover:text-flame"
           >
             Lihat semua <ArrowRight size={15} />
           </Link>

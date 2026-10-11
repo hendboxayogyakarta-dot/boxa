@@ -63,6 +63,26 @@ body {
 }
 
 @media (prefers-reduced-motion: no-preference) {
+  /* Scroll-in fade/slide. Pure CSS (scroll-driven animation), zero JS;
+     browsers without support simply show the content immediately. */
+  @supports (animation-timeline: view()) {
+    @keyframes reveal-up {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: none; }
+    }
+    .reveal {
+      animation: reveal-up linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 35%;
+    }
+  }
+
+  @keyframes float-soft {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+  .animate-float { animation: float-soft 5s ease-in-out infinite; }
+
   .hover-lift {
     transition: transform 0.25s ease, box-shadow 0.25s ease;
   }

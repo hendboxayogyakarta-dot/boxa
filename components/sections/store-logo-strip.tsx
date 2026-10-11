@@ -11,7 +11,7 @@ export function StoreLogoStrip({ stores }: { stores: Store[] }) {
   if (stores.length === 0) return null;
 
   return (
-    <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
+    <section className="reveal mx-auto max-w-7xl px-4 py-10 sm:px-6">
       <h2 className="font-display text-xl font-bold text-ink">Pilihan Toko &amp; Official Store</h2>
       <p className="mt-1 text-sm text-muted">Temukan berbagai tempat untuk mendapatkan produk yang kamu cari.</p>
       <div className="mt-4 flex flex-wrap items-center gap-4">

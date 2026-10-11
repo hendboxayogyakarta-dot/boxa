@@ -79,7 +79,7 @@ export default async function HomePage() {
       )}
 
       {sectionEnabled("new_arrivals") && (
-        <ProductRail title="Baru Datang" products={newArrivals} viewAllHref="/shop?new=1" shuffle />
+        <ProductRail title="Baru Segel" subtitle="Masih tersegel, belum pernah dibuka" products={newArrivals} viewAllHref="/shop?new=1" shuffle />
       )}
 
       {sectionEnabled("rare_secret") && (

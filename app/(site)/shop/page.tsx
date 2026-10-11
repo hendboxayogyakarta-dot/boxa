@@ -79,7 +79,7 @@ export default async function ShopPage({
   ];
   const quickLinks = [
     { label: "Rare / Secret", href: "/shop?rare=1", active: rare },
-    { label: "Baru Datang", href: "/shop?new=1", active: isNew },
+    { label: "Baru Segel", href: "/shop?new=1", active: isNew },
     { label: "Pilihan BOXA", href: "/shop?featured=1", active: featured },
     { label: "Ada Local Price", href: "/shop?local=1", active: localOnly },
   ];

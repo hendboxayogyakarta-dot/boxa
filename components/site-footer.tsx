@@ -33,6 +33,8 @@ export function SiteFooter({ settings }: { settings: SiteSettings }) {
           <div className="text-sm font-semibold text-on-brand/90">Jelajahi</div>
           <ul className="mt-3 space-y-2 text-sm text-on-brand/70">
             <li><Link href="/shop" className="hover:text-on-brand">Semua Produk</Link></li>
+            <li><Link href="/mainan-murah-jogja" className="hover:text-on-brand">Mainan Murah Jogja</Link></li>
+            <li><Link href="/blokees-jogja" className="hover:text-on-brand">Blokees Jogja</Link></li>
             <li><Link href="/pilihan-online" className="hover:text-on-brand">Pilihan Online</Link></li>
             <li><Link href="/tentang" className="hover:text-on-brand">Tentang BOXA</Link></li>
           </ul>

@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { Flame, Gem, Lock } from "lucide-react";
+import { Flame, Gem, Lock, PackageCheck } from "lucide-react";
 import type { Product } from "@/lib/types";
 
 function Badge({
@@ -44,8 +44,12 @@ export function ProductBadges({ product }: { product: Product }) {
         </Badge>
       )}
       {product.is_new && (
-        <Badge className="bg-flame text-on-brand">
-          Baru
+        <Badge
+          className="bg-flame text-on-brand"
+          icon={<PackageCheck size={12} />}
+          title="Baru Segel — masih tersegel pabrik, belum pernah dibuka."
+        >
+          Baru Segel
         </Badge>
       )}
       {product.is_boxa_approved && (

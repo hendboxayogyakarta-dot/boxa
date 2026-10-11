@@ -14,7 +14,7 @@ function Field({ label, children, hint }: { label: string; children: React.React
 }
 
 const inputClass =
-  "mt-1 w-full rounded-lg border border-line px-3 py-2 text-sm outline-none focus:border-maroon";
+  "mt-1 w-full rounded-lg border border-line px-3 py-3 text-base outline-none focus:border-maroon sm:py-2 sm:text-sm";
 
 export function ProductForm({
   product,
@@ -28,7 +28,7 @@ export function ProductForm({
   stores: Store[];
 }) {
   return (
-    <form action={saveProduct} className="max-w-3xl space-y-8">
+    <form action={saveProduct} className="max-w-3xl space-y-5 md:space-y-8">
       {product && <input type="hidden" name="id" value={product.id} />}
 
       <section className="space-y-3 rounded-2xl border-2 border-flame/30 bg-flame/5 p-5">
@@ -74,7 +74,7 @@ export function ProductForm({
         </Field>
       </section>
 
-      <section className="space-y-4 rounded-2xl border border-line bg-white p-5">
+      <section className="space-y-4 rounded-2xl border border-line bg-white p-4 sm:p-5">
         <h2 className="font-display text-base font-bold text-ink">Informasi Dasar</h2>
         <div className="grid gap-4 sm:grid-cols-2">
           <Field label="Nama Produk">
@@ -120,7 +120,7 @@ export function ProductForm({
         </Field>
       </section>
 
-      <section className="space-y-4 rounded-2xl border border-line bg-white p-5">
+      <section className="space-y-4 rounded-2xl border border-line bg-white p-4 sm:p-5">
         <h2 className="font-display text-base font-bold text-ink">Harga & Stok</h2>
         <div className="grid gap-4 sm:grid-cols-2">
           <Field label="Harga (Rp)" hint='Boleh dikosongkan untuk produk jenis Rekomendasi — otomatis tampil "Rp ???" sampai kamu isi.'>
@@ -154,7 +154,7 @@ export function ProductForm({
         </div>
       </section>
 
-      <section className="space-y-4 rounded-2xl border border-line bg-white p-5">
+      <section className="space-y-4 rounded-2xl border border-line bg-white p-4 sm:p-5">
         <h2 className="font-display text-base font-bold text-ink">Kondisi & Kurasi</h2>
         <div className="grid gap-4 sm:grid-cols-2">
           <Field label="Kondisi">
@@ -188,22 +188,22 @@ export function ProductForm({
         <div className="flex flex-wrap gap-4 pt-2">
           {[
             ["is_featured", "Featured", product?.is_featured],
-            ["is_new", "Baru", product?.is_new],
+            ["is_new", "Baru Segel (belum dibuka)", product?.is_new],
             ["is_rare", "Rare", product?.is_rare],
             ["is_secret", "Secret", product?.is_secret],
             ["is_boxa_approved", "BOXA Approved", product?.is_boxa_approved],
           ].map(([name, label, checked]) => (
             <label key={name as string} className="flex items-center gap-2 text-sm text-ink-soft">
-              <input type="checkbox" name={name as string} defaultChecked={Boolean(checked)} className="rounded border-line" />
+              <input type="checkbox" name={name as string} defaultChecked={Boolean(checked)} className="h-5 w-5 rounded border-line" />
               {label as string}
             </label>
           ))}
           <label className="flex items-center gap-2 text-sm text-ink-soft" title="Box in Box — dus asli disimpan dalam dus pelindung tambahan, kondisi packaging terjaga maksimal.">
-            <input type="checkbox" name="is_bib" defaultChecked={product?.is_bib} className="rounded border-line" />
+            <input type="checkbox" name="is_bib" defaultChecked={product?.is_bib} className="h-5 w-5 rounded border-line" />
             BIB (Box in Box)
           </label>
           <label className="flex items-center gap-2 text-sm text-ink-soft" title="Original Factory Condition — kondisi masih persis seperti saat keluar pabrik, segel belum pernah dibuka.">
-            <input type="checkbox" name="is_ofc" defaultChecked={product?.is_ofc} className="rounded border-line" />
+            <input type="checkbox" name="is_ofc" defaultChecked={product?.is_ofc} className="h-5 w-5 rounded border-line" />
             OFC (Original Factory Condition)
           </label>
         </div>
@@ -213,14 +213,15 @@ export function ProductForm({
         </p>
       </section>
 
-      <section className="space-y-4 rounded-2xl border border-line bg-white p-5">
+      <section className="space-y-4 rounded-2xl border border-line bg-white p-4 sm:p-5">
         <h2 className="font-display text-base font-bold text-ink">Foto Produk</h2>
         <p className="text-xs text-muted">Bisa unggah beberapa foto sekaligus. Foto pertama otomatis jadi foto utama — geser urutannya kalau perlu.</p>
         <ProductImagesField initialUrls={product?.images.map((i) => i.url) ?? []} />
       </section>
 
-      <section className="space-y-4 rounded-2xl border border-line bg-white p-5">
-        <h2 className="font-display text-base font-bold text-ink">Pengiriman & CTA</h2>
+      <details className="group rounded-2xl border border-line bg-white p-5 [&_summary::-webkit-details-marker]:hidden">
+        <summary className="flex cursor-pointer list-none items-center justify-between font-display text-base font-bold text-ink">Pengiriman & CTA <span className="text-xs font-medium text-muted group-open:hidden">ketuk untuk buka</span></summary>
+        <div className="mt-4 space-y-4">
         <div className="grid gap-4 sm:grid-cols-2">
           <Field label="Lokasi">
             <input name="location" defaultValue={product?.location ?? "Yogyakarta"} className={inputClass} />
@@ -255,18 +256,20 @@ export function ProductForm({
         </div>
         <div className="flex flex-wrap gap-4 pt-2">
           <label className="flex items-center gap-2 text-sm text-ink-soft">
-            <input type="checkbox" name="delivery_available" defaultChecked={product?.delivery_available ?? true} className="rounded border-line" />
+            <input type="checkbox" name="delivery_available" defaultChecked={product?.delivery_available ?? true} className="h-5 w-5 rounded border-line" />
             Bisa diantar
           </label>
           <label className="flex items-center gap-2 text-sm text-ink-soft">
-            <input type="checkbox" name="instant_delivery_available" defaultChecked={Boolean(product?.instant_delivery_available)} className="rounded border-line" />
+            <input type="checkbox" name="instant_delivery_available" defaultChecked={Boolean(product?.instant_delivery_available)} className="h-5 w-5 rounded border-line" />
             Pengiriman instan
           </label>
         </div>
-      </section>
+      </div>
+      </details>
 
-      <section className="space-y-4 rounded-2xl border border-line bg-white p-5">
-        <h2 className="font-display text-base font-bold text-ink">Garansi & Catatan</h2>
+      <details className="group rounded-2xl border border-line bg-white p-5 [&_summary::-webkit-details-marker]:hidden">
+        <summary className="flex cursor-pointer list-none items-center justify-between font-display text-base font-bold text-ink">Garansi & Catatan <span className="text-xs font-medium text-muted group-open:hidden">ketuk untuk buka</span></summary>
+        <div className="mt-4 space-y-4">
         <div className="grid gap-4 sm:grid-cols-2">
           <Field label="Jenis Garansi">
             <input name="warranty_type" defaultValue={product?.warranty_type ?? ""} className={inputClass} />
@@ -289,9 +292,10 @@ export function ProductForm({
             <textarea name="what_is_not_included" defaultValue={product?.what_is_not_included.join("\n")} rows={4} className={inputClass} />
           </Field>
         </div>
-      </section>
+      </div>
+      </details>
 
-      <section className="space-y-4 rounded-2xl border border-line bg-white p-5">
+      <section className="space-y-4 rounded-2xl border border-line bg-white p-4 sm:p-5">
         <h2 className="font-display text-base font-bold text-ink">Status Publikasi</h2>
         <Field label="Status">
           <select name="status" defaultValue={product?.status ?? "draft"} className={inputClass}>
@@ -302,8 +306,8 @@ export function ProductForm({
         </Field>
       </section>
 
-      <div className="flex justify-end gap-3">
-        <SubmitButton>Simpan Produk</SubmitButton>
+      <div className="sticky bottom-[calc(4.5rem+env(safe-area-inset-bottom))] z-20 -mx-1 flex justify-end gap-3 rounded-2xl border border-line bg-white/95 p-3 shadow-lg backdrop-blur md:static md:mx-0 md:border-0 md:bg-transparent md:p-0 md:shadow-none">
+        <SubmitButton className="h-12 w-full rounded-full bg-maroon px-6 text-base font-semibold text-cream hover:bg-maroon-deep disabled:opacity-60 md:h-auto md:w-auto md:py-2.5 md:text-sm">Simpan Produk</SubmitButton>
       </div>
     </form>
   );

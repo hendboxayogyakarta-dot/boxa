@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ImagePlus, Loader2, Plus, Trash2, CheckCircle2, AlertCircle } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { prepareImage, IMAGE_ACCEPT } from "@/lib/image-compress";
 import { saveProductsBatch, type QuickProductInput } from "@/lib/actions/products";
 import type { Brand, Category, Store } from "@/lib/types";
 
@@ -35,7 +36,7 @@ function emptyRow(): Row {
   };
 }
 
-const inputClass = "w-full rounded-lg border border-line px-2.5 py-2 text-sm outline-none focus:border-maroon";
+const inputClass = "w-full rounded-lg border border-line px-3 py-3 text-base outline-none focus:border-maroon sm:px-2.5 sm:py-2 sm:text-sm";
 
 export function QuickAddProducts({
   categories,
@@ -93,9 +94,16 @@ export function QuickAddProducts({
     setRows((prev) => (prev.length > 1 ? prev.filter((r) => r._key !== key) : prev));
   }
 
-  async function handlePhoto(key: string, file: File) {
+  async function handlePhoto(key: string, raw: File) {
     if (!SUPABASE_CONFIGURED) return;
     updateRow(key, { _uploading: true });
+    let file: File;
+    try {
+      file = await prepareImage(raw);
+    } catch {
+      updateRow(key, { _uploading: false });
+      return;
+    }
     const supabase = createClient();
     const path = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}-${file.name.replace(/[^a-zA-Z0-9.\-]/g, "-")}`;
     const { error } = await supabase.storage.from("product-images").upload(path, file, { upsert: false });
@@ -140,10 +148,10 @@ export function QuickAddProducts({
       {/* Mode toggle — regular COD products and affiliate/recommendation
           listings need genuinely different (and different-sized) forms,
           so switching resets to a blank set of rows for that mode. */}
-      <div className="mb-5 inline-flex rounded-full border border-line bg-white p-1">
+      <div className="mb-5 flex w-full rounded-full border border-line bg-white p-1 sm:inline-flex sm:w-auto">
         <button
           onClick={() => setMode("regular")}
-          className={`rounded-full px-4 py-1.5 text-sm font-semibold transition-colors ${
+          className={`flex-1 rounded-full px-4 py-2.5 text-sm font-semibold transition-colors sm:flex-none sm:py-1.5 ${
             mode === "regular" ? "bg-maroon text-cream" : "text-ink-soft"
           }`}
         >
@@ -151,11 +159,11 @@ export function QuickAddProducts({
         </button>
         <button
           onClick={() => setMode("affiliate")}
-          className={`rounded-full px-4 py-1.5 text-sm font-semibold transition-colors ${
+          className={`flex-1 rounded-full px-4 py-2.5 text-sm font-semibold transition-colors sm:flex-none sm:py-1.5 ${
             mode === "affiliate" ? "bg-flame text-cream" : "text-ink-soft"
           }`}
         >
-          Temukan Online / Affiliate
+          Pilihan Online / Affiliate
         </button>
       </div>
 
@@ -163,7 +171,7 @@ export function QuickAddProducts({
         {rows.map((row, i) => (
           <div key={row._key} className="rounded-2xl border border-line bg-white p-4">
             <div className="flex items-start gap-3">
-              <label className="relative flex h-16 w-16 shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-xl border border-line bg-photo-frame">
+              <label className="relative flex h-20 w-20 shrink-0 cursor-pointer sm:h-16 sm:w-16 items-center justify-center overflow-hidden rounded-xl border border-line bg-photo-frame">
                 {row._uploading ? (
                   <Loader2 size={18} className="animate-spin text-muted" />
                 ) : row.image_url ? (
@@ -174,7 +182,7 @@ export function QuickAddProducts({
                 )}
                 <input
                   type="file"
-                  accept="image/*"
+                  accept={IMAGE_ACCEPT}
                   className="hidden"
                   disabled={row._uploading || !SUPABASE_CONFIGURED}
                   onChange={(e) => {
@@ -298,21 +306,21 @@ export function QuickAddProducts({
 
       <button
         onClick={addRow}
-        className="mt-3 flex items-center gap-1.5 rounded-full border border-dashed border-line px-4 py-2 text-sm font-medium text-ink-soft hover:border-maroon hover:text-maroon"
+        className="mt-3 flex h-12 w-full items-center justify-center gap-1.5 rounded-full border border-dashed border-line px-4 text-sm md:h-auto md:w-auto md:py-2 font-medium text-ink-soft hover:border-maroon hover:text-maroon"
       >
         <Plus size={15} /> Tambah Baris
       </button>
 
-      <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-5">
+      <div className="sticky bottom-[calc(4.5rem+env(safe-area-inset-bottom))] z-20 mt-6 flex flex-col gap-3 rounded-2xl border border-line bg-white/95 p-3 shadow-lg backdrop-blur md:static md:flex-row md:items-center md:justify-between md:rounded-none md:border-0 md:border-t md:bg-transparent md:p-0 md:pt-5 md:shadow-none">
         <label className="flex items-center gap-2 text-sm text-ink-soft">
-          <input type="checkbox" checked={publishAll} onChange={(e) => setPublishAll(e.target.checked)} className="rounded border-line" />
+          <input type="checkbox" checked={publishAll} onChange={(e) => setPublishAll(e.target.checked)} className="h-5 w-5 rounded border-line" />
           Langsung tayang semua produk ini
         </label>
 
         <button
           onClick={handleSubmit}
           disabled={submitting || filledCount === 0 || !SUPABASE_CONFIGURED}
-          className={`flex items-center gap-2 rounded-full px-6 py-2.5 text-sm font-semibold text-cream disabled:opacity-50 ${
+          className={`flex h-12 items-center justify-center gap-2 rounded-full px-6 text-base font-semibold text-cream disabled:opacity-50 md:h-auto md:py-2.5 md:text-sm ${
             mode === "affiliate" ? "bg-flame" : "bg-maroon"
           }`}
         >
